@@ -1,0 +1,216 @@
+---
+title: "My title"
+subtitle: "My subtitle if needed"
+author: 
+  - First author
+  - Another author
+thanks: "Code and data are available at: LINK."
+date: "`r Sys.time()`"
+date-format: "D MMMM YYYY"
+abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+format: html
+number-sections: true
+bibliography: references.bib
+---
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(palmerpenguins)
+```
+
+```{r}
+
+#quarto references itself. wrapping in here:here goes in project 
+knitr::include_graphics(here::here("inputs/data/apod_20230227.jpg"))
+
+```
+
+
+
+```{r}
+#| label: fig-energy
+#| fig-cap: Energy Variable
+#| echo: false
+
+library(lubridate)
+df <- readRDS(here::here("inputs/data/df.rds"))
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = energy, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
+
+
+
+```
+
+```{r}
+#| label: fig-danceability
+#| fig-cap: Danceability Variable
+#| echo: false
+
+
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+```
+
+```{r}
+#| label: fig-valence
+#| fig-cap: Valence Variable
+#| echo: false
+
+
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = valence, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+
+```{r}
+#| label: fig-acousticness
+#| fig-cap: Acousticness Variable
+#| echo: false
+
+
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+```{r}
+#| label: fig-instrumentalness
+#| fig-cap: Instrumentalness Variable
+#| echo: false
+
+
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+```{r}
+#| label: fig-tempo
+#| fig-cap: Tempo Variable
+#| echo: false
+
+
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+
+# Introduction
+
+
+
+
+# Data {#sec-data}
+
+
+
+
+
+# Model
+
+$$
+Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}
+$$ {#eq-bayes}
+
+@eq-bayes seems useful, eh?
+
+
+
+# Results
+
+# Discussion
+
+## First discussion point {#sec-first-point}
+
+
+## Second discussion point
+
+## Third discussion point
+
+## Weaknesses and next steps
+
+
+\newpage
+
+\appendix
+
+# Appendix {-}
+
+
+# Additional details
+
+
+\newpage
+
+
+# References
+
+
