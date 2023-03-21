@@ -11,17 +11,17 @@
 #### Workspace setup ####
 library(tidyverse)
 
-chicks <- read_csv("inputs/data/chicks.csv")
-flo <- read_csv("inputs/data/flo.csv")
-lorde <- read_csv("inputs/data/lorde.csv")
-vincent <- read_csv("inputs/data/vincent.csv")
-lana <- read_csv("inputs/data/lana.csv")
-taylor <- read_csv("inputs/data/taylor.csv")
-
+chicksaf <- read_csv("inputs/data/chicksaf.csv")
+floaf <- read_csv("inputs/data/floaf.csv")
+lordeaf <- read_csv("inputs/data/lordeaf.csv")
+vincentaf <- read_csv("inputs/data/vincentaf.csv")
+lanaaf <- read_csv("inputs/data/lanaaf.csv")
+tayloraf <- read_csv("inputs/data/tayloraf.csv")
+bleachersaf <- read_csv("inputs/data/bleachersaf.csv")
 #### Clean data ####
 # Binding Data
 
-df <- rbind(lana, taylor, vincent, lorde, chicks, flo)
+df <- rbind(lanaaf, tayloraf, vincentaf, lordeaf, chicksaf, floaf, bleachersaf)
 df$jack = NA
 
 jack_tracks <- c(
@@ -167,7 +167,8 @@ jack_tracks <- c(
   "Hits Different",
   "Did You Know That There's a Tunnel Under Ocean Blvd",
   "A&W")
-df$jack <- ifelse(df$track_name %in% jack_tracks, "1", df$jack)
+df$jack <- ifelse(df$track_name %in% jack_tracks, "1", "0")
+df$jack[df$artist_name == "Bleachers"] <- "1"
 
 
 df$danceability <- as.numeric(df$danceability)
@@ -181,9 +182,14 @@ df$jack <- as.factor(df$jack)
 df$key <- as.numeric(df$key)
 df$mode <- as.numeric(df$mode)
 
+
+###Keep only columns we want###
+
+df = subset(df, select = c("artist_name", "track_name", "energy", "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "jack"))
+
 #### Save data ####
+
 
 write.csv(df, "inputs/data/df.csv")
 
-df |> 
-  summary()
+

@@ -13,26 +13,34 @@ library(spotifyr)
 library(tidyverse)
 
 
-#### Download data ####
+#### Download data audio features ####
 
 
 ?spotifyr
-lana <- get_artist_audio_features("lana del rey")
-taylor <- get_artist_audio_features("taylor swift")
-vincent <- get_artist_audio_features("st vincent")
-chicks <- get_artist_audio_features("the chicks")
-lorde <- get_artist_audio_features("lorde")
-flo <- get_artist_audio_features("florence and the machine")
+lanaaf <- get_artist_audio_features("lana del rey")
+tayloraf <- get_artist_audio_features("taylor swift")
+vincentaf <- get_artist_audio_features("st vincent")
+chicksaf <- get_artist_audio_features("the chicks")
+lordeaf <- get_artist_audio_features("lorde")
+floaf <- get_artist_audio_features("florence and the machine")
+bleachersaf <- get_artist_audio_features("bleachers")
 
 
-#### Save data ####
+#### Save data audio features ####
 
-write_csv(lana, "inputs/data/lana.csv") 
-write_csv(taylor, "inputs/data/taylor.csv") 
-write_csv(vincent, "inputs/data/vincent.csv") 
-write_csv(chicks, "inputs/data/chicks.csv") 
-write_csv(lorde, "inputs/data/lorde.csv") 
-write_csv(flo, "inputs/data/flo.csv") 
+write_csv(lanaaf, "inputs/data/lanaaf.csv") 
+write_csv(tayloraf, "inputs/data/tayloraf.csv") 
+write_csv(vincentaf, "inputs/data/vincentaf.csv") 
+write_csv(chicksaf, "inputs/data/chicksaf.csv") 
+write_csv(lordeaf, "inputs/data/lordeaf.csv") 
+write_csv(floaf, "inputs/data/floaf.csv") 
+write_csv(bleachersaf, "inputs/data/bleachersaf.csv") 
+
+#### Download data audio analysis####
+
+
+?spotifyr
+test <- get_track_audio_analysis("4brdb8L2Cy3e9AN8IfV9l8",  authorization = get_spotify_access_token())
 
 
 
