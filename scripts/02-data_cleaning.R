@@ -10,7 +10,13 @@
 
 #### Workspace setup ####
 library(tidyverse)
-# [...UPDATE THIS...]
+
+chicks <- read_csv("inputs/data/chicks.csv")
+flo <- read_csv("inputs/data/flo.csv")
+lorde <- read_csv("inputs/data/lorde.csv")
+vincent <- read_csv("inputs/data/vincent.csv")
+lana <- read_csv("inputs/data/lana.csv")
+taylor <- read_csv("inputs/data/taylor.csv")
 
 #### Clean data ####
 # Binding Data
@@ -163,26 +169,21 @@ jack_tracks <- c(
   "A&W")
 df$jack <- ifelse(df$track_name %in% jack_tracks, "1", df$jack)
 
-table(df$jack)
 
-df[df$jack == "1", "track_name"]
-jack_tracks_test <- subset(df, jack == "1", select = track_name)$track_name
-jack_tracks_test
-#df <- df[!duplicated(df$track_name), ]
-#jack_tracks_test <- subset(df, jack == "Y", select = track_name)$track_name
-
-
+df$danceability <- as.numeric(df$danceability)
+df$energy <- as.numeric(df$energy)
+df$acousticness <- as.numeric(df$acousticness)
+df$tempo <- as.numeric(df$tempo)
+df$instrumentalness <- as.numeric(df$instrumentalness)
+df$loudness <- as.numeric(df$loudness)
+df$valence <- as.numeric(df$valence)
+df$jack <- as.factor(df$jack)
+df$key <- as.numeric(df$key)
+df$mode <- as.numeric(df$mode)
 
 #### Save data ####
 
-saveRDS(df, "inputs/data/df.rds")
-# write.csv(df, "inputs/data/df.csv")
-# 
-# library(tidyverse)
-# my_df <- as.tibble(df)
-# 
-# # Write the data frame to a CSV file
-# class(my_df)
-# write.csv(my_df, "inputs/data/jack_df.csv", row.names = FALSE)
-# ?write.csv
+write.csv(df, "inputs/data/df.csv")
 
+df |> 
+  summary()

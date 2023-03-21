@@ -2,14 +2,13 @@
 # Purpose: Downloads and saves the data from Spotify
 # Author: Michaela Drouillard
 # Data: 27 February 2023
-# Contact: rohan.alexander@utoronto.ca 
+# Contact: michaela.drouillard@mail.utoronto.ca
 # License: MIT
 # Pre-requisites: -
 # Any other information needed?-
 
 #### Workspace setup ####
 
-#run install.packages in console!!!!
 library(spotifyr)
 library(tidyverse)
 
@@ -28,12 +27,13 @@ flo <- get_artist_audio_features("florence and the machine")
 
 #### Save data ####
 
-saveRDS(lana, "inputs/data/lana.rds")
-saveRDS(taylor, "inputs/data/taylor.rds")
-saveRDS(vincent, "inputs/data/vincent.rds")
-saveRDS(lorde, "inputs/data/lorde.rds")
-saveRDS(chicks, "inputs/data/chicks.rds")
-saveRDS(flo, "inputs/data/flo.rds")
-?spotifyr
+write_csv(lana, "inputs/data/lana.csv") 
+write_csv(taylor, "inputs/data/taylor.csv") 
+write_csv(vincent, "inputs/data/vincent.csv") 
+write_csv(chicks, "inputs/data/chicks.csv") 
+write_csv(lorde, "inputs/data/lorde.csv") 
+write_csv(flo, "inputs/data/flo.csv") 
+
+
 
 

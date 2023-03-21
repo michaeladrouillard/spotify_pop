@@ -14,29 +14,20 @@ library(tidyverse)
 
 #### Test data ####
 
+
+#Checking which tracks have Jack as a producer
+jack_tracks_test <- subset(df, jack == "1", select = track_name)$track_name
+jack_tracks_test
+
+#There should be 142, but in both of these tests it's 189. Are duplicates okay?
+
+length(jack_tracks_test)
+table(df$jack)
+
 colnames(df)
 str(df)
 
-df$danceability <- as.numeric(df$danceability)
-df$energy <- as.numeric(df$energy)
-df$acousticness <- as.numeric(df$acousticness)
-df$tempo <- as.numeric(df$tempo)
-df$instrumentalness <- as.numeric(df$instrumentalness)
-df$loudness <- as.numeric(df$loudness)
-df$valence <- as.numeric(df$valence)
-df$jack <- as.numeric(df$jack)
-df$key <- as.numeric(df$key)
-df$mode <- as.numeric(df$mode)
 
-# Fit a logistic regression model
-model <- glm(jack ~ danceability + energy + acousticness + tempo + instrumentalness + key + mode + loudness + valence, data = df, family = binomial)
 
-# Print the model summary
-summary(model)
 
-# Calculate the Pearson correlation coefficients
-correlations <- cor(df[c("danceability", "energy", "acousticness", "liveness", "tempo", "key", "valence", "loudness", "mode", "jack")], method = "pearson")
-
-# Print the correlation matrix
-print(correlations)
 
