@@ -190,7 +190,7 @@ To find an answer to this question, I turned people, statistics, and the overlor
 
 # An Interview with Caleb Gamman
 
-Around the time that Midnights came out, I came across a video on Twitter of a guy guessing which songs on Midnights were produced by Antonoff within seconds. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
+Around the time that Midnights came out, I came across a video on Twitter of a guy, Caleb Gamman, guessing which songs on Midnights were produced by Antonoff within seconds. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
 
 I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his Youtube Channel covering:
 
@@ -214,15 +214,15 @@ I reached out to Gamman to ask him to explain Antonoff to me, only to find out, 
 
     > "what makes you so special and unique that you can tell the production of a song?" "nothing"
 
-6.  Which was further double down on when I found a screenshot he took of his Tweet drafts, one of which being: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
+6.  Which was further doubled down on when I found a screenshot he took of his Tweet drafts in June 2021, one of them reading: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
 
-It is a perfect video essay. The only thing left I could ask was how he felt about that video 6 months after the fact, and what he thought of me asking him about it.
+It is a perfect video essay. The only thing left that I could ask was how he felt about that video 6 months after the fact, and what he thought of me asking him about it.
 
 # Numbers
 
-Taste is subjective. People who can play instruments tend to be better at deciphering and describing sounds. Antonoff is everywhere. Cultural criticism is a hall of smoke and mirrors.
+Taste is subjective. People who can play instruments tend to be better at identifying and describing sounds. Cultural criticism is a hall of smoke and mirrors. Antonoff is everywhere.
 
-Can we translate any of this into something observable? Can be quantify the Jack Antonoff-ification of music?
+Can we translate any of this into something observable? Can we quantify the Jack Antonoff-ification of pop music?
 
 # Data {#sec-data}
 
