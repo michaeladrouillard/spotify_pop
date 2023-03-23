@@ -160,6 +160,70 @@ df %>%
 
 # Introduction
 
+Sometime in early October of 2022 there was a chemical shift in my brain and I couldn't stop listening to Taylor Swift. I was a preteen when my best friend's sister showed us Our Song on the family desktop, went on to own a copy of Fearless, and was in the ninth grade when Red came out. My listening tapered off after that, other than ironically dancing to Blank Space in friends kitchens in college, and a road trip a few years ago where we belted Fearless (Three of the four people present were going through something).
+
+All this to say, I can quite confidently say I hadn't listened to much or any Taylor Swift until October, when I couldn't listen to anything other than Fearless or Red when deadlifting, walking to a friend's house, folding laundry, etc. I listened to so much Taylor in that month alone that she ended up as my #4 artist on Spotify Wrapped, which stops collecting its data for the year on October 31st. It didn't even capture what happened to me after Midnights dropped in November.
+
+I was standing outside of the Garrison eating a slice of pizza with some friends, and one of them asked what music we had been listening to lately.
+
+ME: "Midnights!"
+
+ZACH: "Is it good?"
+
+\[I blacked out.\]
+
+ME: "No!"
+
+\["*No*?" I thought to myself\]
+
+A STRANGER WALKING BY WHO HEARD EVERYTHING: "EXACTLY!!"
+
+Midnight was produced by Swift and her longtime collaborator Jack Antonoff, who is the subject of this essay, and, I suspect, the reason behind both my blacking out, and the stranger's "Exactly".
+
+Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too: Bleachers, and Fun.
+
+When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to, of course, is the fact that Jack Antonoff seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis".
+
+What I am trying to get to here is that I don't really mind Jack Antonoff's music. I kind of like it actually. But I still say his voice with the same tone that everyone else does. There's just something about him... this sense that he's everywhere... and that he's just such a nice guy... Why are we all so fixated on him? What is it about Antonoff music that is so Antonoff-y?
+
+To find an answer to this question, I turned people, statistics, and the overlord of engineered virality itself -- the Spotify API.
+
+# An Interview with Caleb Gamman
+
+Around the time that Midnights came out, I came across a video on Twitter of a guy guessing which songs on Midnights were produced by Antonoff within seconds. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
+
+I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his Youtube Channel covering:
+
+1.  what makes an Antonoff song so Antonoff-y
+
+    > I'm literally not an expert and of course I don't actually claim to always be able to 100 identify a Jack Antonoff song it's not like I've been practicing the way that I can tell if he's produced something is basically if it sounds to me like he's produced it I know that's annoying I will clarify first I think it's mostly in the vocal treatment and that's the thing that is the most off-putting to me but just every decision uh feels a little bit wrong to me I don't know of course if I wanted to be cringe in CinemaSins I could point out the Juno 6 Bass the perfectly stacked vocals the Juno 6 pad the wide and tight plate Reverb the Juno 6 sword the goo goo gaga the man hates treble unless it's just random crap swishing around everything gets low passed with thin 707 drum samples thin 808 drum samples then 909 drum samples thin Lin drum samples thin thin drum samples all the resonances the harmonics get removed everything is sort of squished down to the fundamental reduction in Timbre everything exists in a small frequency range everything becomes a tone it's an extremely consonant sound with no interplay between the different elements now that is a skill to do and it produces a cleaner sound and the only problem is I viscerally hate that sound
+
+2.  his relationship to music growing up (you can skim this, but there are some gems in there)
+
+    > hing I got into drumming at the age oflike six so maybe as a drummer the drumsamples are of a fence I wasanachronistically raised on cassettes soyou know maybe I like the sound ofaudio and maybe that explains I tend tolike dissonance and in harmonic soundinterplay of elements Distortion noisethe Clashing of elements I imagine I'velistened to more SoundCloud in my lifethan radio so uh maybe I only want tohear amateur internet loser I'veliked over 10 000 songs on my Spotifyaccount uh and I can identify lot ofthem off the bat but I'm not that greatat identifying music generally so it'sjust uh compartmentalized mediaconsumption habit I first did musicproduction in primary school I mademashups and dubstep in it as a lateteenager I extensively used Juno 6emulators to make embarrassing synthwaveadmittedly that's probably not thesubconscious Association that he's goingfor lyrics aren't of much interest to meit's just a sound in the mix and somaybe I don't like the focus on vocalI've previously described it as a fightor flight sort of thing so maybe itliterally is tapping into some memory oftrauma I have an unusually small earcanal so maybe I'm just hearing the highend more acutely I was hired as ateenager to play drums on uh a lot ofJack Antonoff songs for a universityGlee Club performer so maybe I don'tlike it because of the embarrassment ofhaving ever been associated with a Gleecloth I liked the album 1989 but to makethe song out of the woods palette ofwool to me I had to mash it up with M83Midnight City and that got a dmcatakedown so maybe it's a personalVendetta and of course I have known anddo know people who like this music somaybe I secretly hate my friends andfamily but I don't know if any of thattells us anything uh I have a taste inmusic w
+
+3.  An elegant and simple defense of taste
+
+    > "i did use the phrase visceral hatred. but i did so only to describe my visceral hatred. i cant stand the sound of it. i hate it. and the way in which i hate it is viscerally. but i didnt go beyond that because it doesnt go beyond that. nothing against the guy, i like taylor swift's stuff. it's just subjective taste...
+
+4.  His response to the media
+
+    > .... \[it's just subjective taste\]. there's just nothing to engage with, so ive had to fabricate a reason for controversy. and what ive come up with is this. \*looks at phone\* the real reason iive been saying for years that i have a visceral reaction to jack antonoffs production style, the REAL reason is this \-- cause during the rollout cycle of the album midnights, i wanted to ascribe taylor swifts authorship to a man and diminish women's voices. so actually, i'm a sexist. so now thats out there, publsihed as facts, in the news. with all the other facts..."
+
+5.  Basically a refutation to the entire premise of my interview
+
+    > "what makes you so special and unique that you can tell the production of a song?" "nothing"
+
+6.  Which was further double down on when I found a screenshot he took of his Tweet drafts, one of which being: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
+
+It is a perfect video essay. The only thing left I could ask was how he felt about that video 6 months after the fact, and what he thought of me asking him about it.
+
+# Numbers
+
+Taste is subjective. People who can play instruments tend to be better at deciphering and describing sounds. Antonoff is everywhere. Cultural criticism is a hall of smoke and mirrors.
+
+Can we translate any of this into something observable? Can be quantify the Jack Antonoff-ification of music?
+
 # Data {#sec-data}
 
 I pulled the data using the Spotify API, which I accessed using the `spotifyr` package in R. I used the `get_artist_audio_features` and `get_track_audio_analysis functions` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies.
