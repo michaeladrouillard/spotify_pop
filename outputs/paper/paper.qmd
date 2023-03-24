@@ -246,7 +246,19 @@ The Spotify API returns JSON metadata directly from the Spotify Data Catalogue.
 
 The `get_artist_audio_features` provides a general profile of each song, according to variables developped by spotify, which makes for simple comparisons across artists.
 
-However, it's hard to gauge exactly what variables like "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)", and danceability as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like "danceability". However, whatever these features capture is easier to compare across artists in visualizations than more granular details about bars, beats, duration, and tatums -- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events". The full documentation for each variable included in this study is available in the Appendix.
+However, it's hard to gauge exactly what variables like "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)".
+
+This is pretty vague. I compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself.
+
+```{r}
+
+
+
+
+
+```
+
+and danceability as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like "danceability". However, whatever these features capture is easier to compare across artists in visualizations than more granular details about bars, beats, duration, and tatums -- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events". The full documentation for each variable included in this study is available in the Appendix.
 
 The final audio features in this study data set contains the variables: "artist_name", "track_name", "energy", "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "jack".
 
