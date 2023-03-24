@@ -28,40 +28,37 @@ chisq
 
 
 # select the relevant columns
-cols <- c("danceability", "energy", "key", "loudness", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "jack")
-
-# create a new dataframe with only the selected columns
-df_small <- data[,cols]
-levels(df_small$jack)
-# Replace NAs with 0 in the jack column
-df_small$jack <- ifelse(is.na(df_small$jack), 0, df_small$jack)
+#cols <- c("danceability", "energy", "key", "loudness", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "jack")
+#jack ~ danceability + energy + loudness + speechiness + key + acousticness + instrumentalness + liveness + valence
 
 
+jack_model <-
+  glm(jack ~ danceability + energy + loudness + speechiness + key + acousticness + instrumentalness + liveness + valence,
+      data = df,
+      family = "binomial"
+  )
 
-# perform t-tests for continuous variables
-for (col in cols[!cols %in% c("artist_name", "track_name", "jack")]) {
-  ttest <- t.test(df_small[[col]] ~ df_small$jack)
-  print(paste("T-test for", col))
-  print(ttest)
-}
+library(marginaleffects)
 
-#SIGNIFICANT P VALUES: danceability, energy, loudness, acousticness, instrumentalness, liveness, valence
-#NOT SIGNIFCANT: Speechiness, Key
+jack_predictions <-
+  predictions(jack_model) |>
+  as_tibble()
 
+jack_predictions
 
-# perform chi-square tests for categorical variables
-for (col in cols[!cols %in% c("artist_name", "track_name", "jack")]) {
-  chisq <- chisq.test(table(df_small[[col]], df_small$jack))
-  print(paste("Chi-square test for", col))
-  print(chisq)
-}
-
-#SIGNIFICANT P VALUES: all of them??
-
-
-
-
-
-
-
+jack_predictions |>
+  ggplot(aes(
+    x = valence,
+    y = estimate,
+    color = jack
+  )) +
+  geom_jitter(width = 0.01, height = 0.01, alpha = 0.3) +
+  labs(
+    x = "Valence",
+    y = "Estimated probability that Jack produced them",
+    color = "Was it actually Jack"
+  ) +
+  theme_classic() +
+  scale_color_brewer(palette = "Set1") +
+  theme(legend.position = "bottom")
 
