@@ -8,7 +8,7 @@
 #Going to make a smaller df that only had the columns we want to capture correlations
 
 library(ggplot2)
-
+library(tidyverse)
 data <- read_csv("inputs/data/df.csv")
 
 #chisquared test from website http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
@@ -61,4 +61,33 @@ jack_predictions |>
   theme_classic() +
   scale_color_brewer(palette = "Set1") +
   theme(legend.position = "bottom")
+
+
+
+
+library(rstanarm)
+
+
+model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key + 
+                    acousticness + instrumentalness + liveness + valence,
+                  data = df,
+                  family = binomial(),
+                  prior_intercept = normal(0,10),
+                  prior = normal(0,2.5),
+                  chains = 4, iter = 2000)
+
+summary(model)
+
+#danceability has strongest relationship
+
+library(bayesplot)
+
+# Plot posterior distributions of coefficients
+mcmc_areas(model, regex_pars = "^(?!lp__)")
+
+# Plot posterior predictive checks
+pp_check(model)
+
+mcmc_areas(model, pars = grep("^lp__", colnames(model$summary), invert = TRUE, value = TRUE))
+
 
