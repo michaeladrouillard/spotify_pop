@@ -94,10 +94,10 @@ test_data$jack <- factor(test_data$jack, levels = c(1, 0), labels = c("Yes", "No
 
 # Create a confusion matrix
 confusion_matrix2 <- table(test_data$predictions, test_data$jack)
-confusion_matrix <- as.matrix(confusion_matrix)
+confusion_matrix2 <- as.matrix(confusion_matrix2)
 
 # Print the confusion matrix
-confusion_matrix
+confusion_matrix2
 precision <- confusion_matrix[2, 2] / sum(confusion_matrix[, 2])
 recall <- confusion_matrix[2, 2] / sum(confusion_matrix[2, ])
 f1_score <- 2 * precision * recall / (precision + recall)

@@ -183,9 +183,6 @@ df$key <- as.numeric(df$key)
 df$mode <- as.numeric(df$mode)
 
 
-###Keep only columns we want###
-
-df = subset(df, select = c("artist_name","album_release_date", "album_release_date_precision", "track_name", "energy", "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "jack"))
 
 #### Save data ####
 
