@@ -11,57 +11,11 @@ library(ggplot2)
 library(tidyverse)
 df <- read_csv("inputs/data/df.csv")
 
-#chisquared test from website http://www.sthda.com/english/wiki/chi-square-test-of-independence-in-r
-#not including liveness because its negative values
-df_chisq <- df[, c("artist_name", "track_name", "danceability",                
-                   "energy", "key","loudness", "speechiness", "acousticness",                
-                   "instrumentalness", "valence", "jack")]
-
-chisq <- chisq.test(df_chisq)
-chisq
-
-
-
-
-
-
-
-
-# select the relevant columns
-#cols <- c("danceability", "energy", "key", "loudness", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "jack")
-#jack ~ danceability + energy + loudness + speechiness + key + acousticness + instrumentalness + liveness + valence
-
-
 jack_model <-
   glm(jack ~ danceability + energy + loudness + speechiness + key + acousticness + instrumentalness + liveness + valence,
       data = df,
       family = "binomial"
   )
-
-library(marginaleffects)
-
-jack_predictions <-
-  predictions(jack_model) |>
-  as_tibble()
-
-jack_predictions
-
-jack_predictions |>
-  ggplot(aes(
-    x = valence,
-    y = estimate,
-    color = jack
-  )) +
-  geom_jitter(width = 0.01, height = 0.01, alpha = 0.3) +
-  labs(
-    x = "Valence",
-    y = "Estimated probability that Jack produced them",
-    color = "Was it actually Jack"
-  ) +
-  theme_classic() +
-  scale_color_brewer(palette = "Set1") +
-  theme(legend.position = "bottom")
-
 
 
 
@@ -103,4 +57,54 @@ confusion_matrix <- confusionMatrix(df$predictions, df$jack)
 # Print confusion matrix
 confusion_matrix
 confusion_matrix$byClass
+
+
+
+##FK forgot to split the data lol
+
+library(caret)
+
+# Set seed for reproducibility
+set.seed(123)
+
+# Split data into training and testing sets
+train_index <- createDataPartition(df$jack, p = 0.7, list = FALSE)
+train_data <- df[train_index, ]
+test_data <- df[-train_index, ]
+
+
+library(rstanarm)
+
+# Fit the model using only the training data
+model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key + 
+                    acousticness + instrumentalness + liveness + valence,
+                  data = train_data,
+                  family = binomial(),
+                  prior_intercept = normal(0,10),
+                  prior = normal(0,2.5),
+                  chains = 4, iter = 2000)
+
+# Make predictions on the testing data
+probabilities <- predict(model, newdata = test_data, type = "response")
+predictions <- ifelse(probabilities >= 0.5, "Yes", "No")
+
+# Add the predictions to the testing data
+test_data$predictions <- predictions
+test_data$jack <- factor(test_data$jack, levels = c(1, 0), labels = c("Yes", "No"))
+
+# Create a confusion matrix
+confusion_matrix2 <- table(test_data$predictions, test_data$jack)
+confusion_matrix <- as.matrix(confusion_matrix)
+
+# Print the confusion matrix
+confusion_matrix
+precision <- confusion_matrix[2, 2] / sum(confusion_matrix[, 2])
+recall <- confusion_matrix[2, 2] / sum(confusion_matrix[2, ])
+f1_score <- 2 * precision * recall / (precision + recall)
+precision
+recall
+f1_score
+
+#... do these features just not tell us anything about the song?
+
 
