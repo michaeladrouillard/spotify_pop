@@ -78,16 +78,50 @@ model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key +
 
 summary(model)
 
+
 #danceability has strongest relationship
+# Load necessary packages
+library(pROC)
+library(ggroc)
+library(ggplot2)
 
-library(bayesplot)
+# Predict probability of Jack Antonoff producing the song for each observation
+probabilities <- predict(model, type = "response")
 
-# Plot posterior distributions of coefficients
-mcmc_areas(model, regex_pars = "^(?!lp__)")
+df_prob <- cbind(df, probabilities)
 
-# Plot posterior predictive checks
-pp_check(model)
+# Create ROC curve
+roc_curve <- roc(jack ~ probabilities, data = df_prob)
 
-mcmc_areas(model, pars = grep("^lp__", colnames(model$summary), invert = TRUE, value = TRUE))
+# Convert ROC curve to data frame
+roc_df <- fortify(roc_curve)
+
+# calculate auc 
+auc <- auc(roc_curve)
+
+# Plot ROC curve
+ggplot(roc_curve, aes(x = 1 - specificity, y = sensitivity)) + 
+  geom_line() + 
+  geom_abline(intercept = 0, slope = 1, linetype = "dashed") + 
+  ggtitle(paste0("ROC Curve (AUC = ", round(auc, 2), ")")) + 
+  xlab("False Positive Rate") + 
+  ylab("True Positive Rate")
+
+# Create confusion matrix
+predictions <- ifelse(probabilities >= 0.5, 1, 0)
+confusion_matrix <- table(predictions, jack)
+
+# Print confusion matrix
+confusion_matrix
+
+# Calculate precision, recall, and F1-score
+precision <- confusion_matrix[2,2] / sum(confusion_matrix[,2])
+recall <- confusion_matrix[2,2] / sum(confusion_matrix[2,])
+f1_score <- 2 * precision * recall / (precision + recall)
+
+# Print precision, recall, and F1-score
+cat("Precision:", round(precision, 2), "\n")
+cat("Recall:", round(recall, 2), "\n")
+cat("F1-score:", round(f1_score, 2))
 
 

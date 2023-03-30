@@ -246,9 +246,11 @@ The Spotify API returns JSON metadata directly from the Spotify Data Catalogue.
 
 The `get_artist_audio_features` provides a general profile of each song, according to variables developped by spotify, which makes for simple comparisons across artists.
 
-However, it's hard to gauge exactly what variables like "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)".
+However, it's hard to gauge exactly what variables like "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)". "Danceability" is described as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like "danceability". However, whatever these features capture is easier to compare across artists in visualizations than more granular details about bars, beats, duration, and tatums[^1].
 
-This is pretty vague. I compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself. Jupiter's valence score is 326.78% higher than Mars. This not only indicates the valence is based on audio features other than lyrical content, but that it is capturing a difference between the two songs' profiles.
+[^1]: \-- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events". The full documentation for each variable included in this study is available in the Appendix
+
+This is pretty vague. Especially valence -- is the positivity related to lyricsI compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself. Jupiter's valence score is 326.78% higher than Mars. This not only indicates the valence is based on audio features other than lyrical content, but that it is capturing a difference between the two songs' profiles.
 
 ```{r}
 
@@ -257,11 +259,12 @@ This is pretty vague. I compared the valence scores of classical music tracks to
 
 sub_planets<- read.csv(here::here("inputs/data/subset_planets.csv"))
 sub_planets |>
-  select(artist_name, valence, track_name) |>
+  select(artist_name, valence, danceability, track_name) |>
   head() |>
   knitr::kable(
     col.names = c("Artist Name", 
                   "Valence", 
+                  "Danceability",
                   "Track Name")
  )
 
@@ -273,11 +276,12 @@ I looked at the valence measures on Flight of the Bumblebee, a song that's much 
 ```{r}
 sub_bees<- read.csv(here::here("inputs/data/subset_bumblebee.csv"))
 sub_bees |>
-   select(artist_name, valence, album_release_year, track_name) |>
+   select(artist_name, valence, danceability, album_release_year, track_name) |>
    head(17) |>
    knitr::kable(
      col.names = c("Artist Name", 
                    "Valence",
+                   "Danceability",
                    "Album Release Year",
                    "Track Name")
   )
