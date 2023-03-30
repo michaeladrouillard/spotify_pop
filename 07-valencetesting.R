@@ -8,6 +8,9 @@ write_csv(nikolai, "inputs/data/nikolai.csv")
 
 
 subset_planets <- subset(holst, track_id %in% c("08i3LqX0LijeLAiuJShjPm", "3OjbUkoryQX47hd0t9HyuK"))
+write_csv(subset_planets, "inputs/data/subset_planets.csv")
+
+
 
 subset_nikolai <- nikolai[grepl("Bumblebee", nikolai$track_id, ignore.case = TRUE), ]
 

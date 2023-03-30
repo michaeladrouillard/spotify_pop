@@ -248,11 +248,38 @@ The `get_artist_audio_features` provides a general profile of each song, accordi
 
 However, it's hard to gauge exactly what variables like "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)".
 
-This is pretty vague. I compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself.
+This is pretty vague. I compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself. Jupiter's valence score is 326.78% higher than Mars. This not only indicates the valence is based on audio features other than lyrical content, but that it is capturing a difference between the two songs' profiles.
 
 ```{r}
 
+#| echo: false
+#| warning: false
 
+sub_planets<- read.csv(here::here("inputs/data/subset_planets.csv"))
+sub_planets |>
+  select(artist_name, valence, track_name) |>
+  head() |>
+  knitr::kable(
+    col.names = c("Artist Name", 
+                  "Valence", 
+                  "Track Name")
+ )
+
+
+```
+
+I looked at the valence measures on Flight of the Bumblebee, a song that's much faster and "upbeat" than Mars and Jupiter. What I found complicated my understanding of valence -- different performance of the same song had different valence scores.
+
+```{r}
+# sub_planets<- read.csv(here::here("inputs/data/subset_planets.csv"))
+# sub_planets |>
+#   select(artist_name, valence, track_name) |>
+#   head() |>
+#   knitr::kable(
+#     col.names = c("Artist Name", 
+#                   "Valence", 
+#                   "Track Name")
+#  )
 
 
 
