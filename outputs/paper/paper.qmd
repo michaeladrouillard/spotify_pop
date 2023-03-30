@@ -206,7 +206,7 @@ I reached out to Gamman to ask him to explain Antonoff to me, only to find out, 
 
     > "i did use the phrase visceral hatred. but i did so only to describe my visceral hatred. i cant stand the sound of it. i hate it. and the way in which i hate it is viscerally. but i didnt go beyond that because it doesnt go beyond that. nothing against the guy, i like taylor swift's stuff. it's just subjective taste...
 
-4.  His response to the media
+4.  His tongue in cheek response to the media
 
     > .... \[it's just subjective taste\]. there's just nothing to engage with, so ive had to fabricate a reason for controversy. and what ive come up with is this. \*looks at phone\* the real reason iive been saying for years that i have a visceral reaction to jack antonoffs production style, the REAL reason is this \-- cause during the rollout cycle of the album midnights, i wanted to ascribe taylor swifts authorship to a man and diminish women's voices. so actually, i'm a sexist. so now thats out there, publsihed as facts, in the news. with all the other facts..."
 
@@ -268,18 +268,19 @@ sub_planets |>
 
 ```
 
-I looked at the valence measures on Flight of the Bumblebee, a song that's much faster and "upbeat" than Mars and Jupiter. What I found complicated my understanding of valence -- different performance of the same song had different valence scores.
+I looked at the valence measures on Flight of the Bumblebee, a song that's much faster and "upbeat" than Mars and Jupiter. What I found complicated my understanding of valence -- different performances of the same song had different valence scores. Some were arias, played by different instruments. These tend to have higher valence scores. The lowest recorded valence is 0.2410, and the highest is .9230. What gives?
 
 ```{r}
-# sub_planets<- read.csv(here::here("inputs/data/subset_planets.csv"))
-# sub_planets |>
-#   select(artist_name, valence, track_name) |>
-#   head() |>
-#   knitr::kable(
-#     col.names = c("Artist Name", 
-#                   "Valence", 
-#                   "Track Name")
-#  )
+sub_bees<- read.csv(here::here("inputs/data/subset_bumblebee.csv"))
+sub_bees |>
+   select(artist_name, valence, album_release_year, track_name) |>
+   head(17) |>
+   knitr::kable(
+     col.names = c("Artist Name", 
+                   "Valence",
+                   "Album Release Year",
+                   "Track Name")
+  )
 
 
 

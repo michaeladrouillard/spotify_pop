@@ -12,5 +12,7 @@ write_csv(subset_planets, "inputs/data/subset_planets.csv")
 
 
 
-subset_nikolai <- nikolai[grepl("Bumblebee", nikolai$track_id, ignore.case = TRUE), ]
+subset_nikolai <- nikolai[grepl("Bumblebee", nikolai$track_name, ignore.case = TRUE), ]
+write_csv(subset_nikolai, "inputs/data/subset_bumblebee.csv")
 
+summary(subset_nikolai)
