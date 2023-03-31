@@ -11,58 +11,9 @@ library(ggplot2)
 library(tidyverse)
 df <- read_csv("inputs/data/df.csv")
 
-jack_model <-
-  glm(jack ~ danceability + energy + loudness + speechiness + key + acousticness + instrumentalness + liveness + valence,
-      data = df,
-      family = "binomial"
-  )
 
-
-
+library(caret)
 library(rstanarm)
-
-
-model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key + 
-                    acousticness + instrumentalness + liveness + valence,
-                  data = df,
-                  family = binomial(),
-                  prior_intercept = normal(0,10),
-                  prior = normal(0,2.5),
-                  chains = 4, iter = 2000)
-
-summary(model)
-
-
-#danceability has strongest relationship
-library(ggplot2)
-library(pROC)
-
-probabilities <- predict(model, type = "response")
-# Create probabilities column in the original data frame
-df$probabilities <- probabilities
-
-### plot an ROC curve?
-
-
-
-# Create confusion matrix
-library(caret)
-predictions <- ifelse(probabilities >= 0.5, "Yes", "No")
-df$predictions <- predictions
-df$predictions <- factor(predictions, levels = c("Yes", "No"))
-df$jack <- factor(df$jack, levels = c(1, 0), labels = c("Yes", "No"))
-confusion_matrix <- confusionMatrix(df$predictions, df$jack)
-
-
-# Print confusion matrix
-confusion_matrix
-confusion_matrix$byClass
-
-
-
-##FK forgot to split the data lol
-
-library(caret)
 
 # Set seed for reproducibility
 set.seed(123)
@@ -72,29 +23,45 @@ train_index <- createDataPartition(df$jack, p = 0.7, list = FALSE)
 train_data <- df[train_index, ]
 test_data <- df[-train_index, ]
 
+#balance the classes by undersampling
+train_data_balanced <- train_data |>
+  group_by(jack) |>
+  sample_n(size = min(table(jack))) |>
+  ungroup()
 
-library(rstanarm)
 
 # Fit the model using only the training data
 model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key + 
                     acousticness + instrumentalness + liveness + valence,
-                  data = train_data,
+                  data = train_data_balanced,
                   family = binomial(),
                   prior_intercept = normal(0,10),
                   prior = normal(0,2.5),
                   chains = 4, iter = 2000)
 
 # Make predictions on the testing data
-probabilities <- predict(model, newdata = test_data, type = "response")
-predictions <- ifelse(probabilities >= 0.5, "Yes", "No")
+#probabilities <- predict(model, newdata = test_data, type = "response")
+#predictions <- ifelse(probabilities >= 0.5, "Yes", "No")
 
 # Add the predictions to the testing data
-test_data$predictions <- predictions
-test_data$jack <- factor(test_data$jack, levels = c(1, 0), labels = c("Yes", "No"))
+test_data$predictions <- ifelse(predict(model, newdata = test_data, type = "response") > 0.5, "Yes", "No")
+
+
+# Convert factors to the same set of levels
+test_data$jack <- ifelse(test_data$jack == 1, "Yes", "No")
+test_data$jack <- factor(test_data$jack, levels = c("Yes", "No"))
+test_data$predictions <- factor(test_data$predictions, levels = c("Yes", "No"))
+
+
+confusion_matrix <- confusionMatrix(test_data$predictions, test_data$jack)
+print(confusion_matrix)
+
+confusion_matrix$byClass
+
 
 # Create a confusion matrix
-confusion_matrix2 <- table(test_data$predictions, test_data$jack)
-confusion_matrix2 <- as.matrix(confusion_matrix2)
+#confusion_matrix2 <- table(test_data$predictions, test_data$jack)
+#confusion_matrix2 <- as.matrix(confusion_matrix2)
 
 # Print the confusion matrix
 confusion_matrix2
