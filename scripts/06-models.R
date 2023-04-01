@@ -30,7 +30,7 @@ train_data_balanced <- train_data |>
   ungroup()
 
 
-# Fit the model using only the training data
+
 model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key + 
                     acousticness + instrumentalness + liveness + valence,
                   data = train_data_balanced,
@@ -47,7 +47,7 @@ model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key +
 test_data$predictions <- ifelse(predict(model, newdata = test_data, type = "response") > 0.5, "Yes", "No")
 
 
-# Convert factors to the same set of levels
+# convert factors to the same set of levels
 test_data$jack <- ifelse(test_data$jack == 1, "Yes", "No")
 test_data$jack <- factor(test_data$jack, levels = c("Yes", "No"))
 test_data$predictions <- factor(test_data$predictions, levels = c("Yes", "No"))
@@ -59,11 +59,7 @@ print(confusion_matrix)
 confusion_matrix$byClass
 
 
-# Create a confusion matrix
-#confusion_matrix2 <- table(test_data$predictions, test_data$jack)
-#confusion_matrix2 <- as.matrix(confusion_matrix2)
 
-# Print the confusion matrix
 confusion_matrix2
 precision <- confusion_matrix[2, 2] / sum(confusion_matrix[, 2])
 recall <- confusion_matrix[2, 2] / sum(confusion_matrix[2, ])
