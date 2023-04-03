@@ -71,3 +71,34 @@ f1_score
 #... do these features just not tell us anything about the song?
 
 
+##Decision Tree
+
+library(rpart)
+library(rpart.plot)
+
+# Split your data into training and testing sets
+set.seed(123) # for reproducibility
+train_index <- sample(nrow(df), 0.7*nrow(df))
+train_data <- df[train_index,]
+test_data <- df[-train_index,]
+
+# Build the decision tree
+mytree <- rpart(jack ~ danceability + energy + loudness + speechiness + key +
+                  acousticness + instrumentalness + liveness + valence, 
+                data = train_data, 
+                method = "class")
+
+# Plot the decision tree
+rpart.plot(mytree)
+
+# Make predictions on the test set
+predictions <- predict(mytree, test_data, type = "class")
+
+# Calculate the accuracy of the model
+accuracy <- sum(predictions == test_data$jack)/nrow(test_data)
+print(paste("Accuracy:", round(accuracy, 3)))
+
+
+
+
+
