@@ -15,10 +15,9 @@ df <- read_csv("inputs/data/df.csv")
 library(caret)
 library(rstanarm)
 
-# Set seed for reproducibility
+
 set.seed(123)
 
-# Split data into training and testing sets
 train_index <- createDataPartition(df$jack, p = 0.7, list = FALSE)
 train_data <- df[train_index, ]
 test_data <- df[-train_index, ]
@@ -72,6 +71,7 @@ f1_score
 
 
 ##Decision Tree
+## Rohan dunked on me for this
 
 library(rpart)
 library(rpart.plot)
@@ -82,19 +82,17 @@ train_index <- sample(nrow(df), 0.7*nrow(df))
 train_data <- df[train_index,]
 test_data <- df[-train_index,]
 
-# Build the decision tree
 mytree <- rpart(jack ~ danceability + energy + loudness + speechiness + key +
                   acousticness + instrumentalness + liveness + valence, 
                 data = train_data, 
                 method = "class")
 
-# Plot the decision tree
+
 rpart.plot(mytree)
 
-# Make predictions on the test set
+
 predictions <- predict(mytree, test_data, type = "class")
 
-# Calculate the accuracy of the model
 accuracy <- sum(predictions == test_data$jack)/nrow(test_data)
 print(paste("Accuracy:", round(accuracy, 3)))
 
