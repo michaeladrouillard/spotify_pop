@@ -187,18 +187,19 @@ library(palmerpenguins)
 #| label: fig-energy
 #| fig-cap: Energy Variable
 #| echo: false
-# 
-# library(lubridate)
-# df <- read.csv(here::here("inputs/data/df.csv"))
-# df %>%
-#   filter(album_release_date_precision == "day") %>%
-#   mutate(album_release_date = ymd(album_release_date)) %>%
-#   ggplot(aes(y = energy, x = album_release_date, color = jack)) +
-#   geom_point() +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
-#   labs(color = "Has 'y' in jack?") +
-#   facet_wrap(~ artist_name, ncol = 3)
+
+library(lubridate)
+df <- read.csv(here::here("inputs/data/df.csv"))
+df$jack <- factor(df$jack)
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = energy, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
 
 
 
@@ -210,15 +211,15 @@ library(palmerpenguins)
 #| echo: false
 
 
-# df %>%
-#   filter(album_release_date_precision == "day") %>%
-#   mutate(album_release_date = ymd(album_release_date)) %>%
-#   ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
-#   geom_point() +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
-#   labs(color = "Has 'y' in jack?") +
-#   facet_wrap(~ artist_name, ncol = 3) 
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
 
 
 
@@ -231,15 +232,15 @@ library(palmerpenguins)
 #| echo: false
 
 
-# df %>%
-#   filter(album_release_date_precision == "day") %>%
-#   mutate(album_release_date = ymd(album_release_date)) %>%
-#   ggplot(aes(y = valence, x = album_release_date, color = jack)) +
-#   geom_point() +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
-#   labs(color = "Has 'y' in jack?") +
-#   facet_wrap(~ artist_name, ncol = 3) 
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = valence, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
 
 
 
@@ -253,15 +254,15 @@ library(palmerpenguins)
 #| echo: false
 
 
-# df %>%
-#   filter(album_release_date_precision == "day") %>%
-#   mutate(album_release_date = ymd(album_release_date)) %>%
-#   ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
-#   geom_point() +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
-#   labs(color = "Has 'y' in jack?") +
-#   facet_wrap(~ artist_name, ncol = 3) 
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
 
 
 
@@ -274,16 +275,16 @@ library(palmerpenguins)
 #| fig-cap: Instrumentalness Variable
 #| echo: false
 
-# 
-# df %>%
-#   filter(album_release_date_precision == "day") %>%
-#   mutate(album_release_date = ymd(album_release_date)) %>%
-#   ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
-#   geom_point() +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
-#   labs(color = "Has 'y' in jack?") +
-#   facet_wrap(~ artist_name, ncol = 3) 
+
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
 
 
 
@@ -292,22 +293,21 @@ library(palmerpenguins)
 ```
 
 ```{r}
-#| label: fig-tempo
+
+#| label: fig-temp
 #| fig-cap: Tempo Variable
 #| echo: false
 
-# 
-# df %>%
-#   filter(album_release_date_precision == "day") %>%
-#   mutate(album_release_date = ymd(album_release_date)) %>%
-#   ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
-#   geom_point() +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
-#   labs(color = "Has 'y' in jack?") +
-#   facet_wrap(~ artist_name, ncol = 3) 
 
-
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
 
 
 

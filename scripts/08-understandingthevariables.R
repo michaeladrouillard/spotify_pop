@@ -1,3 +1,8 @@
+library(dplyr)
+library(lubridate)
+library(ggplot2)
+
+
 mydata <- read_csv("inputs/data/df.csv")
 #cleaning lol
 mydata <- data.frame(sapply(mydata, as.numeric))
@@ -22,6 +27,89 @@ summary(mydata)
 
 # Create a scatterplot of two variables
 plot(mydata$danceability, mydata$energy, main = "Danceability vs. Energy", xlab = "Danceability", ylab = "Energy")
+
+
+
+##Plotting all the variables##
+df <- read.csv(here::here("inputs/data/df.csv"))
+df$jack <- factor(df$jack)
+
+library(lubridate)
+
+#Energy
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+   ggplot(aes(y = energy, x = album_release_date, color = jack)) +
+   geom_point() +
+   theme_minimal() +
+   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+   labs(color = "Has 'y' in jack?") +
+   facet_wrap(~ artist_name, ncol = 3)
+
+
+#Danceability
+df %>%
+   filter(album_release_date_precision == "day") %>%
+   mutate(album_release_date = ymd(album_release_date)) %>%
+   ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
+   geom_point() +
+   theme_minimal() +
+   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+   labs(color = "Has 'y' in jack?") +
+   facet_wrap(~ artist_name, ncol = 3)
+
+
+
+#Valence
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = valence, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
+
+
+#Acousticness
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
+
+
+#Instrumentalness
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
+
+
+
+
+#Tempo
+df %>%
+  filter(album_release_date_precision == "day") %>%
+  mutate(album_release_date = ymd(album_release_date)) %>%
+  ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
+  geom_point() +
+  theme_minimal() +
+  scale_color_manual(values = c("#FFB6C1", "#808080")) +
+  labs(color = "Has 'y' in jack?") +
+  facet_wrap(~ artist_name, ncol = 3)
+
 
 
 
