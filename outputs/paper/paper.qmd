@@ -187,6 +187,7 @@ library(palmerpenguins)
 #| label: fig-energy
 #| fig-cap: Energy Variable
 #| echo: false
+#| warning: false
 
 library(lubridate)
 df <- read.csv(here::here("inputs/data/df.csv"))
@@ -209,6 +210,7 @@ df %>%
 #| label: fig-danceability
 #| fig-cap: Danceability Variable
 #| echo: false
+#| warning: false
 
 
 df %>%
@@ -230,6 +232,7 @@ df %>%
 #| label: fig-valence
 #| fig-cap: Valence Variable
 #| echo: false
+#| warning: false
 
 
 df %>%
@@ -252,6 +255,7 @@ df %>%
 #| label: fig-acousticness
 #| fig-cap: Acousticness Variable
 #| echo: false
+#| warning: false
 
 
 df %>%
@@ -274,6 +278,7 @@ df %>%
 #| label: fig-instrumentalness
 #| fig-cap: Instrumentalness Variable
 #| echo: false
+#| warning: false
 
 
 df %>%
@@ -297,6 +302,7 @@ df %>%
 #| label: fig-temp
 #| fig-cap: Tempo Variable
 #| echo: false
+#| warning: false
 
 
 df %>%
