@@ -5,157 +5,11 @@ author:
   - Michaela Drouillard
 thanks: "Code and data are available at: LINK."
 date: today
-abstract: "In this essay, I will be exploring Jack Antonoff's production style using data from the Spotify API. Drawing from an interview with Caleb Gamman, a guy who went viral for guessing which song on Taylor Swift's Midnights album was produced by Antonoff within seconds, I will delve into the specific characteristics that define an "Antonoff-y" song, and assess whether or not the audio features defined by Spotify can capture this. I plan to lasso Glen McDonald,the Spotify engineer behind these features, into explaining them to me. Finally, I will armchair a little bit about the cultural significance of Antonoff's music and the reasons behind his ubiquity in the music industry."
-format: html
+abstract: "In this essay, I will be exploring Jack Antonoff's production style using data from the Spotify API. Drawing from an interview with Caleb Gamman, a guy who went viral for guessing which song on Taylor Swift's Midnights album was produced by Antonoff within seconds, I will delve into the specific characteristics that define an Antonoff-y song, and assess whether or not the audio features defined by Spotify can capture this. I plan to lasso Glen McDonald,the Spotify engineer behind these features, into explaining them to me. There will be a Bayesian inference model. It will be a logistic regression. We do not know whether or not it will be good. Finally, I will armchair a little bit about the cultural significance of Antonoff's music and the reasons behind his ubiquity in the music industry."
+format: pdf
 number-sections: true
 bibliography: references.bib
 ---
-
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
-```
-
-```{r}
-
-#quarto references itself. wrapping in here:here goes in project 
-knitr::include_graphics(here::here("inputs/data/apod_20230227.jpg"))
-
-```
-
-```{r}
-#| label: fig-energy
-#| fig-cap: Energy Variable
-#| echo: false
-
-library(lubridate)
-df <- readRDS(here::here("inputs/data/df.rds"))
-df %>%
-  filter(album_release_date_precision == "day") %>%
-  mutate(album_release_date = ymd(album_release_date)) %>%
-  ggplot(aes(y = energy, x = album_release_date, color = jack)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_manual(values = c("#FFB6C1", "#808080")) +
-  labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3)
-
-
-
-```
-
-```{r}
-#| label: fig-danceability
-#| fig-cap: Danceability Variable
-#| echo: false
-
-
-df %>%
-  filter(album_release_date_precision == "day") %>%
-  mutate(album_release_date = ymd(album_release_date)) %>%
-  ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_manual(values = c("#FFB6C1", "#808080")) +
-  labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3) 
-
-
-
-
-```
-
-```{r}
-#| label: fig-valence
-#| fig-cap: Valence Variable
-#| echo: false
-
-
-df %>%
-  filter(album_release_date_precision == "day") %>%
-  mutate(album_release_date = ymd(album_release_date)) %>%
-  ggplot(aes(y = valence, x = album_release_date, color = jack)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_manual(values = c("#FFB6C1", "#808080")) +
-  labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3) 
-
-
-
-
-
-```
-
-```{r}
-#| label: fig-acousticness
-#| fig-cap: Acousticness Variable
-#| echo: false
-
-
-df %>%
-  filter(album_release_date_precision == "day") %>%
-  mutate(album_release_date = ymd(album_release_date)) %>%
-  ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_manual(values = c("#FFB6C1", "#808080")) +
-  labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3) 
-
-
-
-
-
-```
-
-```{r}
-#| label: fig-instrumentalness
-#| fig-cap: Instrumentalness Variable
-#| echo: false
-
-
-df %>%
-  filter(album_release_date_precision == "day") %>%
-  mutate(album_release_date = ymd(album_release_date)) %>%
-  ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_manual(values = c("#FFB6C1", "#808080")) +
-  labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3) 
-
-
-
-
-
-```
-
-```{r}
-#| label: fig-tempo
-#| fig-cap: Tempo Variable
-#| echo: false
-
-
-df %>%
-  filter(album_release_date_precision == "day") %>%
-  mutate(album_release_date = ymd(album_release_date)) %>%
-  ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
-  geom_point() +
-  theme_minimal() +
-  scale_color_manual(values = c("#FFB6C1", "#808080")) +
-  labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3) 
-
-
-
-
-
-```
 
 # Introduction
 
@@ -181,7 +35,7 @@ Antonoff is prolific, to the extent that it is starting to bother people. He has
 
 What I am trying to get to here is that I don't actually really mind Jack Antonoff's music, I kind of like it, but I still say his voice with the same tone that everyone else does. There's just something about him... this sense that he's everywhere... and that he's just such a nice guy... Why do music people seem to be a little annoyed with him? What is it about Antonoff music that is so Antonoff-y? Is the Jack Antonoff-fication of pop something we should be worried about?
 
-To find an answer to this question, I turned to statistics, people who know more than me about describing music, and the overlord of engineered virality itself -- the Spotify API.
+To find an answer to this question, I turned to statistics, people who know more than me about describing music, and the overlord of engineered virality itself -- the Spotify API. There will be a Bayesian inference model. It will be a logistic regression. We do not know whether or not it will be good.
 
 # An Interview with Caleb Gamman
 
@@ -213,13 +67,15 @@ I reached out to Gamman to ask him to explain Antonoff to me, only to find out, 
 
 6.  Which was refuted even harder when I found a screenshot he tweeted of his tweet drafts in June 2021, one of them reading: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
 
+![](images/Screen%20Shot%202023-04-03%20at%209.31.05%20PM.png)
+
 It is a perfect video essay. The only thing left that I could ask was how he felt about that video 6 months after the fact, and what he thought of me asking him about it.
 
-\[\[He ended up saying a lot of interesting things, which i will transcribe and somehow make use of in this paper later\]\]
+\[\[He told me that he didn't actually refute the premise of my interview, and ended up saying a lot of interesting things, which i will transcribe and somehow make use of in this paper later\]\]
 
 # Numbers
 
-Taste is subjective. People who can play instruments tend to be better at identifying and describing sounds. Cultural criticism is a hall of smoke and mirrors. Antonoff is everywhere.
+TLDR of the Gamman interview is: Taste is subjective. People who can play instruments tend to be better at identifying and describing sounds. Cultural criticism is a hall of smoke and mirrors. Antonoff is everywhere.
 
 Can we translate any of this into something observable? Can we quantify the Jack Antonoff-ification of pop music?
 
@@ -255,6 +111,7 @@ This is pretty vague. Especially valence -- is the positivity related to lyrics,
 
 #| echo: false
 #| warning: false
+library(dplyr)
 
 sub_planets<- read.csv(here::here("inputs/data/subset_planets.csv"))
 sub_planets |>
@@ -292,9 +149,12 @@ sub_bees |>
 The final audio features in this study data set contains the variables: "artist_name", "track_name", "energy", "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "jack".
 
 ```{r}
-library(kableExtra)
-df |>
-  knitr::kable()
+#| echo: false
+#| warning: false
+
+#library(kableExtra)
+#df |>
+ # knitr::kable()
 
 ```
 
@@ -311,6 +171,147 @@ Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}
 $$ {#eq-bayes}
 
 My model is driving me bananas.
+
+# "EDA"
+
+```{r}
+#| include: false
+#| warning: false
+#| message: false
+
+library(tidyverse)
+library(palmerpenguins)
+```
+
+```{r}
+#| label: fig-energy
+#| fig-cap: Energy Variable
+#| echo: false
+# 
+# library(lubridate)
+# df <- read.csv(here::here("inputs/data/df.csv"))
+# df %>%
+#   filter(album_release_date_precision == "day") %>%
+#   mutate(album_release_date = ymd(album_release_date)) %>%
+#   ggplot(aes(y = energy, x = album_release_date, color = jack)) +
+#   geom_point() +
+#   theme_minimal() +
+#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+#   labs(color = "Has 'y' in jack?") +
+#   facet_wrap(~ artist_name, ncol = 3)
+
+
+
+```
+
+```{r}
+#| label: fig-danceability
+#| fig-cap: Danceability Variable
+#| echo: false
+
+
+# df %>%
+#   filter(album_release_date_precision == "day") %>%
+#   mutate(album_release_date = ymd(album_release_date)) %>%
+#   ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
+#   geom_point() +
+#   theme_minimal() +
+#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+#   labs(color = "Has 'y' in jack?") +
+#   facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+```
+
+```{r}
+#| label: fig-valence
+#| fig-cap: Valence Variable
+#| echo: false
+
+
+# df %>%
+#   filter(album_release_date_precision == "day") %>%
+#   mutate(album_release_date = ymd(album_release_date)) %>%
+#   ggplot(aes(y = valence, x = album_release_date, color = jack)) +
+#   geom_point() +
+#   theme_minimal() +
+#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+#   labs(color = "Has 'y' in jack?") +
+#   facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+```{r}
+#| label: fig-acousticness
+#| fig-cap: Acousticness Variable
+#| echo: false
+
+
+# df %>%
+#   filter(album_release_date_precision == "day") %>%
+#   mutate(album_release_date = ymd(album_release_date)) %>%
+#   ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
+#   geom_point() +
+#   theme_minimal() +
+#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+#   labs(color = "Has 'y' in jack?") +
+#   facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+```{r}
+#| label: fig-instrumentalness
+#| fig-cap: Instrumentalness Variable
+#| echo: false
+
+# 
+# df %>%
+#   filter(album_release_date_precision == "day") %>%
+#   mutate(album_release_date = ymd(album_release_date)) %>%
+#   ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
+#   geom_point() +
+#   theme_minimal() +
+#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+#   labs(color = "Has 'y' in jack?") +
+#   facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
+
+```{r}
+#| label: fig-tempo
+#| fig-cap: Tempo Variable
+#| echo: false
+
+# 
+# df %>%
+#   filter(album_release_date_precision == "day") %>%
+#   mutate(album_release_date = ymd(album_release_date)) %>%
+#   ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
+#   geom_point() +
+#   theme_minimal() +
+#   scale_color_manual(values = c("#FFB6C1", "#808080")) +
+#   labs(color = "Has 'y' in jack?") +
+#   facet_wrap(~ artist_name, ncol = 3) 
+
+
+
+
+
+```
 
 # Results
 
