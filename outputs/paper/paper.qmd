@@ -1,12 +1,11 @@
 ---
-title: "My title"
+title: "Jack Antonoff-ification of pop music"
 subtitle: "My subtitle if needed"
 author: 
   - Michaela Drouillard
 thanks: "Code and data are available at: LINK."
-date: "`r Sys.time()`"
-date-format: "D MMMM YYYY"
-abstract: "First sentence. Second sentence. Third sentence. Fourth sentence."
+date: today
+abstract: "In this essay, I will be exploring Jack Antonoff's production style using data from the Spotify API. Drawing from an interview with Caleb Gamman, a guy who went viral for guessing which song on Taylor Swift's Midnights album was produced by Antonoff within seconds, I will delve into the specific characteristics that define an "Antonoff-y" song, and assess whether or not the audio features defined by Spotify can capture this. I plan to lasso Glen McDonald,the Spotify engineer behind these features, into explaining them to me. Finally, I will armchair a little bit about the cultural significance of Antonoff's music and the reasons behind his ubiquity in the music industry."
 format: html
 number-sections: true
 bibliography: references.bib
@@ -172,19 +171,17 @@ ZACH: "Is it good?"
 
 ME: "No!"
 
-\["*No*?" I thought to myself\]
+\["*No*?"\]
 
 A STRANGER WALKING BY WHO HEARD EVERYTHING: "EXACTLY!!"
 
-Midnight was produced by Swift and her longtime collaborator Jack Antonoff, who is the subject of this essay, and, I suspect, the reason behind both my blacking out, and the stranger's "Exactly".
+Midnight was produced by Swift and her longtime collaborator Jack Antonoff, who is the subject of this paper, and, I suspect, the reason behind both my blacking out, and the stranger's "Exactly".
 
-Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too: Bleachers, and fun.
+Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too (Bleachers, and fun.). When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to, of course, is the fact that Jack Antonoff seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis".
 
-When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to, of course, is the fact that Jack Antonoff seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis".
+What I am trying to get to here is that I don't actually really mind Jack Antonoff's music, I kind of like it, but I still say his voice with the same tone that everyone else does. There's just something about him... this sense that he's everywhere... and that he's just such a nice guy... Why do music people seem to be a little annoyed with him? What is it about Antonoff music that is so Antonoff-y? Is the Jack Antonoff-fication of pop something we should be worried about?
 
-What I am trying to get to here is that I don't really mind Jack Antonoff's music. I kind of like it actually. But I still say his voice with the same tone that everyone else does. There's just something about him... this sense that he's everywhere... and that he's just such a nice guy... Why are we all so fixated on him? What is it about Antonoff music that is so Antonoff-y?
-
-To find an answer to this question, I turned people, statistics, and the overlord of engineered virality itself -- the Spotify API.
+To find an answer to this question, I turned to statistics, people who know more than me about describing music, and the overlord of engineered virality itself -- the Spotify API.
 
 # An Interview with Caleb Gamman
 
@@ -192,11 +189,13 @@ Around the time that Midnights came out, I came across a video on Twitter of a g
 
 I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his Youtube Channel covering:
 
+(you can skim the quote chunks)
+
 1.  what makes an Antonoff song so Antonoff-y
 
     > I'm literally not an expert and of course I don't actually claim to always be able to 100 identify a Jack Antonoff song it's not like I've been practicing the way that I can tell if he's produced something is basically if it sounds to me like he's produced it I know that's annoying I will clarify first I think it's mostly in the vocal treatment and that's the thing that is the most off-putting to me but just every decision uh feels a little bit wrong to me I don't know of course if I wanted to be cringe in CinemaSins I could point out the Juno 6 Bass the perfectly stacked vocals the Juno 6 pad the wide and tight plate Reverb the Juno 6 sword the goo goo gaga the man hates treble unless it's just random crap swishing around everything gets low passed with thin 707 drum samples thin 808 drum samples then 909 drum samples thin Lin drum samples thin thin drum samples all the resonances the harmonics get removed everything is sort of squished down to the fundamental reduction in Timbre everything exists in a small frequency range everything becomes a tone it's an extremely consonant sound with no interplay between the different elements now that is a skill to do and it produces a cleaner sound and the only problem is I viscerally hate that sound
 
-2.  his relationship to music growing up (you can skim this, but there are some gems in there)
+2.  his relationship to music growing up (some gems in here)
 
     > hing I got into drumming at the age oflike six so maybe as a drummer the drumsamples are of a fence I wasanachronistically raised on cassettes soyou know maybe I like the sound ofaudio and maybe that explains I tend tolike dissonance and in harmonic soundinterplay of elements Distortion noisethe Clashing of elements I imagine I'velistened to more SoundCloud in my lifethan radio so uh maybe I only want tohear amateur internet loser I'veliked over 10 000 songs on my Spotifyaccount uh and I can identify lot ofthem off the bat but I'm not that greatat identifying music generally so it'sjust uh compartmentalized mediaconsumption habit I first did musicproduction in primary school I mademashups and dubstep in it as a lateteenager I extensively used Juno 6emulators to make embarrassing synthwaveadmittedly that's probably not thesubconscious Association that he's goingfor lyrics aren't of much interest to meit's just a sound in the mix and somaybe I don't like the focus on vocalI've previously described it as a fightor flight sort of thing so maybe itliterally is tapping into some memory oftrauma I have an unusually small earcanal so maybe I'm just hearing the highend more acutely I was hired as ateenager to play drums on uh a lot ofJack Antonoff songs for a universityGlee Club performer so maybe I don'tlike it because of the embarrassment ofhaving ever been associated with a Gleecloth I liked the album 1989 but to makethe song out of the woods palette ofwool to me I had to mash it up with M83Midnight City and that got a dmcatakedown so maybe it's a personalVendetta and of course I have known anddo know people who like this music somaybe I secretly hate my friends andfamily but I don't know if any of thattells us anything uh I have a taste inmusic w
 
@@ -204,17 +203,19 @@ I reached out to Gamman to ask him to explain Antonoff to me, only to find out, 
 
     > "i did use the phrase visceral hatred. but i did so only to describe my visceral hatred. i cant stand the sound of it. i hate it. and the way in which i hate it is viscerally. but i didnt go beyond that because it doesnt go beyond that. nothing against the guy, i like taylor swift's stuff. it's just subjective taste...
 
-4.  His tongue in cheek response to the media
+4.  His tongue in cheek response to some of Twitter's negative response to his video
 
-    > .... \[it's just subjective taste\]. there's just nothing to engage with, so ive had to fabricate a reason for controversy. and what ive come up with is this. \*looks at phone\* the real reason iive been saying for years that i have a visceral reaction to jack antonoffs production style, the REAL reason is this \-- cause during the rollout cycle of the album midnights, i wanted to ascribe taylor swifts authorship to a man and diminish women's voices. so actually, i'm a sexist. so now thats out there, publsihed as facts, in the news. with all the other facts..."
+    > .... \[it's just subjective taste\]. there's just nothing to engage with, so ive had to fabricate a reason for controversy. and what ive come up with is this. \*looks at phone\* the real reason iive been saying for years that i have a visceral reaction to jack antonoffs production style, the REAL reason is this \-- cause during the rollout cycle of the album midnights, i wanted to ascribe taylor swifts authorship to a man and diminish women's voices. so actually, i'm a sexist. so now thats out there, publishhed as facts, in the news. with all the other facts..."
 
 5.  Basically a refutation to the entire premise of my interview
 
     > "what makes you so special and unique that you can tell the production of a song?" "nothing"
 
-6.  Which was further doubled down on when I found a screenshot he took of his Tweet drafts in June 2021, one of them reading: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
+6.  Which was refuted even harder when I found a screenshot he tweeted of his tweet drafts in June 2021, one of them reading: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
 
 It is a perfect video essay. The only thing left that I could ask was how he felt about that video 6 months after the fact, and what he thought of me asking him about it.
+
+\[\[He ended up saying a lot of interesting things, which i will transcribe and somehow make use of in this paper later\]
 
 # Numbers
 
@@ -248,7 +249,7 @@ However, it's hard to gauge exactly what variables like "danceability" or "valen
 
 [^1]: \-- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events". The full documentation for each variable included in this study is available in the Appendix
 
-This is pretty vague. Especially valence -- is the positivity related to lyricsI compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself. Jupiter's valence score is 326.78% higher than Mars. This not only indicates the valence is based on audio features other than lyrical content, but that it is capturing a difference between the two songs' profiles.
+This is pretty vague. Especially valence -- is the positivity related to lyrics, or something else? I compared the valence scores of classical music tracks to see if this score is based on lyrics, or the audio itself. Jupiter's valence score is 326.78% higher than Mars. This not only indicates the valence is based on audio features other than lyrical content, but that it is in fact capturing a difference between the two songs' profiles.
 
 ```{r}
 
@@ -288,8 +289,6 @@ sub_bees |>
 
 ```
 
-and danceability as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like "danceability". However, whatever these features capture is easier to compare across artists in visualizations than more granular details about bars, beats, duration, and tatums -- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events". The full documentation for each variable included in this study is available in the Appendix.
-
 The final audio features in this study data set contains the variables: "artist_name", "track_name", "energy", "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "jack".
 
 ```{r}
@@ -310,8 +309,6 @@ This data will be used when building a logistic regression model to determine th
 $$
 Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}
 $$ {#eq-bayes}
-
-@eq-bayes seems useful, eh?
 
 # Results
 
