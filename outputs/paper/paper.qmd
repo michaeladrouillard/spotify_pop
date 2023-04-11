@@ -69,9 +69,17 @@ I reached out to Gamman to ask him to explain Antonoff to me, only to find out, 
 
 ![](images/Screen%20Shot%202023-04-03%20at%209.31.05%20PM.png)
 
-It is a perfect video essay. The only thing left that I could ask was how he felt about that video 6 months after the fact, and what he thought of me asking him about it.
+It is a perfect video essay. I pestered him anyway.
 
-\[\[He told me that he didn't actually refute the premise of my interview, and ended up saying a lot of interesting things, which i will transcribe and somehow make use of in this paper later\]\]
+> "In the treble mix of the song, like in the very upper end, like sort of above where the vocals are. He often really crushes that down. Like it's lower in volume than anything else, which is sort of a weird effect. Like, when you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing her likes to do."
+
+Gamman is a fan of messier music.
+
+"Jack Antonoff does a very good job of making stuff very clean. So you know, all of the notes that are happening simulaneously are perfectly stacked. They're like mathematically stacked .. Like, you have the harmonic spectrum where everything is like a multiple on top of each other. So that's like your notes on a keyboard. And if you played a keyboard note that was a little bit off where it's supposed to be, you're gonna create this interesting effect where these two notes sort of clash against each other and they wiggle around in terms of their tone because you've got these two harmonics happening that don't match. And Jack Antonoff avoids that quite strictly"
+
+"His drums are low past, like the vocals, so you don't get like the tinny high end in the drums or whatever because that tinny high end in the drums is like a bunch of random harmonics all over the place. So if you cut that out, you just get the tone of the drum. And then he achieves those effects using the same sounds like literally the same synthesizer on the same drum machine and stuff."
+
+"If you used a cscope spectrogram sort of thing to look at a Jack Antonoff song, you're gonna see a lot of big lines. And then if you're listening to a song by someone else, you're gonna see like a bunch of sort of like static wiggling. It's gonna be really jagged because you've got a bunch of harmonics that don't exactly mix with each other, so they're stacking in all sorts of weird different ways"
 
 # Numbers
 

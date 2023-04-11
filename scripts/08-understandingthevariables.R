@@ -1,11 +1,12 @@
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-
+library(tidyverse)
 
 mydata <- read_csv("inputs/data/df.csv")
 #cleaning lol
-mydata <- data.frame(sapply(mydata, as.numeric))
+#next line of code gets rid of the string variables
+#mydata <- data.frame(sapply(mydata, as.numeric))
 mydata <- mydata[, c("jack", "danceability", "energy", "loudness", "speechiness", "key", "acousticness", "instrumentalness", "liveness", "valence")]
 
 # Verify the new structure of your dataset
@@ -126,6 +127,32 @@ cor_matrix <- cor(mydata)
 # Create the correlation plot
 corrplot(cor_matrix, method = "circle", type = "lower")
 cor(mydata)
+
+
+
+library(ggplot2)
+
+# create a scatterplot with energy on the x-axis and valence on the y-axis
+ggplot(data = mydata, aes(x = energy, y = valence)) + 
+  
+  # add points to the scatterplot and color them by artist_name
+  geom_point(aes(color = artist_name)) +
+  
+  # add vertical and horizontal lines to separate the quadrants
+  geom_vline(xintercept = mean(mydata$energy), color = "gray") +
+  geom_hline(yintercept = mean(mydata$valence), color = "gray") +
+  
+  # add labels to each quadrant
+  annotate("text", x = mean(mydata$energy), y = max(mydata$valence), 
+           label = "High Energy, High Valence") +
+  annotate("text", x = mean(mydata$energy), y = min(mydata$valence), 
+           label = "High Energy, Low Valence") +
+  annotate("text", x = min(mydata$energy), y = mean(mydata$valence), 
+           label = "Low Energy, High Valence") +
+  annotate("text", x = max(mydata$energy), y = mean(mydata$valence), 
+           label = "Low Energy, Low Valence") +
+  scale_x_continuous(limits = c(min(mydata$energy), max(mydata$energy))) +
+  scale_y_continuous(limits = c(min(mydata$valence), max(mydata$valence)))
 
 
 
