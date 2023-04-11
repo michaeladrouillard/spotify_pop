@@ -154,6 +154,14 @@ sub_bees |>
 
 ```
 
+I asked Glen McDonald, a "data alchemist" (see: Principal Engineer) who worked at The Echo Nest, a machine listening start-up that was acquired by Spotify in \[YEAR\]. He still works at Spotify now.
+
+Glen told me that Valence and Danceability we created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data. (My favourite example Glen gave was that the ML treated banjos like a human voice, giving bluegrass songs with banjos high Speechiness ratings. Because there were no banjos in the training data, they were registered as human).
+
+Glen said that the way he's made use of these variables is by combing Energy and Valence to get a quadrant, which usually turns out "pretty good".
+
+\[discuss the convo we had about how even two humans can have disagreement about a song's positivity, let alone human vs machine. i.e. an elliot smith song where the lyrics are depressing but the melody is happy. or a happy song but you know that the band died in a plane crash yesterday. etc.\]
+
 The final audio features in this study data set contains the variables: "artist_name", "track_name", "energy", "danceability", "energy", "key", "loudness", "mode", "speechiness", "acousticness", "instrumentalness", "liveness", "valence", "tempo", "jack".
 
 ```{r}
