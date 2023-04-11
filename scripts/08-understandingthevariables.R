@@ -136,7 +136,7 @@ library(ggplot2)
 ggplot(data = mydata, aes(x = energy, y = valence)) + 
   
   # add points to the scatterplot and color them by artist_name
-  geom_point(aes(color = artist_name)) +
+  geom_point(aes(color = as.factor(jack))) +
   
   # add vertical and horizontal lines to separate the quadrants
   geom_vline(xintercept = mean(mydata$energy), color = "gray") +
@@ -150,10 +150,51 @@ ggplot(data = mydata, aes(x = energy, y = valence)) +
   annotate("text", x = min(mydata$energy), y = mean(mydata$valence), 
            label = "Low Energy, High Valence") +
   annotate("text", x = max(mydata$energy), y = mean(mydata$valence), 
-           label = "Low Energy, Low Valence") +
-  scale_x_continuous(limits = c(min(mydata$energy), max(mydata$energy))) +
-  scale_y_continuous(limits = c(min(mydata$valence), max(mydata$valence)))
+           label = "Low Energy, Low Valence") 
 
 
+
+
+# create a scatterplot with energy on the x-axis and valence on the y-axis
+ggplot(data = mydata, aes(x = energy, y = danceability)) + 
+  
+  # add points to the scatterplot and color them by artist_name
+  geom_point(aes(color = artist_name)) +
+  
+  # add vertical and horizontal lines to separate the quadrants
+  geom_vline(xintercept = mean(mydata$energy), color = "gray") +
+  geom_hline(yintercept = mean(mydata$danceability), color = "gray") +
+  
+  # add labels to each quadrant
+  annotate("text", x = mean(mydata$energy), y = max(mydata$danceability), 
+           label = "High Energy, High Danceability") +
+  annotate("text", x = mean(mydata$energy), y = min(mydata$danceability), 
+           label = "High Energy, Low Danceability") +
+  annotate("text", x = min(mydata$energy), y = mean(mydata$danceability), 
+           label = "Low Energy, High Danceability") +
+  annotate("text", x = max(mydata$energy), y = mean(mydata$danceability), 
+           label = "Low Energy, Low Danceability") 
+
+
+
+# create a scatterplot with energy on the x-axis and valence on the y-axis
+ggplot(data = mydata, aes(x = energy, y = danceability)) + 
+  
+  # add points to the scatterplot and color them by artist_name
+  geom_point(aes(color = as.factor(jack))) +
+  
+  # add vertical and horizontal lines to separate the quadrants
+  geom_vline(xintercept = mean(mydata$energy), color = "gray") +
+  geom_hline(yintercept = mean(mydata$danceability), color = "gray") +
+  
+  # add labels to each quadrant
+  annotate("text", x = mean(mydata$energy), y = max(mydata$danceability), 
+           label = "High Energy, High Danceability") +
+  annotate("text", x = mean(mydata$energy), y = min(mydata$danceability), 
+           label = "High Energy, Low Danceability") +
+  annotate("text", x = min(mydata$energy), y = mean(mydata$danceability), 
+           label = "Low Energy, High Danceability") +
+  annotate("text", x = max(mydata$energy), y = mean(mydata$danceability), 
+           label = "Low Energy, Low Danceability") 
 
 
