@@ -327,6 +327,102 @@ df %>%
 
 ```
 
+I'm gonna fix the axis labels later
+
+```{r}
+
+#| label: fig-quadvalence1
+#| fig-cap: Valence and Energy Quadrant 
+#| echo: false
+#| warning: false
+
+
+
+ggplot(data = df, aes(x = energy, y = valence)) + 
+  geom_point(aes(color = as.factor(jack))) +
+  geom_vline(xintercept = mean(df$energy), color = "gray") +
+  geom_hline(yintercept = mean(df$valence), color = "gray") +
+  annotate("text", x = mean(df$energy), y = max(df$valence), 
+           label = "High Energy, High Valence") +
+  annotate("text", x = mean(df$energy), y = min(df$valence), 
+           label = "High Energy, Low Valence") +
+  annotate("text", x = min(df$energy), y = mean(df$valence), 
+           label = "Low Energy, High Valence") +
+  annotate("text", x = max(df$energy), y = mean(df$valence), 
+           label = "Low Energy, Low Valence") 
+
+
+
+```
+
+```{r}
+
+#| label: fig-quadvalence2
+#| fig-cap: Valence and Energy Quadrant
+#| echo: false
+#| warning: false
+
+
+
+ggplot(data = df, aes(x = energy, y = valence)) + 
+  geom_point(aes(color = artist_name)) +
+  geom_vline(xintercept = mean(df$energy), color = "gray") +
+  geom_hline(yintercept = mean(df$valence), color = "gray") +
+  annotate("text", x = mean(df$energy), y = max(df$valence), 
+           label = "High Energy, High Valence") +
+  annotate("text", x = mean(df$energy), y = min(df$valence), 
+           label = "High Energy, Low Valence") +
+  annotate("text", x = min(df$energy), y = mean(df$valence), 
+           label = "Low Energy, High Valence") +
+  annotate("text", x = max(df$energy), y = mean(df$valence), 
+           label = "Low Energy, Low Valence") 
+```
+
+```{r}
+
+#| label: fig-quaddanceability
+#| fig-cap: Danceability and Energy Quadrant
+#| echo: false
+#| warning: false
+
+ggplot(data = df, aes(x = energy, y = danceability)) + 
+  geom_point(aes(color = artist_name)) +
+  geom_vline(xintercept = mean(df$energy), color = "gray") +
+  geom_hline(yintercept = mean(df$danceability), color = "gray") +
+  annotate("text", x = mean(df$energy), y = max(df$danceability), 
+           label = "High Energy, High Danceability") +
+  annotate("text", x = mean(df$energy), y = min(df$danceability), 
+           label = "High Energy, Low Danceability") +
+  annotate("text", x = min(df$energy), y = mean(df$danceability), 
+           label = "Low Energy, High Danceability") +
+  annotate("text", x = max(df$energy), y = mean(df$danceability), 
+           label = "Low Energy, Low Danceability") 
+
+```
+
+```{r}
+
+#| label: fig-quaddanceability2
+#| fig-cap: Danceability and Energy Quadrant
+#| echo: false
+#| warning: false
+
+
+ggplot(data = df, aes(x = energy, y = danceability)) + 
+  geom_point(aes(color = as.factor(jack))) +
+  geom_vline(xintercept = mean(df$energy), color = "gray") +
+  geom_hline(yintercept = mean(df$danceability), color = "gray") +
+  annotate("text", x = mean(df$energy), y = max(df$danceability), 
+           label = "High Energy, High Danceability") +
+  annotate("text", x = mean(df$energy), y = min(df$danceability), 
+           label = "High Energy, Low Danceability") +
+  annotate("text", x = min(df$energy), y = mean(df$danceability), 
+           label = "Low Energy, High Danceability") +
+  annotate("text", x = max(df$energy), y = mean(df$danceability), 
+           label = "Low Energy, Low Danceability") 
+
+```
+
 # Results
 
 # Discussion
