@@ -1,6 +1,6 @@
 ---
 title: "We Are All Trying to Describe Something And We Don't Have the Words"
-subtitle: "an exploration of the Jack Antonoffification of Pop Music"
+subtitle: "An exploration of the Jack Antonoffification of Pop Music"
 author: 
   - Michaela Drouillard
 thanks: "Code and data are available at: LINK."
@@ -29,7 +29,7 @@ ME: "No!"
 
 A STRANGER WALKING BY WHO HEARD EVERYTHING: "EXACTLY!!"
 
-Midnight was produced by Swift and her longtime collaborator Jack Antonoff, who is the subject of this paper, and, I suspect, the reason behind both my blacking out, and the stranger's "Exactly".
+Midnights was produced by Swift and her longtime collaborator Jack Antonoff, who is the subject of this paper, and, I suspect, the reason behind both my blacking out, and the stranger's "Exactly".
 
 Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too (Bleachers, and fun.). When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to, of course, is the fact that Jack Antonoff and his sound seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis".
 
@@ -206,17 +206,19 @@ library(palmerpenguins)
 #| warning: false
 
 library(lubridate)
-df <- read.csv(here::here("inputs/data/df.csv"))
+library(tidyverse)
+df <- read_csv(here::here("inputs/data/df.csv"))
 df$jack <- factor(df$jack)
 df %>%
   filter(album_release_date_precision == "day") %>%
   mutate(album_release_date = ymd(album_release_date)) %>%
   ggplot(aes(y = energy, x = album_release_date, color = jack)) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
-  scale_color_manual(values = c("#808080","#FFB6C1")) +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
   labs(color = "Has 'y' in jack?") +
-  facet_wrap(~ artist_name, ncol = 3)
+  facet_wrap( ~ artist_name, ncol = 3)
 
 
 
@@ -233,7 +235,8 @@ df %>%
   filter(album_release_date_precision == "day") %>%
   mutate(album_release_date = ymd(album_release_date)) %>%
   ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080","#FFB6C1")) +
   labs(color = "Has 'y' in jack?") +
@@ -255,7 +258,8 @@ df %>%
   filter(album_release_date_precision == "day") %>%
   mutate(album_release_date = ymd(album_release_date)) %>%
   ggplot(aes(y = valence, x = album_release_date, color = jack)) +
-  geom_point() +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080","#FFB6C1")) +
   labs(color = "Has 'y' in jack?") +
@@ -278,7 +282,8 @@ df %>%
   filter(album_release_date_precision == "day") %>%
   mutate(album_release_date = ymd(album_release_date)) %>%
   ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
-  geom_point() +
+    geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080","#FFB6C1")) +
   labs(color = "Has 'y' in jack?") +
@@ -301,7 +306,8 @@ df %>%
   filter(album_release_date_precision == "day") %>%
   mutate(album_release_date = ymd(album_release_date)) %>%
   ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
-  geom_point() +
+    geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080","#FFB6C1")) +
   labs(color = "Has 'y' in jack?") +
@@ -325,7 +331,8 @@ df %>%
   filter(album_release_date_precision == "day") %>%
   mutate(album_release_date = ymd(album_release_date)) %>%
   ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
-  geom_point() +
+    geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080","#FFB6C1")) +
   labs(color = "Has 'y' in jack?") +
@@ -347,7 +354,7 @@ I'm gonna fix the axis labels later
 
 
 ggplot(data = df, aes(x = energy, y = valence)) + 
-  geom_point(aes(color = as.factor(jack))) +
+  geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
   geom_vline(xintercept = mean(df$energy), color = "gray") +
   geom_hline(yintercept = mean(df$valence), color = "gray") +
   annotate("text", x = mean(df$energy), y = max(df$valence), 
@@ -373,7 +380,7 @@ ggplot(data = df, aes(x = energy, y = valence)) +
 
 
 ggplot(data = df, aes(x = energy, y = valence)) + 
-  geom_point(aes(color = artist_name)) +
+  geom_point(aes(color = artist_name), alpha = 0.3) +
   geom_vline(xintercept = mean(df$energy), color = "gray") +
   geom_hline(yintercept = mean(df$valence), color = "gray") +
   annotate("text", x = mean(df$energy), y = max(df$valence), 
@@ -394,7 +401,7 @@ ggplot(data = df, aes(x = energy, y = valence)) +
 #| warning: false
 
 ggplot(data = df, aes(x = energy, y = danceability)) + 
-  geom_point(aes(color = artist_name)) +
+  geom_point(aes(color = artist_name), alpha = 0.3) +
   geom_vline(xintercept = mean(df$energy), color = "gray") +
   geom_hline(yintercept = mean(df$danceability), color = "gray") +
   annotate("text", x = mean(df$energy), y = max(df$danceability), 
@@ -417,7 +424,7 @@ ggplot(data = df, aes(x = energy, y = danceability)) +
 
 
 ggplot(data = df, aes(x = energy, y = danceability)) + 
-  geom_point(aes(color = as.factor(jack))) +
+  geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
   geom_vline(xintercept = mean(df$energy), color = "gray") +
   geom_hline(yintercept = mean(df$danceability), color = "gray") +
   annotate("text", x = mean(df$energy), y = max(df$danceability), 

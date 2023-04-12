@@ -10,7 +10,7 @@
 library(ggplot2)
 library(tidyverse)
 df <- read_csv("inputs/data/df.csv")
-
+df$jack <- as.factor(df$jack)
 
 library(caret)
 library(rstanarm)
@@ -37,6 +37,8 @@ model <- stan_glm(jack ~ danceability + energy + loudness + speechiness + key +
                   prior_intercept = normal(0,10),
                   prior = normal(0,2.5),
                   chains = 4, iter = 2000)
+
+
 
 # Make predictions on the testing data
 #probabilities <- predict(model, newdata = test_data, type = "response")

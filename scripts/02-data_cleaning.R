@@ -18,10 +18,17 @@ vincentaf <- read_csv("inputs/data/vincentaf.csv")
 lanaaf <- read_csv("inputs/data/lanaaf.csv")
 tayloraf <- read_csv("inputs/data/tayloraf.csv")
 bleachersaf <- read_csv("inputs/data/bleachersaf.csv")
+haimaf <- read_csv("inputs/data/haimaf.csv")
+maggierogersaf <- read_csv("inputs/data/maggierogersaf.csv")
+sharonaf <- read_csv("inputs/data/sharonaf.csv")
+marinaaf <- read_csv("inputs/data/marinaaf.csv")
+mitskiaf <- read_csv("inputs/data/mitskiaf.csv")
+
 #### Clean data ####
 # Binding Data
 
-df <- rbind(lanaaf, tayloraf, vincentaf, lordeaf, chicksaf, floaf, bleachersaf)
+df <- rbind(lanaaf, tayloraf, vincentaf, lordeaf, chicksaf, floaf, bleachersaf,
+            haimaf, maggierogersaf, sharonaf, marinaaf, mitskiaf)
 df$jack = NA
 
 jack_tracks <- c(
