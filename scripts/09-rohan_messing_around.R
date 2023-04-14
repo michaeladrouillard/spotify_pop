@@ -41,6 +41,24 @@ data_reduced |>
   )
 
 
+data_reduced %>%
+  group_by(jack) %>%
+  summarise(across(everything(), mean)) %>%
+  pivot_longer(cols = -jack) %>%
+  ggplot(aes(value, name, fill = factor(jack))) +
+  geom_col(alpha = 0.8, position = "dodge")
+
+
+data_reduced %>%
+  group_by(jack) %>%
+  summarise(across(-c(tempo, loudness), mean)) %>%
+  pivot_longer(cols = -jack) %>%
+  ggplot(aes(value, name, fill = factor(jack))) +
+  geom_col(alpha = 0.8, position = "dodge")
+
+
+
+?across
 #### Try a model ####
 # Code from: https://juliasilge.com/blog/project-feederwatch/
 
@@ -86,6 +104,7 @@ narrower_penalty <- penalty(range = c(-3, 0))
 
 # install.packages("doParallel")
 doParallel::registerDoParallel()
+#install.packages("glmnet")
 
 set.seed(853)
 
