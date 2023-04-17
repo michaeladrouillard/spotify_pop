@@ -543,7 +543,7 @@ Danceability, with a score of 4.32, had the highest level of importance in deter
 
 # Discussion
 
-## Jack-iness and What Danceability Tells Us {#sec-first-point}
+## Danceability Predicts Jack-iness {#sec-first-point}
 
 Using the Spotify Audio Features, you can't really gauge what Jack Antonoff's music sound like. You get a rough idea, but you don't get the same granularity that you would by simply DM'ing Caleb Gamman on Twitter and asking him to describe it you. \[ add gamman quote\]
 
@@ -553,7 +553,7 @@ According to this model, though, danceability is the most important feature in p
 #| echo: false
 #| warning: false
 
-library(tidyverse)
+
 
 df %>%
   filter(jack == 1) %>%
@@ -594,6 +594,31 @@ df %>%
 
     -   Yeah I'm dancing. Or at least bobbing my head.
 
+## But Danceability isn't even about Dancing! I propose: Visceral-ness
+
+I am thinking about what Gamman said in his video.
+
+> I did use the phrase "visceral hatred". But i did so only to describe my visceral hatred. I can't stand the sound of it. I hate it. And the way in which I hate it is viscerally. But I didn't go beyond that because it doesn't go beyond that. Nothing against the guy, I like Taylor swift's stuff. It's just subjective taste.
+
+It's just his subjective taste, but in one way Gamman was actually totally on the money about this. The danceability variable, which is the strongest predictor of Jack-ness, seems to actually be more about "visceral"-ness when you do a close-listen of the songs with the highest danceability scores. The reason Jack is getting under people's skin could just be because his music... gets underneath your skin. Right to the viscera.
+
+## Weaknesses and next steps
+
+One fundamental weakness is cooked into the dataset. Since we're not in the studio, we can't know the degree of Jack-iness in each individual song. Especially when he takes on the role of a more backseat co-producer, as he did with Lana Del Rey's Did You Know There's a Tunnel Under Ocean Blvd? \[tk\].
+
+#### Could our model just be predicting Jack via Taylor Swift?
+
+```{r}
+#| echo: false
+#| warning: false
+df %>%
+  filter(jack == 1) %>%
+  ggplot(aes(x = artist_name, y = danceability)) +
+  geom_boxplot() +
+  ggtitle("Boxplot of Danceability by Artist") +
+  coord_flip()
+```
+
 ```{r}
 #| echo: false
 #| warning: false
@@ -612,25 +637,9 @@ df %>%
 
 ```
 
-```{r}
-#| echo: false
-#| warning: false 
+#### Next Steps
 
-df |>
-  arrange(desc(danceability)) |>
-  select(artist_name, danceability, track_name)
-
-
-
-```
-
-## Third discussion point
-
-## Weaknesses and next steps
-
-It only makes sense, of course, to hire a bunch of undergrads and get them to tell us whether or not a few thousand songs are danceable, and then build our own danceability metric, and see if we get the same results -- that danceability is the characteristic that helps us best understand what makes Jack, Jack.
-
-A major weakness is cooked into the dataset. Since we're not in the studio, we can't know the degree of Jack-iness in each individual song. Especially when he takes on the role of a more backseat co-producer, as he did with Lana Del Rey's Did You Know There's a Tunnel Under Ocean Blvd? \[tk\].
+It only makes sense, of course, to hire a bunch of undergrads and get them to tell us whether or not a few thousand songs are visceral, and then build our own visceral-ness metric, and see if we get the same results -- that danceability is just visceral-ness in a trench coat, and that visceral-ness is the characteristic that helps us best understand what makes Jack, Jack.
 
 \newpage
 
