@@ -432,9 +432,7 @@ Let's throw a logistic regression at the problem.
 
 Since we're trying to figure out whether these variables can tell us anything about what Jack Antonoff's sound is all about, a good way to figure that out is by seeing if any of these variables can help us predict what songs are produced by Jack. Logistic regressions like questions with binary outcomes.
 
-This cannot be the right formula. $$
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)} = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p)}}
-$$ {#eq-bayes}
+\[add the formula\]
 
 This model estimates the probability P of the outcome variable Y using predictor variables Xc. In other words, it estimates the probability that a song was produced by Jack Anotnoff using the Spotfiy variables. Which gives us information about the "research" "question": are these characteristics related to Jack's music?
 
@@ -443,6 +441,8 @@ The chart below gives us an idea of the mean value of each of these features for
 ```{r}
 #|: echo: false
 #|: warning: false
+
+data_reduced <- read.csv(here::here("inputs/data/data_reduced.csv"))
 
 data_reduced %>%
   group_by(jack) %>%
@@ -475,17 +475,154 @@ Following Julia Silge's tutorial \[TK\], I used the tidymodels metapackage to sp
 
 # Results
 
+0.743 accuracy, 0.841 roc_auc. Interesting. Check it out:
+
+```{r}
+#jackmatrix
+```
+
+```{r}
+
+
+
+
+data_reduced |> 
+  pivot_longer(cols = c(danceability, energy, loudness, mode,
+               speechiness, acousticness, instrumentalness, liveness, valence,
+               tempo),
+               names_to = "name",
+               values_to = "value"
+  ) |> 
+  ggplot(aes(x = value, color = jack)) +
+  stat_ecdf() +
+  facet_wrap(vars(name), 
+             nrow = 3, 
+             ncol = 4,
+             scales = "free") +
+  theme_minimal() +
+  labs(
+    x = "Value",
+    y = "Proportion"
+  )
+
+```
+
+And here are the different variables' importance on determining whether a song was had any Antonoff involvement.
+
+```{r}
+#| echo: false
+#| warning: false
+
+jack_vip <- read.csv(here::here("inputs/data/jack_vip.csv"))
+
+jack_vip |>
+   knitr::kable(
+     col.names = c("Variable", 
+                   "Importance",
+                   "Sign")
+  )
+
+```
+
+```{r}
+#| echo: false
+#| warning: false
+
+jack_vip %>%
+  group_by(Sign) %>%
+  slice_max(Importance, n = 15) %>%
+  ungroup() %>%
+  ggplot(aes(Importance, fct_reorder(Variable, Importance), fill = Sign)) + 
+  geom_col() +
+  facet_wrap(vars(Sign), scales = "free_y") +
+  labs(y = NULL) +
+  theme(legend.position = "none")
+```
+
+Danceability, with a score of 4.32, had the highest level of importance in determining whether or not a song was produced or co-produced by Jack Antonoff.
+
 # Discussion
 
 ## Jack-iness and What Danceability Tells Us {#sec-first-point}
 
 Using the Spotify Audio Features, you can't really gauge what Jack Antonoff's music sound like. You get a rough idea, but you don't get the same granularity that you would by simply DM'ing Caleb Gamman on Twitter and asking him to describe it you. \[ add gamman quote\]
 
-According to this model, though, danceability is the most important feature in predicting whether or not a song was produced by Jack Antonoff. This is so hilarious. This was a feature that was invented in a lab 15 years ago. This number refers to the time a bunch of undergraduates were paid (hopefully?) to listen to a bunch of songs and tag whether they were danceable or not. It captures this je-ne-sais-quoi essence of music that connects with listeners on a visceral level. Even if it doesn't make YOUR body want to move, you could imagine it making SOMEBODY'S body want to move.
+According to this model, though, danceability is the most important feature in predicting whether or not a song was produced by Jack Antonoff. This is so hilarious. This was a feature that was invented in a lab 15 years ago. This number refers to the time a bunch of undergraduates were paid (hopefully?) to listen to a bunch of songs and tag whether they were danceable or not. It is pretty much based on intuition. It captures this je-ne-sais-quoi essence of music that connects with listeners on a visceral level. Even if it doesn't make YOUR body want to move, you could imagine it making SOMEBODY'S body want to move.
 
-But does Jack Antonoff's music even make your body want to move? Let's put a pin in that.
+```{r}
+#| echo: false
+#| warning: false
 
-Eliciting a visceral reaction doesn't cause career success -- factors in a career trajectory like network, connections, right time right place ism and other elements of biography all shape that sort of thing.
+library(tidyverse)
+
+df %>%
+  filter(jack == 1) %>%
+  arrange(desc(danceability)) |>
+  distinct(track_name, .keep_all = TRUE) |>
+  select(artist_name, danceability, track_name) |>
+  knitr::kable(
+     col.names = c("Artist Name", 
+                   "Danceability",
+                   "Track")
+  )
+
+
+
+```
+
+### What do I think:
+
+-   I Think He Knows by Taylor Swift:
+
+    -   pretty danceable tbh
+
+-   Vigilante Shit by Taylor Swift:
+
+    -   Not danceable. But it is trying to coerce you into some sort of body feeling.
+
+-   Heaven is Here by Florence and the Machine
+
+    -   DEFINITELY not danceable. But it is trying to get your body to do something. Kind of sounds like it's suggesting that you join a Macedonian phalanx or something. But no. Not danceable.
+
+    ![](images/Macefonian_phalanx.png)
+
+-   I Wanna Get Better by Bleachers
+
+    -   I don't know if "danceability" is the word, but I'll give it "anthem"-y. Like, I can't picture a group of friends dancing to this in the kitchen, but I can picture someone listening to it in their car when it comes on the radio on their way to give a presentation or negotiate a promotion or something.
+
+-   Cornelia Street by Taylor Swift
+
+    -   Yeah I'm dancing. Or at least bobbing my head.
+
+```{r}
+#| echo: false
+#| warning: false
+library(dplyr)
+library(ggplot2)
+
+df %>%
+  filter(jack == 1) %>%
+  count(artist_name) %>%
+  arrange(desc(n)) %>%
+  head(10) %>%
+  ggplot(aes(x = reorder(artist_name, n), y = n)) +
+  geom_bar(stat = "identity", fill = "steelblue") +
+  coord_flip() +
+  labs(title = "Artists with Most Jack = 1 Values", x = "Artist", y = "Count")
+
+```
+
+```{r}
+#| echo: false
+#| warning: false 
+
+df |>
+  arrange(desc(danceability)) |>
+  select(artist_name, danceability, track_name)
+
+
+
+```
 
 ## Third discussion point
 

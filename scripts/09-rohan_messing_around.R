@@ -21,6 +21,8 @@ data_reduced <-
          tempo
          ) 
 
+write_csv(data_reduced,"inputs/data/data_reduced.csv")
+
 data_reduced |> 
   pivot_longer(cols = c(danceability, energy, loudness, mode,
                speechiness, acousticness, instrumentalness, liveness, valence,
@@ -202,8 +204,14 @@ final_fit
 collect_metrics(final_fit)
 
 
-collect_predictions(final_fit) %>%
+jackmatrix <- collect_predictions(final_fit) %>%
   conf_mat(jack, .pred_class)
+
+jackmatrix
+
+jackmatrix_df <- as.data.frame(jackmatrix$table)
+write.table(jackmatrix_df, file = "path/to/folder/jackmatrix.txt", sep = "\t")
+
 
 # install.packages("vip")
 library(vip)
@@ -212,6 +220,7 @@ jack_vip <-
   vi()
 
 jack_vip
+
 
 jack_vip %>%
   group_by(Sign) %>%
