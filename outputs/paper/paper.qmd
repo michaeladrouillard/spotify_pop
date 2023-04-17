@@ -1,6 +1,6 @@
 ---
 title: "We Are All Trying to Describe Something And We Don't Have the Words"
-subtitle: "An exploration of the Jack Antonoffification of Pop Music"
+subtitle: "The Jack Antonoffification of Pop Music?"
 author: 
   - Michaela Drouillard
 thanks: "Code and data are available at: LINK."
@@ -173,20 +173,6 @@ The final audio features in this study data set contains the variables: "artist_
  # knitr::kable()
 
 ```
-
-#### Audio Analysis Dataset
-
-The `get_track_audio_analysis` offers a more granular look at each track. The variables included are arrays of objects, which are the kinds of things that are a bit harder to wrap your mind around if you were to visualize each one across each artist. They include: track, bars, beats, sections, segments, tatums, and meta, which includes information on which platforms and Analyzer versions were used to analyze the track, along with metadata on the status and duration of the analysis.
-
-This data will be used when building a logistic regression model to determine the character and predictability of Jack Antonoff's music.
-
-# Model
-
-$$
-Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)}
-$$ {#eq-bayes}
-
-My model is driving me bananas.
 
 # "EDA"
 
@@ -438,17 +424,76 @@ ggplot(data = df, aes(x = energy, y = danceability)) +
 
 ```
 
+Sure. These are fun quadrants.But it doesn't solve the Jack-iness underlying each of those points, which are scattered pretty broadly.
+
+Let's throw a logistic regression at the problem.
+
+# Model
+
+Since we're trying to figure out whether these variables can tell us anything about what Jack Antonoff's sound is all about, a good way to figure that out is by seeing if any of these variables can help us predict what songs are produced by Jack. Logistic regressions like questions with binary outcomes.
+
+This cannot be the right formula. $$
+Pr(\theta | y) = \frac{Pr(y | \theta) Pr(\theta)}{Pr(y)} = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_1 + \cdots + \beta_p x_p)}}
+$$ {#eq-bayes}
+
+This model estimates the probability P of the outcome variable Y using predictor variables Xc. In other words, it estimates the probability that a song was produced by Jack Anotnoff using the Spotfiy variables. Which gives us information about the "research" "question": are these characteristics related to Jack's music?
+
+The chart below gives us an idea of the mean value of each of these features for Jack and non-Jack song. A logistic regression will give us a better idea of how to weigh each of these features.
+
+```{r}
+#|: echo: false
+#|: warning: false
+
+data_reduced %>%
+  group_by(jack) %>%
+  summarise(across(-c(tempo, loudness), mean)) %>%
+  pivot_longer(cols = -jack) %>%
+  ggplot(aes(value, name, fill = factor(jack))) +
+  geom_col(alpha = 0.8, position = "dodge") +
+  labs(x = "Mean Value", y = "Feature")
+
+
+```
+
+One issue is that in our dataset, there are a lot more songs that aren't produced by Jack than songs that are:
+
+```{r}
+#|: echo: false
+#|: warning: false
+
+data_reduced %>%
+  count(jack) %>%
+  knitr::kable(col.names = c("Is it Jack?", "Number of Songs"))
+
+
+
+```
+
+So, we have to balance the classes.
+
+Following Julia Silge's tutorial \[TK\], I used the tidymodels metapackage to split the training and testing data and make cross-validation samples. The `workflow_set()` function lets us hold different sets of feature engineering together and use tuning to evaluate them all at once. I need to evaluate two elements: a basic model, and a model that was downsampled using the `themis` package.
+
 # Results
 
 # Discussion
 
-## First discussion point {#sec-first-point}
+## Jack-iness and What Danceability Tells Us {#sec-first-point}
 
-## Second discussion point
+Using the Spotify Audio Features, you can't really gauge what Jack Antonoff's music sound like. You get a rough idea, but you don't get the same granularity that you would by simply DM'ing Caleb Gamman on Twitter and asking him to describe it you. \[ add gamman quote\]
+
+According to this model, though, danceability is the most important feature in predicting whether or not a song was produced by Jack Antonoff. This is so hilarious. This was a feature that was invented in a lab 15 years ago. This number refers to the time a bunch of undergraduates were paid (hopefully?) to listen to a bunch of songs and tag whether they were danceable or not. It captures this je-ne-sais-quoi essence of music that connects with listeners on a visceral level. Even if it doesn't make YOUR body want to move, you could imagine it making SOMEBODY'S body want to move.
+
+But does Jack Antonoff's music even make your body want to move? Let's put a pin in that.
+
+Eliciting a visceral reaction doesn't cause career success -- factors in a career trajectory like network, connections, right time right place ism and other elements of biography all shape that sort of thing.
 
 ## Third discussion point
 
 ## Weaknesses and next steps
+
+It only makes sense, of course, to hire a bunch of undergrads and get them to tell us whether or not a few thousand songs are danceable, and then build our own danceability metric, and see if we get the same results -- that danceability is the characteristic that helps us best understand what makes Jack, Jack.
+
+A major weakness is cooked into the dataset. Since we're not in the studio, we can't know the degree of Jack-iness in each individual song. Especially when he takes on the role of a more backseat co-producer, as he did with Lana Del Rey's Did You Know There's a Tunnel Under Ocean Blvd? \[tk\].
 
 \newpage
 
