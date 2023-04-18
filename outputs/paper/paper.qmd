@@ -83,7 +83,7 @@ It is a perfect video essay. I pestered him anyway:
 >
 > If you used a cscope spectrogram sort of thing to look at a Jack Antonoff song, you're gonna see a lot of big lines. And then if you're listening to a song by someone else, you're gonna see like a bunch of sort of like static wiggling. It's gonna be really jagged because you've got a bunch of harmonics that don't exactly mix with each other, so they're stacking in all sorts of weird different ways.
 
-I bolded the part about vocals sounding the way they would to the person who's singing them while editing this paragraph because I thought it was kind of funny, and maybe meaningful. It sounds like it's coming from inside the house!
+He was really nice and fun to talk to. I bolded the part about vocals sounding the way they would to the person who's singing them while editing this paragraph because I thought it was kind of funny, and maybe meaningful. It sounds like it's coming from inside the house!
 
 # Numbers?
 
@@ -207,7 +207,7 @@ ggplot(data = df, aes(x = energy, y = valence)) +
 
 ```
 
-It looks like Jack-produced songs err towards danceability, across the spectrum of energy. It's a bit harder to gauge any trends from the valence quadrant. These quadrants are a start, but they don't suggest any defining Jack-iness characteristic underlying each of those blue points, which are scattered pretty broadly.
+It looks like Jack-produced songs err towards danceability, across the spectrum of energy. It's a bit harder to gauge any trends from the valence quadrant, but it looks like Jack's songs tend to be somewhat on the side of low valence. These quadrants are a start, but they don't suggest any defining Jack-iness characteristic underlying each of those blue points, which are scattered pretty broadly.
 
 Let's throw a logistic regression at the problem.
 
