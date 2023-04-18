@@ -8,7 +8,7 @@ date: today
 abstract: "In this essay, I will be exploring Jack Antonoff's production style using data from the Spotify API. Drawing from an interview with Caleb Gamman, a guy who went viral for guessing which song on Taylor Swift's Midnights album was produced by Antonoff within seconds, I will delve into the specific characteristics that define an Antonoff-y song, and assess whether or not the audio features defined by Spotify can capture this. I plan to lasso Glen McDonald,the Spotify engineer behind these features, into explaining them to me. There will be a Bayesian inference model. It will be a logistic regression. We do not know whether or not it will be good. Finally, I will armchair a little bit about the cultural significance of Antonoff's music and the reasons behind his ubiquity in the music industry."
 format: pdf
 number-sections: true
-bibliography: references.bib
+bibliography: bibliography.bib
 ---
 
 # Introduction
@@ -31,7 +31,7 @@ A STRANGER WALKING BY WHO HEARD EVERYTHING: "EXACTLY!!"
 
 Midnights was produced by Swift and her longtime collaborator Jack Antonoff, who is the subject of this paper, and, I suspect, the reason behind both my blacking out, and the stranger's "Exactly".
 
-Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too (Bleachers, and fun.). When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to, of course, is the fact that Jack Antonoff and his sound seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis".
+Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too (Bleachers, and fun.). When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to, of course, is the fact that Jack Antonoff and his sound seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
 
 What I am trying to get to here is that I don't actually really mind Jack Antonoff's music, I kind of like it, but I still say his voice with the same tone that everyone else does. There's just something about him... this sense that he's everywhere... and that he's just such a nice guy... Why do music people seem to be a little annoyed with him? What is it about Antonoff music that is so Antonoff-y? Is the Jack Antonoff-fication of pop something we should be worried about?
 
@@ -39,9 +39,9 @@ To find an answer to this question, I turned to statistics, people who know more
 
 # An Interview with Caleb Gamman
 
-Around the time that Midnights came out, I came across a video on Twitter of a guy, Caleb Gamman, guessing which songs on Midnights were produced by Antonoff within seconds. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
+Around the time that Midnights came out, I came across a video on Twitter of a guy, Caleb Gamman, guessing which songs on Midnights were produced by Antonoff within seconds [@citeTweet]. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
 
-I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his Youtube Channel covering:
+I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his Youtube Channel covering [@citeGamman]:
 
 (you can skim the quote chunks)
 
@@ -93,7 +93,7 @@ Can we translate any of this into something observable? Can we quantify the Jack
 
 # Data {#sec-data}
 
-I pulled the data using the Spotify API, which I accessed using the `spotifyr` package in R. I used the `get_artist_audio_features` and `get_track_audio_analysis functions` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. I threw in HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski in too, since they've never collaborated with Jack Antonoff but are more or less part of the same pop space.
+I pulled the data using the Spotify API, which I accessed using the `spotifyr` package in R [@citeSpotify]. I used the `get_artist_audio_features` and `get_track_audio_analysis functions` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. I threw in HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski in too, since they've never collaborated with Jack Antonoff but are more or less part of the same pop space.
 
 ### Artist Selection
 
@@ -105,7 +105,7 @@ Of the artists who did collaborate with Antonoff, I chose these artists because 
 
 ### Data Cleaning
 
-I joined these data sets using the `rbind` function in base R, and created an additional variable called "jack", which contains a 1 if Jack Antonoff produced or co-produced the song, and a 0 if he had nothing to do with it. I got the information on which songs Antonoff did or did not produce from the "Jack Antonoff Production Discography" Wikipedia page \[cite\].
+I joined these data sets using the `rbind` function in base R, and created an additional variable called "jack", which contains a 1 if Jack Antonoff produced or co-produced the song, and a 0 if he had nothing to do with it. I got the information on which songs Antonoff did or did not produce from the "Jack Antonoff Production Discography" Wikipedia page [@citeWiki].
 
 ### Spotify's API
 
@@ -115,7 +115,7 @@ The Spotify API returns JSON metadata directly from the Spotify Data Catalogue.
 
 #### Audio Features Dataset
 
-The `get_artist_audio_features` provides a general profile of each song, according to variables developped by spotify, which makes for simple comparisons across artists. The final audio features in this study data set contains the variables: `artist_name`, `track_name`, `energy`, `danceability`, `key`, `loudness`, `mode`, `speechiness`, `acousticness`, `instrumentalness`, `liveness`, `valence`, `tempo`, `jack`.
+The `get_artist_audio_features` provides a general profile of each song, according to variables developped by Spotify, which makes for simple comparisons across artists. The final audio features in this study data set contains the variables: `artist_name`, `track_name`, `energy`, `danceability`, `key`, `loudness`, `mode`, `speechiness`, `acousticness`, `instrumentalness`, `liveness`, `valence`, `tempo`, `jack`.
 
 \[insert documentation glimpse\]
 
@@ -172,22 +172,20 @@ Glen said that the way he's made use of these variables is by combing energy and
 
 \[discuss the convo we had about how even two humans can have disagreement about a song's positivity, let alone human vs machine. i.e. an elliot smith song where the lyrics are depressing but the melody is happy. or a happy song but you know that the band died in a plane crash yesterday. etc.\]
 
-I thanked Glen for this time, ended the call, and booted up the ❤️statistical computing programming language, R ❤️\[citeR\].
-
+I thanked Glen for this time, ended the call, and booted up the ❤️statistical computing programming language, R ❤️[@citeR].
 
 ```{r}
-
 #| label: fig-quaddanceability2
 #| fig-cap: Danceability and Energy Quadrant
 #| echo: false
 #| warning: false
-
-
-ggplot(data = df, aes(x = energy, y = danceability)) + 
-  geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
-  geom_vline(xintercept = mean(df$energy), color = "gray") +
-  geom_hline(yintercept = mean(df$danceability), color = "gray") +
-  theme_minimal()
+library(ggplot2)
+df |>
+  ggplot(aes(x = energy, y = danceability)) + 
+    geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
+    geom_vline(xintercept = mean(df$energy), color = "gray") +
+    geom_hline(yintercept = mean(df$danceability), color = "gray") +
+    theme_minimal()
 
 ```
 
@@ -198,22 +196,18 @@ ggplot(data = df, aes(x = energy, y = danceability)) +
 #| echo: false
 #| warning: false
 
-
-ggplot(data = df, aes(x = energy, y = valence)) + 
-  geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
-  geom_vline(xintercept = mean(df$energy), color = "gray") +
-  geom_hline(yintercept = mean(df$valence), color = "gray") +
-  theme_minimal()
+df |>
+  ggplot(aes(x = energy, y = valence)) + 
+    geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
+    geom_vline(xintercept = mean(df$energy), color = "gray") +
+    geom_hline(yintercept = mean(df$valence), color = "gray") +
+    theme_minimal()
 
 ```
 
 It looks like Jack-produced songs err towards danceability, across the spectrum of energy. It's a bit harder to gauge any trends from the valence quadrant, but it looks like Jack's songs tend to be somewhat on the side of low valence. These quadrants are a start, but they don't suggest any defining Jack-iness characteristic underlying each of those blue points, which are scattered pretty broadly.
 
 Let's throw a logistic regression at the problem.
-
-
-
-
 
 ```{r}
 #| echo: false
@@ -222,16 +216,6 @@ Let's throw a logistic regression at the problem.
 #library(kableExtra)
 #df |>
  # knitr::kable()
-
-```
-
-```{r}
-#| include: false
-#| warning: false
-#| message: false
-
-library(tidyverse)
-library(palmerpenguins)
 ```
 
 ```{r}
@@ -405,7 +389,6 @@ ggplot(data = df, aes(x = energy, y = valence)) +
 
 ```
 
-
 # Model
 
 Since we're trying to figure out whether these variables can tell us anything about what Jack Antonoff's sound is all about, a good way to figure that out is by seeing if any of these variables can help us predict what songs are produced by Jack. Logistic regressions like questions with binary outcomes.
@@ -415,7 +398,7 @@ I made a binary response variable, called `jack`, that has a value of 1 if the s
 The formula for this logistic regression can be written as:
 
 $$
-P(y=1|x) = \frac{1}{1 + e^{-(\beta_0 + \beta_1 x_1 + \cdots + \beta_n x_n)}}
+\mbox{Pr}(y_i=1) = \mbox{logit}^{-1}\left(\beta_0+\beta_1 x_i\right)
 $$
 
 P(y=1\|x) is the probability of the dependent variable *Y* being 1, given the independent variables *x1*, *x2*, \..., *xn*, and *b0*, *b1*, *b2*, \..., *bn.* The function e\^(-(b0 + b1*x1 + b2*x2 + \... + bn\*xn)), also known as the logit function, is the exponential function of the linear combination of the independent variables and coefficients. βn represents the weights assigned to each independent variable xn. The product of βn and Xn is the contribution of the xn variable to the predicted outcome.
@@ -457,9 +440,9 @@ data_reduced %>%
 
 So, we have to balance the classes.
 
-After some minor pre-processing using the `tidyverse` and `lubridate` R packages. I followed Julia Silge's tutorial \[TK\] to build a model that deals with the imbalanced classes.
+After some minor pre-processing using the `tidyverse` R package [@citetidyverse]. I followed Julia Silge's tutorial [@citeSilge] to build a model that deals with the imbalanced classes.
 
-I used the `tidymodels` to fir the model. To deal with the imbalanced classes, I downsampled the majority class using the **`step_downsample()`** function from the **`themis`** package. Then I used 5-fold cross-validation with stratification by the **`jack`** variable to estimate the performance of the model.
+I used the `tidymodels` to fit the model [@citetidymodels]. To deal with the imbalanced classes, I downsampled the majority class using the **`step_downsample()`** function from the **`themis`** package. Then I used 5-fold cross-validation with stratification by the **`jack`** variable to estimate the performance of the model.
 
 The `workflow_set()` function lets us hold different sets of feature engineering together and use tuning to evaluate them all at once. I need to evaluate two elements: a basic model, and a model that was downsampled using the `themis` package.
 
@@ -505,6 +488,8 @@ data_reduced |>
     x = "Value",
     y = "Proportion"
   )
+
+#even tho there's similrities, there's differences
 
 ```
 
