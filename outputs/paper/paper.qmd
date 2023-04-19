@@ -1,6 +1,6 @@
 ---
 title: "We Are All Trying to Describe Something And We Don't Have the Words"
-subtitle: "A Study of The Jack Antonoffification of Pop Music, and Propagating Uncertainty with Spotify"
+subtitle: "A Study of The Jack Antonoffification of Pop Music (Or: Propagating Uncertainty with Spotify)"
 author: 
   - Michaela Drouillard
 thanks: "Code and data are available at: https://github.com/michaeladrouillard/jack."
