@@ -169,6 +169,10 @@ antonoff_vip %>%
 
 
 
+### SECOND MODEL ###
+# one hot encoding for each producer (is_antonoff 1,0, is_elwroth 1,0, etc)
+# multi class classification
+
 
 
 
