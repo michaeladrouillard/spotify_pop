@@ -10,7 +10,7 @@
 library(tidyverse)
 library(lubridate)
 
-data <- read_csv(here::here("inputs/data/df.csv"))
+data <- read_csv(here::here("inputs/data/clean_df.csv"))
 
 data <- 
   data |> 
@@ -21,7 +21,7 @@ data <-
 
 data_reduced <- 
   data |> 
-  select(jack, 
+  select(producer, 
          danceability, energy, loudness, mode,
          speechiness, acousticness, instrumentalness, liveness, valence,
          tempo
@@ -29,30 +29,36 @@ data_reduced <-
 
 write_csv(data_reduced,"inputs/data/data_reduced.csv")
 
-#### Try a model ####
-# Code from: https://juliasilge.com/blog/project-feederwatch/
 
-library(tidymodels)
+#### Predicting Antonoff ####
+## glmnet requires all variables to be numeric, so i'm excluding the producer column
 
+# 1. Create a new binary column
+data_reduced$is_antonoff <- ifelse(data_reduced$producer == "antonoff", 1, 0)
 set.seed(853)
 
-jack_split <- 
+data_reduced$is_antonoff <- as.factor(data_reduced$is_antonoff)
+
+# 2. Update variable names and strata
+antonoff_split <- 
   data_reduced |>
-  initial_split(strata = jack)
+  initial_split(strata = is_antonoff)
 
-jack_train <- training(jack_split)
-jack_test <- testing(jack_split)
+antonoff_train <- training(antonoff_split)
+antonoff_test <- testing(antonoff_split)
 
 set.seed(853)
-jack_folds <- vfold_cv(jack_train, strata = jack)
-jack_folds
+antonoff_folds <- vfold_cv(antonoff_train, strata = is_antonoff)
+antonoff_folds
 
-is_jack <- 
-  recipe(jack ~ ., data = jack_train)
-# Oh god, she inputs the mean
+# 3. Update the recipe
+is_antonoff <- 
+  recipe(is_antonoff ~ ., data = antonoff_train) %>%
+  step_rm(producer)
 
-## we can `prep()` just to check that it works:
-prep(is_jack)
+
+# we can `prep()` just to check that it works:
+prep(is_antonoff)
 
 glmnet_spec <- 
   logistic_reg(penalty = tune(), mixture = 1) |>
@@ -61,12 +67,11 @@ glmnet_spec <-
 # install.packages("themis")
 library(themis)
 
-
-#so this is comparing the basic model and the downsampled one
+# Comparing the basic model and the downsampled one
 wf_set <-
   workflow_set(
-    list(basic = is_jack,
-         downsampling = is_jack |> step_downsample(jack)),
+    list(basic = is_antonoff,
+         downsampling = is_antonoff |> step_downsample(is_antonoff)),
     list(glmnet = glmnet_spec)
   )
 
@@ -76,28 +81,14 @@ narrower_penalty <- penalty(range = c(-3, 0))
 
 # install.packages("doParallel")
 doParallel::registerDoParallel()
-#install.packages("glmnet")
 
 set.seed(853)
-
-#first u pass in ur wf set, then u pass which function,
-#then u pass in things u need for the tuning. like resamples,
-# values for penalty (grid=16), pass in metrics
-#accuracy and roc_auc are basic metrics
-# add logloss, which looks at model as a whole, measures how wrong u r.
-# helps measure that u do a better job. i.e. .6 and .9 would
-#still be in positive class, but it tells you how wrong you are
-#sensitivity, specifity: measure how well u do on one class versus the other
-# (important for unbalanced dataset)
-#passing params. knows from exp that default penalty is really broad -10, 0.
-#make it much much narrower
-
 
 tune_rs <- 
   workflow_map(
     wf_set,
     "tune_grid",
-    resamples = jack_folds,
+    resamples = antonoff_folds,
     grid = 15,
     metrics = metric_set(accuracy, mn_log_loss, sensitivity, specificity),
     param_info = parameters(narrower_penalty)
@@ -107,29 +98,17 @@ tune_rs
 
 autoplot(tune_rs) + theme(legend.position = "none")
 
-#x axis is workflow rank, so which workflow are we on
-#ok so we have good accuracy and good specificity. but low
-#low specificity and low log loss
-#dont quite understand workflow rank?
-#theres no right metric to evaluate model. you have to understand
-# it holistically and look at a bunch of different metrics
-#sanity check with rohan
-
 rank_results(tune_rs, rank_metric = "sensitivity")
 rank_results(tune_rs, rank_metric = "mn_log_loss")
 rank_results(tune_rs, rank_metric = "accuracy")
 rank_results(tune_rs, rank_metric = "specificity")
 
-#the only one where downsampling is ranked higher is specificity...
-#wouldn't it make more sense to go with the basic one then?
-
 downsample_rs <-
   tune_rs %>%
   extract_workflow_set_result("downsampling_glmnet")
 
-#tuning result for recipe that included downsampling + glmnet model
+# Tuning result for recipe that included downsampling + glmnet model
 plotdownsample <- autoplot(downsample_rs) + ggtitle("Downsampled Data")
-
 
 basic_rs <-
   tune_rs %>%
@@ -139,18 +118,6 @@ plotbasic <- autoplot(basic_rs) + ggtitle("Original Data")
 
 library(gridExtra)
 grid.arrange(plotdownsample, plotbasic, ncol=2)
-#on the right is a lot of regularization, so just throw a bunch of predictors out
-
-#we want specificity because we specifically care about the variables..
-
-
-
-
-#this gives me this penalty. this is the biggest penalty
-#where u get log loss that is about the same performance has the best value
-
-#should i change this to specificity?
-
 
 best_penalty <- 
   downsample_rs %>%
@@ -158,39 +125,38 @@ best_penalty <-
 
 best_penalty
 
-
-# last fit is a convenient helper function that fits one time to the training data
-#and evaluates one time on the testing data
+# Last fit is a helper function that fits one time to the training data
+# and evaluates one time on the testing data
 final_fit <-  
   wf_set %>% 
   extract_workflow("downsampling_glmnet") %>%
   finalize_workflow(best_penalty) %>%
-  last_fit(jack_split)
+  last_fit(antonoff_split)
 
 final_fit
 
 collect_metrics(final_fit)
 
+antonoffmatrix <- collect_predictions(final_fit) %>%
+  conf_mat(is_antonoff, .pred_class)
 
-jackmatrix <- collect_predictions(final_fit) %>%
-  conf_mat(jack, .pred_class)
+antonoffmatrix
 
-jackmatrix
-
-jackmatrix_df <- as.data.frame(jackmatrix$table)
-write.table(jackmatrix_df, file = "path/to/folder/jackmatrix.txt", sep = "\t")
-
+antonoffmatrix_df <- as.data.frame(antonoffmatrix$table)
 
 # install.packages("vip")
 library(vip)
-jack_vip <-
+antonoff_vip <-
   extract_fit_engine(final_fit) %>%
   vi()
 
-jack_vip
+antonoff_vip
 
 
-jack_vip %>%
+## Predictors ##
+
+
+antonoff_vip %>%
   group_by(Sign) %>%
   slice_max(Importance, n = 15) %>%
   ungroup() %>%
@@ -199,3 +165,10 @@ jack_vip %>%
   facet_wrap(vars(Sign), scales = "free_y") +
   labs(y = NULL) +
   theme(legend.position = "none")
+
+
+
+
+
+
+
