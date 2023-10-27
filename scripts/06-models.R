@@ -5,25 +5,20 @@
 # Contact: michaela.drouillard@mail.utoronto.ca
 # License: MIT
 
-
-
+library(tidyr)
+library(dplyr)
 library(tidyverse)
 library(lubridate)
+library(tidymodels)
+library(randomForest)
 
 data <- read_csv(here::here("inputs/data/clean_df.csv"))
 
-data <- 
-  data |> 
-  mutate(jack = as_factor(jack)) |> 
-  filter(album_release_date_precision == "day") |>
-  mutate(album_release_date = ymd(album_release_date))
 
 
 data_reduced <- 
   data |> 
-  select(producer, 
-         danceability, energy, loudness, mode,
-         speechiness, acousticness, instrumentalness, liveness, valence,
+  select(producer,danceability, energy, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence,
          tempo
   ) 
 
@@ -169,10 +164,73 @@ antonoff_vip %>%
 
 
 
-### SECOND MODEL ###
+### SECOND MODEL: Random Forest ###
 # one hot encoding for each producer (is_antonoff 1,0, is_elwroth 1,0, etc)
 # multi class classification
+install.packages("ranger")
+install.packages("caret") # For some helper functions
+library(ranger)
+library(caret)
 
+
+data_reduced$producer <- as.factor(data_reduced$producer)
+
+set.seed(853)
+antonoff_split <- initial_split(data_reduced, strata = producer)
+antonoff_train <- training(antonoff_split)
+antonoff_test <- testing(antonoff_split)
+
+
+rf_model <- ranger(producer ~ ., data = antonoff_train, importance = 'impurity')
+#impurity == asking model to interpret variable importance based on gini impurity
+
+rf_predictions <- predict(rf_model, data = antonoff_test)$predictions
+
+confusionMatrix(rf_predictions, antonoff_test$producer)
+
+## Variable Importance
+var_importance <- importance(rf_model)
+print(var_importance)
+sorted_importance <- var_importance[order(-var_importance)]
+print(sorted_importance)
+
+## Variable importance for each producer
+
+list_importance <- list()
+unique_producers <- unique(data_reduced$producer)
+
+for (producer in unique_producers) {
+  data_temp <- data_reduced
+  data_temp$producer_binary <- as.factor(ifelse(data_temp$producer == producer, 1, 0))
+  
+  rf_temp <- randomForest(producer_binary ~ . - producer, data = data_temp, ntree = 100)
+  
+  importance_temp <- rf_temp$importance
+  print(colnames(importance_temp))  # To see available columns
+  
+  
+  list_importance[[producer]] <- importance_temp[,'MeanDecreaseGini']
+}
+
+
+
+df_importance <- bind_rows(list_importance, .id = "producer")
+
+head(df_importance)
+
+
+
+df_importance_long <- df_importance %>%
+  gather(variable, importance, -producer)
+
+ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~producer, scales = "free") + 
+  coord_flip() +
+  labs(title = "Variable Importance by Producer", 
+       x = "Variable", 
+       y = "Mean Decrease Gini") +
+  theme_minimal()
 
 
 
