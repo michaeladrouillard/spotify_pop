@@ -23,35 +23,36 @@ library(lubridate)
 
 # Introduction
 
-Sometime in early October of 2022 there was a chemical shift in my brain, and I couldn't stop listening to Taylor Swift. I couldn't listen to anything other than Fearless or Red when deadlifting, walking to a friend's house, folding laundry, etc. I listened to so much Taylor in that month alone that she ended up as my #4 artist on Spotify Wrapped, which stops collecting its data for the year on October 31st. It didn't even capture what happened to me after Midnights dropped in November.
+Shortly after the release of Taylor Swift's *Midnights* album, a video of the Youtuber Caleb Gammen, in which guesses which songs on Midnights were produced by Antonoff within seconds [@citeTweet], went viral. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
 
-I was standing outside of the Garrison eating a slice of pizza with some friends, and one of them asked what music we had been listening to lately.
+Antonoff began his career as a guitarist in fun., and is the frontman in Bleachers. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more.  Antonoff is prolific, to the extent that it is starting to bother people. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
 
-ME: "Midnights!"
+(Cite a few snippets from critics articles to give a dose of the discourse)
 
-ZACH: "Is it good?"
 
-\[I glitched.\]
+Can Spotify's audio features dataset help us determine what makes Antonoff music so Antonoff-y?
 
-ME: "No!"
+I spoke to Caleb Gamman, a Youtuber and Antonoff-production-style hater who had a tweet go viral around the time of Taylor Swift's *Midnights* release, in which he predicts whether a song was produced by Antonoff within seconds. 
 
-\["*No*?"\]
+During an interview with Glen McDonald, an engineer at Spotify, I learned that the `valence` and `danceability` variables were created by hiring college interns and having them tag whether songs were positive or danceable. 
 
-A STRANGER WALKING BY WHO HEARD EVERYTHING: "EXACTLY!!"
+I used two models to investigate the data. The first, a logistic regression, draws on the dataset of artists who've collaborated with Antonoff, with an extra binary variable to tag whether or not the song was an Antonoff production. With this model, we can get a first glimpse at variables that are stronger predictors of Antonoff-iness, along with a better understanding of whether the Spotify data can trace Antonoff's influence on an artist's sound over time.
 
-Midnights was produced by Swift and her long-time collaborator Jack Antonoff, who is the subject of this paper, and, I suspect, the reason behind both my glitching, and the stranger's "Exactly".
+However, logistic regression assumes a linear relationship between the dependent and predictor variables, and is sensitive to multi-collinearity. In music data, we would expect for certain variables to be correlated (for instance, loudness and energy). We also cannot assume that an artists' style can be measured in the linear growth of these metrics. Although the logistic regression has a strong accuracy, indicating that danceability and loudness are the strongest indicators of an Anotonoff produced song, it may be detecting a change in genre, rather than a change in style, across artists whose sound turns more into pop while collaborating with Antonoff.
 
-Antonoff is prolific, to the extent that it is starting to bother people. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. All of this and his own bands too (Bleachers, and fun.). When I was getting brunch with a friend one Sunday and a Swift song came on, and she said "Jack Antonoff's gonna kill us all", we both laughed. What my friend was referring to is the fact that Jack Antonoff and his sound seems to be everywhere these days. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
+I built a second model, a Random Forest, to complement the insights drawn from the logistic regression. The Random Forest trains on the full data set, including other producers. Random Forests (what's the package) don't assume linear relationships, and aren't sensitive to multicollinearity. In fact, using the x package in R, we can visualize and analyse the relationships between different variables. The variance in correlation scores across producers can be taken as an approximate for style, since this variance helps the model classify tracks. 
 
-What I am trying to get to here is that I don't actually really mind Jack Antonoff's music, I kind of like it, but I still say his voice with the same tone that everyone else does. There's just something about him... this sense that he's everywhere... and that he's just such a nice guy... Why do music people seem to be a little annoyed with him? What is it about Antonoff music that is so Antonoff-y?
+In the discussion section, I listen to the songs with the highest danceability scores, and make an argument that this `danceability` feature, which has so much uncertainty cooked into it, is really capturing something like visceral-ness. Against the odds, we can capture something about Antonoff's music with these variables, and it might just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe.
 
-To find an answer to this question, I turned to statistics, people who know more than me about describing music (Youtubers), and the overlord of engineered virality itself -- the Spotify API. Can Spotify's audio features dataset help us determine what makes Antonoff music so Antonoff-y?
 
-I spoke to Caleb Gamman, a Youtuber and Antonoff-production-style hater who had a tweet go viral around the time of Taylor Swift's *Midnights* release, in which he predicts whether a song was produced by Antonoff within seconds. A real-life logistic regression, if you will. Using an actual logistic regression model, I was able to determine that Spotify's `danceability` feature was the most important in predicting whether a song had any Antonoff involvement. During an interview with Glen McDonald, an engineer at Spotify, I learned that the `valence` and `danceability` variables were created by hiring college interns and having them tag whether songs were positive or danceable. In the discussion section, I listen to the songs with the highest danceability scores, and make an argument that this `danceability` feature, which has so much uncertainty cooked into it, is really capturing something like visceral-ness. Against the odds, we can capture something about Antonoff's music with these variables, and it might just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe.
 
-# An Interview with Caleb Gamman
+TLDR of the Gamman interview is: Taste is subjective. People who can play instruments tend to be better at identifying and describing sounds. Cultural criticism is a hall of smoke and mirrors. Antonoff is everywhere.
 
-Around the time that *Midnights* came out, I came across a video on Twitter of a guy, Caleb Gamman, guessing which songs on Midnights were produced by Antonoff within seconds [@citeTweet]. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
+Can we translate any of this into something observable? Can we quantify the Jack Antonoff-ification of pop music?
+
+# Mini literature review on Antonoff's place in culture? or should that go in the introduction
+
+# Either radically transform or cull the gamman or use it for the discussion section
 
 I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his YouTube Channel covering [@citeGamman]:
 
@@ -95,29 +96,30 @@ It is a perfect video essay. I pestered him anyway:
 >
 > If you used a cscope spectrogram sort of thing to look at a Jack Antonoff song, you're gonna see a lot of big lines. And then if you're listening to a song by someone else, you're gonna see like a bunch of sort of like static wiggling. It's gonna be really jagged because you've got a bunch of harmonics that don't exactly mix with each other, so they're stacking in all sorts of weird different ways.
 
-He was really nice and fun to talk to. I bolded the part about vocals sounding the way they would to the person who's singing them while editing this paragraph because I thought it was kind of funny, and kind of cool. It's coming from inside the house!!!!
 
-## So
 
-TLDR of the Gamman interview is: Taste is subjective. People who can play instruments tend to be better at identifying and describing sounds. Cultural criticism is a hall of smoke and mirrors. Antonoff is everywhere.
 
-Can we translate any of this into something observable? Can we quantify the Jack Antonoff-ification of pop music?
 
 # Data {#sec-data}
 
-I pulled data on artists who've collaborated with Antonoff using the Spotify API, which I accessed using the `spotifyr` package in R [@citeSpotify]. I used the `get_artist_audio_features` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. I threw in HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski in too, since they've never collaborated with Jack Antonoff but are more or less part of the same pop sphere.
+The audio feature data was pulled using Spotify API, which I accessed using the `spotifyr` package in R [@citeSpotify]. I used the `get_artist_audio_features` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. I threw in HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski in too, since they've never collaborated with Jack Antonoff but are more or less part of the same pop sphere.
+
+
+I also scraped the discographies of comparable contemporary pop producers' Wikipedias. The producers include Epworth, Rechstaid, Max Martin, Nowels, Joel Little, and Greg Kustin. (cite Carl here?) These producers were chosen based on their popularity, and also because some of them collaborated with artists who also collaborate with Antonoff.
+
+The data was manually validated, and live performances, karaoke editions, international versions or translations, and remix albums were removed. Where deluxe albums were available, original albums were deleted to avoid duplicate rows. 
+
+
 
 ### Artist Selection
 
-Of the artists who did collaborate with Antonoff, I chose these artists because they've produced multiple albums, and at least one album with Antonoff, as opposed to just individual songs. I chose the Chicks because I figured that collaborating with Antonoff after an extended gap in a longer spanning career than the other artists might offer some interesting results[^1]. The data points at beginning of their career reflect music that existed in a different time from the other artists in this dataset[^2].
-
-[^1]: It didn't. But I kept them in there anyway because why not.
-
-[^2]: Again, nothing worth noting came up.
+Of the artists who did collaborate with Antonoff, I chose these artists because they've produced multiple albums, and at least one album with Antonoff, as opposed to just individual songs. 
 
 ### Data Cleaning
 
 I joined these data sets using the `rbind` function in base R, and created an additional variable called "jack", which contains a 1 if Jack Antonoff produced or co-produced the song, and a 0 if he had nothing to do with it. I got the information on which songs Antonoff did or did not produce from the "Jack Antonoff Production Discography" Wikipedia page [@citewiki].
+
+
 
 ### Audio Features Dataset
 
@@ -196,23 +198,19 @@ sub_bees |>
   )
 ```
 
-I asked Glen McDonald, a "data alchemist" (see: Principal Engineer) at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014.
-
-Glen told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^4]:
+I interviewed Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. Macdonald told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^4]:
 
 [^4]: My favourite example Glen gave was that the ML kept giving bluegrass songs insanely high `speechiness` ratings. Because there were no banjos in the training data, they were registered as human speech. (This is hilarious.) They had to go back and add more songs with banjos to the training data.
 
-"You could imagine writing a formula for energy that combines like loudness and tempo and degree of harmonic variation or something. So it was ML, but that one's more like a human helping a machine figure out a formula. Whereas valence is teaching the machine to try to reproduce a purely human thing. Same with danceability. I mean, danceability is whether a human can dance to it.
-
-So like, the machine's not gonna dance, so the machine can't have any opinion on that. The computer could have an opinion on energy. And the computer can definitely have an opinion on loudness. So there's a spectrum from, you know, loudness as purely analytical, and then energy is a little like loudness, with a little more subjectivity. And then danceability and valence are purely subjective."
+"You could imagine writing a formula for energy that combines like loudness and tempo and degree of harmonic variation or something. So it was [machine learning], but that one's more like a human helping a machine figure out a formula. Whereas valence is teaching the machine to try to reproduce a purely human thing. Same with danceability. I mean, danceability is whether a human can dance to it. So like, the machine's not gonna dance, so the machine can't have any opinion on that. The computer could have an opinion on energy. And the computer can definitely have an opinion on loudness. So there's a spectrum from, you know, loudness as purely analytical, and then energy is a little like loudness, with a little more subjectivity. And then danceability and valence are purely subjective."
 
 This put the big range of valence scores for Flight of The Bumblebee into perspective -- what that value is capturing is abstracted away from the actual notes of the song. The valence feature propagates a vibe, so of course this uncertainty makes room for noise and variation.
 
-Glen confirmed that this process didn't know anything about lyrics, which makes valence a particularly difficult variable to built. It could, in theory, pick up on aspects of vocal performance, but it doesn't know anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Add to that that two humans might even disagree on the song's valence.
+Glen confirmed that this process didn't know anything about lyrics, which makes valence a particularly difficult variable to build. It could, in theory, pick up on aspects of vocal performance, but it doesn't know anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Add to that that two humans might even disagree on the song's valence.
 
 "Plus, we have the confounding factor of like, a song that seems happy today could be sad tomorrow because the singer was killed in a plane crash. The song didn't change, but our world changed and our reactions changed."
 
-All this said, Glen said that the way he's made use of these variables is by combing energy and valence to get a quadrant, which usually works "fairly well". High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming. I thanked Glen for this time, ended the call, and booted up the ❤️statistical computing programming language, R ❤️[@citeR].
+Macdonald suggests combining energy and valence to create quadrant, which usually works "fairly well". High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming.
 
 ```{r}
 #| label: fig-quadvalence
@@ -229,7 +227,7 @@ ggplot(df, aes(x = energy, y = valence)) +
   theme_minimal()
 ```
 
-In @fig-quadvalence, it looks like songs produced by Jack Antonoff are a little more clustered towards the lower end of valence, and across the spectrum of energy, although the variance is pretty big.
+In @fig-quadvalence, it looks like songs produced by Jack Antonoff are a little more clustered towards the lower end of valence, and across the spectrum of energy, although the variance is large.
 
 ```{r}
 #| label: fig-quaddanceability2
@@ -418,9 +416,7 @@ Finally, in @fig-tempo, there aren't many significant trends in tempo, except fo
 
 Now that we understand that there do seem to be some subtle differences in how variables that are and aren't produced by Jack behave, as seen in our cumulative distribution functions, our quadrants, and some minor trends in artists' sounds over time (specifically, `energy`), we can use a logistic regression to see if a model can a) predict whether a song was produced by Antonoff based on these variables, and b) tell us which variables were more significant in determining the output.
 
-# Model
-
-Since we're trying to figure out whether these variables can tell us anything about what Jack Antonoff's sound is all about, a good way to figure that out is by seeing if any of these variables can help us predict what songs are produced by Jack. Logistic regressions like questions with binary outcomes.
+# Logistic Regression
 
 I made a binary response variable, called `jack`, that has a value of 1 if the song was written by Jack, and a 0 otherwise. There are 10 predictor variables, all of which are continuous: **`danceability`**, **`energy`**, **`loudness`**, **`mode`**, **`speechiness`**, **`acousticness`**, **`instrumentalness`**, **`liveness`**, **`valence`**, and **`tempo`**.
 
@@ -540,6 +536,13 @@ df |>
 
 @tbl-mostdanceable shows us the 20 songs in Jack Antonoff's discography with the highest danceability scores. Bleachers takes up 35% of this list, and Taylor Swift takes up 40% of this list. St Vincent, The Chicks, Lorde, and Florence and the Machine also haves songs up there.
 
+
+# Random Forest
+
+
+
+
+
 # Discussion
 
 ## Danceability Predicts Jack-iness {#sec-first-point}
@@ -580,6 +583,10 @@ This was a feature that was invented in a lab \~15 years ago. This number refers
 
     -   Yeah I'm dancing. Or at least bobbing my head. I only became aware of that fact when I made eye contact with the guy next to me at this cafe.
 
+## Draw on the random forest danceability correlations graph, tie it into the close listen
+
+
+
 ## Danceability isn't even necessarily about Dancing! I propose: Visceral-ness
 
 I am thinking about what Gamman said in his video.
@@ -587,6 +594,13 @@ I am thinking about what Gamman said in his video.
 > I did use the phrase "visceral hatred". But i did so only to describe my visceral hatred. I can't stand the sound of it. I hate it. And the way in which I hate it is viscerally. But I didn't go beyond that because it doesn't go beyond that. Nothing against the guy, I like Taylor swift's stuff. It's just subjective taste.
 
 It's just his subjective taste, but in one way Gamman was actually totally on the money about this. The danceability variable, which is the strongest predictor of Jack-ness, seems to actually be more about "visceral"-ness when you do a close-listen of the songs with the highest danceability scores. Not all of them are danceable, but the one's that aren't still feel like they're trying to manipulate the way your body is holding itself in some way. The reason Jack is getting under people's skin could just be because his music... gets underneath your skin. Right to the viscera.
+
+
+
+
+
+
+
 
 ## Weaknesses and next steps
 
