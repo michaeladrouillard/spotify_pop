@@ -1,6 +1,6 @@
 ---
-title: "We Are All Trying to Describe Something And We Don't Have the Words"
-subtitle: "A Study of The Jack Antonoffification of Pop Music (Or: Propagating Uncertainty with Spotify)"
+title: "title"
+subtitle: "subtitle"
 author: 
   - Michaela Drouillard
 thanks: "Code and data are available at: https://github.com/michaeladrouillard/jack."
@@ -42,49 +42,7 @@ I built a second model, a Random Forest, to complement the insights drawn from t
 
 In the discussion section, I listen to the songs with the highest danceability scores, and make an argument that this `danceability` feature, which has so much uncertainty cooked into it, is really capturing something like visceral-ness. Against the odds, we can capture something about Antonoff's music with these variables, and it might just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe.
 
-# Mini literature review on Antonoff's place in culture? or should that go in the introduction
-
-# Either radically transform or cull the gamman or use it for the discussion section
-
-I reached out to Gamman to ask him to explain Antonoff to me, only to find out, on the morning of the interview, that Gamman had released a 29 minute video essay on his YouTube Channel covering [@citeGamman]:
-
-(you can skim the quote chunks)
-
-1.  what makes an Antonoff song so Antonoff-y
-
-    > ...I'm literally not an expert, and of course I don't actually claim to always be able to be able to 100% identify a Jack Antonoff song. It's not like I've been practicing the way that I can tell if he's produced something. It's just basically if it sounds to me like he's produced it. I know that's annoying I will clarify first, I think it's mostly in the vocal treatment, that's the thing that is the most off-putting to me. But just every decision feels a little bit wrong to me. If I wanted to be cringe I could point out the Juno 6 Bass, the perfectly stacked vocals, the Juno 6 pad, the wide and tight plate reverb, the Juno 6 sword, the goo goo gaga, the man hates treble unless it's just random crap swishing around, everything gets low passed with thin 707 drum samples, thin 808 drum samples, then 909 drum samples, thin Lin drum samples, thin thin drum samples, all the resonances, the harmonics get removed, everything is sort of squished down to the fundamental reduction in timbre, everything exists in a small frequency range, everything becomes a tone, it's an extremely consonant sound with no interplay between the different elements. Now that is a skill to do, and it produces a cleaner sound, and the only problem is I viscerally hate that sound. ...
-
-2.  his relationship to music growing up (some gems in here)
-
-    > ... I got into drumming at the age of like six, so maybe as a drummer the drum samples are \[offensive?\]. I was anachronistically raised on cassettes so, you know maybe I like the sound of audio and maybe that explains why I tend to like dissonance and inharmonic sound, interplay of elements, distortion noise, the clashing of elements. I imagine I've listened to more SoundCloud in my life than radio so uh, maybe I only want to hear amateur internet losers. I've liked over 10 000 songs on my Spotify account and I can identify lot of them off the bat, but I'm not that great at identifying music generally, so it's just a compartmentalized media consumption habit. I first did music production in primary school. I made mashups and dubstep. As a teenager I extensively used Juno 6 emulators to make embarrassing synthwave. \[Admittedly that's probably not the subconscious association that he's going for.\] Lyrics aren't of much interest to me, it's just a sound in the mix, and so maybe I don't like the focus on vocals. I've previously described \[my reaction\] as a fight or flight sort of thing, so maybe it's literally is tapping into some memory of trauma. I have an unusually small ear canal so maybe I'm just hearing the high end more acutely. I was hired as a teenager to play drums on a lot of Jack Antonoff songs for a university glee club so maybe I don't like it because of the embarrassment of having ever been associated with a glee club. I liked the album 1989 but to make the song Out of the Woods palatable to me I had to mash it up with M83Midnight City and that got a DMCA takedown so maybe it's a personal vendetta. And of course I have known and do know people who like this music so maybe I secretly hate my friends and family but I don't know if any of that tells us anything ...
-
-3.  An elegant and simple defense of taste
-
-    > ...I did use the phrase visceral hatred. But I did so only to describe my visceral hatred. I can't stand the sound of it. I hate it. And the way in which I hate it is viscerally. But I didn't go beyond that because it doesn't go beyond that. Nothing against the guy, I like Taylor Swift's stuff. It's just subjective taste...
-
-4.  His tongue in cheek and pretty based response to some of Twitter's negative response to his video
-
-    > .... \[it's just subjective taste\]. There's just nothing to engage with, so I've had to fabricate a reason for controversy. And what I've come up with is this: \**Reads off of phone*\* "The real reason I've been saying for years that I have a visceral reaction to Jack Antonoff's production style, the REAL reason is this: because during the rollout cycle of the album *Midnights*, I wanted to ascribe Taylor Swift's authorship to a man and diminish women's voices." So actually, I'm a sexist. So now that's out there, published as facts, in the news. With all the other facts...
-
-5.  Basically a refutation to the entire premise of my interview
-
-    > .."What makes you so special and unique that you can tell the production of a song?" Nothing. ...
-
-6.  Which was refuted even harder when I found a screenshot he tweeted of his tweet drafts in June 2021, one of them reading: "people often say to me:"caleb, what's wrong with jack antonoff?". don't ask questions"
-
-![](images/Screen%20Shot%202023-04-03%20at%209.31.05%20PM.png)
-
-> **Michaela Drouillard:** I know you cover this in the video. I'm sorry. What makes a Jack Antonoff song a Jack Antonoff song?
->
-> **Caleb Gamman:** I suppose I do have much more detail that I can go into, but it is always, for me, just a knee jerk. It's not any principled thing. I do have some loose experience with like, audio production stuff. So if I really dig into it, I can maybe point some things out. In the treble mix of the song, like in the very upper end, like sort of above where the vocals are. He often really crushes that down. Like it's lower in volume than anything else, which is sort of a weird effect. Like, when you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing her likes to do.
->
-> So I don't know, like I personally am quite a fan of messier music, you know, more experimental stuff, stuff that has a lot of clashing, sounds, a lot of different interesting pieces coming together. Jack Antonoff does a very good job of making stuff very clean. So you know, all of the notes that are happening simultaneously are perfectly stacked. They're like mathematically stacked .. Like, you have the harmonic spectrum where everything is like a multiple on top of each other. So that's like your notes on a keyboard. And if you played a keyboard note that was a little bit off where it's supposed to be, you're gonna create this interesting effect where these two notes sort of clash against each other and they wiggle around in terms of their tone because you've got these two harmonics happening that don't match. And Jack Antonoff avoids that quite strictly.
->
-> His drums are low pass, like the vocals, so you don't get like the tinny high end in the drums or whatever because that tinny high end in the drums is like a bunch of random harmonics all over the place. So if you cut that out, you just get the tone of the drum. And then he achieves those effects using the same sounds like literally the same synthesizer on the same drum machine and stuff.
->
-> ....
->
-> If you used a cscope spectrogram sort of thing to look at a Jack Antonoff song, you're gonna see a lot of big lines. And then if you're listening to a song by someone else, you're gonna see like a bunch of sort of like static wiggling. It's gonna be really jagged because you've got a bunch of harmonics that don't exactly mix with each other, so they're stacking in all sorts of weird different ways.
+# Lit Review 
 
 # Data {#sec-data}
 
@@ -179,13 +137,13 @@ sub_bees |>
   )
 ```
 
+## Interview with Glen McDonald
+
 I interviewed Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. Macdonald told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^2]:
 
 [^2]: My favourite example Glen gave was that the ML kept giving bluegrass songs insanely high `speechiness` ratings. Because there were no banjos in the training data, they were registered as human speech. (This is hilarious.) They had to go back and add more songs with banjos to the training data.
 
 "You could imagine writing a formula for energy that combines like loudness and tempo and degree of harmonic variation or something. So it was \[machine learning\], but that one's more like a human helping a machine figure out a formula. Whereas valence is teaching the machine to try to reproduce a purely human thing. Same with danceability. I mean, danceability is whether a human can dance to it. So like, the machine's not gonna dance, so the machine can't have any opinion on that. The computer could have an opinion on energy. And the computer can definitely have an opinion on loudness. So there's a spectrum from, you know, loudness as purely analytical, and then energy is a little like loudness, with a little more subjectivity. And then danceability and valence are purely subjective."
-
-This put the big range of valence scores for Flight of The Bumblebee into perspective -- what that value is capturing is abstracted away from the actual notes of the song. The valence feature propagates a vibe, so of course this uncertainty makes room for noise and variation.
 
 Glen confirmed that this process didn't know anything about lyrics, which makes valence a particularly difficult variable to build. It could, in theory, pick up on aspects of vocal performance, but it doesn't know anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Add to that that two humans might even disagree on the song's valence.
 
@@ -399,6 +357,8 @@ Now that we understand that there do seem to be some subtle differences in how v
 
 # Logistic Regression
 
+## Data Preparation
+
 I made a binary response variable, called `jack`, that has a value of 1 if the song was written by Jack, and a 0 otherwise. There are 10 predictor variables, all of which are continuous: **`danceability`**, **`energy`**, **`loudness`**, **`mode`**, **`speechiness`**, **`acousticness`**, **`instrumentalness`**, **`liveness`**, **`valence`**, and **`tempo`**.
 
 The formula for this logistic regression can be written as:
@@ -429,9 +389,9 @@ data_reduced |>
   labs(fill = "Jack", x = "Mean Value", y = "Feature")
 ```
 
-Bracketing the major blindspot that these variables provide a single number to represent the dynamics of an entire song, the model has a few other limitations. First of all, this model assumes that the relationship between the independent variables and the dependent variable is linear. There could be non-linear relationships between the variables that this model isn't capturing. Second, it assumes that the relationship between the independent variables and the dependent variable is the same for all observations, which might not be true in practice -- there could be interactions between the variables, or in certain subgroups of data where the relationship is different. Albums where Jack may have had more of a back seat producing role are one example. (The fact that a song's development, from inception to recording, is a whole creative process, each having its own origin story with varying degrees of Jack-ness, is another.)
+This model assumes that the relationship between the independent variables and the dependent variable is linear. There could be non-linear relationships between the variables that this model isn't capturing. Second, it assumes that the relationship between the independent variables and the dependent variable is the same for all observations, which might not be true in practice -- there could be interactions between the variables, or in certain subgroups of data where the relationship is different. Albums where Jack may have had more of a back seat producing role are one example. (The fact that a song's development, from inception to recording, is a whole creative process, each having its own origin story with varying degrees of Jack-ness, is another.)
 
-One issue is that in our dataset, there are a lot more songs that aren't produced by Jack than songs that are:
+One issue is that in our dataset, there are a lot more songs that aren't produced by Jack than songs that are. The classes have to be balanced.
 
 ```{r}
 #| echo: false
@@ -442,8 +402,6 @@ data_reduced |>
   knitr::kable(col.names = c("Is it Jack?", "Number of Songs"))
 ```
 
-So, we have to balance the classes.
-
 After some minor pre-processing using the `tidyverse` R package [@citetidyverse]. I followed @citeSilge to build a model that deals with the imbalanced classes.
 
 I used the `tidymodels` to fit the model [@citetidymodels]. To deal with the imbalanced classes, I downsampled the majority class using the **`step_downsample()`** function from the **`themis`** package. Then I used 5-fold cross-validation with stratification by the **`jack`** variable to estimate the performance of the model.
@@ -452,7 +410,7 @@ The `workflow_set()` function lets us hold different sets of feature engineering
 
 I used **`rank_results()`** from the **`yardstick`** package to rank the models based on accuracy, log loss, sensitivity, and specificity, and went with the downsampled model.
 
-# Results
+## Results
 
 The model's accuracy score is 0.743, and the ROC AUC score is 0.841. The accuracy score could be misleading, since the model had imbalanced classes, and downsampling may have affected the model's ability to correctly identify the minority class. The ROC AUC score is more reliable, since it's less sensitive to class imbalance.
 
@@ -536,6 +494,16 @@ Gini impurity was chose on the grounds that this study is interested in not only
 ## Results
 
 ### Model Performance
+
+| Metric                  | Value           |
+|-------------------------|-----------------|
+| Accuracy                | 0.6111          |
+| 95% Confidence Interval | (0.579, 0.6425) |
+| No Information Rate     | 0.4274          |
+| P-Value (Acc \> NIR)    | \<2.2e-16       |
+| Kappa                   | 0.4223          |
+
+: Overall Performance Statistics
 
 ### Stylistic Difference
 
