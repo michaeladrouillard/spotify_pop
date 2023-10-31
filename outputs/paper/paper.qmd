@@ -20,35 +20,27 @@ library(lubridate)
 
 ```
 
-
 # Introduction
 
 Shortly after the release of Taylor Swift's *Midnights* album, a video of the Youtuber Caleb Gammen, in which guesses which songs on Midnights were produced by Antonoff within seconds [@citeTweet], went viral. The tweet reads: "im able to instantly detect if jack antonoff worked on a song due to a visceral hatred of his production style". He nails it. Only one song on the album wasn't produced by Antonoff, and he guesses it.
 
-Antonoff began his career as a guitarist in fun., and is the frontman in Bleachers. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more.  Antonoff is prolific, to the extent that it is starting to bother people. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
+Antonoff began his career as a guitarist in fun., and is the frontman in Bleachers. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. Antonoff is prolific, to the extent that it is starting to bother people. As Andrew Marantz writes in the New Yorker: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
 
 (Cite a few snippets from critics articles to give a dose of the discourse)
 
-
 Can Spotify's audio features dataset help us determine what makes Antonoff music so Antonoff-y?
 
-I spoke to Caleb Gamman, a Youtuber and Antonoff-production-style hater who had a tweet go viral around the time of Taylor Swift's *Midnights* release, in which he predicts whether a song was produced by Antonoff within seconds. 
+I spoke to Caleb Gamman, a Youtuber and Antonoff-production-style hater who had a tweet go viral around the time of Taylor Swift's *Midnights* release, in which he predicts whether a song was produced by Antonoff within seconds.
 
-During an interview with Glen McDonald, an engineer at Spotify, I learned that the `valence` and `danceability` variables were created by hiring college interns and having them tag whether songs were positive or danceable. 
+During an interview with Glen McDonald, an engineer at Spotify, I learned that the `valence` and `danceability` variables were created by hiring college interns and having them tag whether songs were positive or danceable.
 
 I used two models to investigate the data. The first, a logistic regression, draws on the dataset of artists who've collaborated with Antonoff, with an extra binary variable to tag whether or not the song was an Antonoff production. With this model, we can get a first glimpse at variables that are stronger predictors of Antonoff-iness, along with a better understanding of whether the Spotify data can trace Antonoff's influence on an artist's sound over time.
 
 However, logistic regression assumes a linear relationship between the dependent and predictor variables, and is sensitive to multi-collinearity. In music data, we would expect for certain variables to be correlated (for instance, loudness and energy). We also cannot assume that an artists' style can be measured in the linear growth of these metrics. Although the logistic regression has a strong accuracy, indicating that danceability and loudness are the strongest indicators of an Anotonoff produced song, it may be detecting a change in genre, rather than a change in style, across artists whose sound turns more into pop while collaborating with Antonoff.
 
-I built a second model, a Random Forest, to complement the insights drawn from the logistic regression. The Random Forest trains on the full data set, including other producers. Random Forests (what's the package) don't assume linear relationships, and aren't sensitive to multicollinearity. In fact, using the x package in R, we can visualize and analyse the relationships between different variables. The variance in correlation scores across producers can be taken as an approximate for style, since this variance helps the model classify tracks. 
+I built a second model, a Random Forest, to complement the insights drawn from the logistic regression. The Random Forest trains on the full data set, including other producers. Random Forests (what's the package) don't assume linear relationships, and aren't sensitive to multicollinearity. In fact, using the x package in R, we can visualize and analyse the relationships between different variables. The variance in correlation scores across producers can be taken as an approximate for style, since this variance helps the model classify tracks.
 
 In the discussion section, I listen to the songs with the highest danceability scores, and make an argument that this `danceability` feature, which has so much uncertainty cooked into it, is really capturing something like visceral-ness. Against the odds, we can capture something about Antonoff's music with these variables, and it might just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe.
-
-
-
-TLDR of the Gamman interview is: Taste is subjective. People who can play instruments tend to be better at identifying and describing sounds. Cultural criticism is a hall of smoke and mirrors. Antonoff is everywhere.
-
-Can we translate any of this into something observable? Can we quantify the Jack Antonoff-ification of pop music?
 
 # Mini literature review on Antonoff's place in culture? or should that go in the introduction
 
@@ -82,8 +74,6 @@ I reached out to Gamman to ask him to explain Antonoff to me, only to find out, 
 
 ![](images/Screen%20Shot%202023-04-03%20at%209.31.05%20PM.png)
 
-It is a perfect video essay. I pestered him anyway:
-
 > **Michaela Drouillard:** I know you cover this in the video. I'm sorry. What makes a Jack Antonoff song a Jack Antonoff song?
 >
 > **Caleb Gamman:** I suppose I do have much more detail that I can go into, but it is always, for me, just a knee jerk. It's not any principled thing. I do have some loose experience with like, audio production stuff. So if I really dig into it, I can maybe point some things out. In the treble mix of the song, like in the very upper end, like sort of above where the vocals are. He often really crushes that down. Like it's lower in volume than anything else, which is sort of a weird effect. Like, when you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing her likes to do.
@@ -96,30 +86,21 @@ It is a perfect video essay. I pestered him anyway:
 >
 > If you used a cscope spectrogram sort of thing to look at a Jack Antonoff song, you're gonna see a lot of big lines. And then if you're listening to a song by someone else, you're gonna see like a bunch of sort of like static wiggling. It's gonna be really jagged because you've got a bunch of harmonics that don't exactly mix with each other, so they're stacking in all sorts of weird different ways.
 
-
-
-
-
 # Data {#sec-data}
 
 The audio feature data was pulled using Spotify API, which I accessed using the `spotifyr` package in R [@citeSpotify]. I used the `get_artist_audio_features` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. I threw in HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski in too, since they've never collaborated with Jack Antonoff but are more or less part of the same pop sphere.
 
-
 I also scraped the discographies of comparable contemporary pop producers' Wikipedias. The producers include Epworth, Rechstaid, Max Martin, Nowels, Joel Little, and Greg Kustin. (cite Carl here?) These producers were chosen based on their popularity, and also because some of them collaborated with artists who also collaborate with Antonoff.
 
-The data was manually validated, and live performances, karaoke editions, international versions or translations, and remix albums were removed. Where deluxe albums were available, original albums were deleted to avoid duplicate rows. 
-
-
+The data was manually validated, and live performances, karaoke editions, international versions or translations, and remix albums were removed. Where deluxe albums were available, original albums were deleted to avoid duplicate rows.
 
 ### Artist Selection
 
-Of the artists who did collaborate with Antonoff, I chose these artists because they've produced multiple albums, and at least one album with Antonoff, as opposed to just individual songs. 
+Of the artists who did collaborate with Antonoff, I chose these artists because they've produced multiple albums, and at least one album with Antonoff, as opposed to just individual songs.
 
 ### Data Cleaning
 
 I joined these data sets using the `rbind` function in base R, and created an additional variable called "jack", which contains a 1 if Jack Antonoff produced or co-produced the song, and a 0 if he had nothing to do with it. I got the information on which songs Antonoff did or did not produce from the "Jack Antonoff Production Discography" Wikipedia page [@citewiki].
-
-
 
 ### Audio Features Dataset
 
@@ -147,9 +128,9 @@ From the `get_artist_audio_features` documentation (@citeSpotifyDocumentation):
 >
 > -   **valence:** A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
 
-It's hard to gauge exactly what the variables "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)". "Danceability" is described as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like "danceability". However, whatever these features capture is easier to compare across artists in visualizations than more granular details about bars, beats, duration, and tatums[^3].
+It's hard to gauge exactly what the variables "danceability" or "valence" mean, even using the documentation. For instance, "valence" is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)". "Danceability" is described as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like "danceability". However, whatever these features capture is easier to compare across artists in visualizations than more granular details about bars, beats, duration, and tatums[^1].
 
-[^3]: \-- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events".
+[^1]: \-- a word I just learned, which refers to "the lowest regular pulse train that a listener intuitively infers from the timing of perceived musical events".
 
 This is pretty vague. Especially valence -- is the positivity related to lyrics, or something else? I compared the valence scores of classical music tracks to see if this score is based on lyrics, or the just the instruments. In @tbl-Holst, Gustav Holst's Jupiter has a valence score 326.78% higher than Mars. This tracks. It suggests the valence is based on audio features other than lyrical content. It also suggests that it is, in fact, capturing a difference between the two songs' profiles.
 
@@ -198,11 +179,11 @@ sub_bees |>
   )
 ```
 
-I interviewed Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. Macdonald told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^4]:
+I interviewed Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. Macdonald told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^2]:
 
-[^4]: My favourite example Glen gave was that the ML kept giving bluegrass songs insanely high `speechiness` ratings. Because there were no banjos in the training data, they were registered as human speech. (This is hilarious.) They had to go back and add more songs with banjos to the training data.
+[^2]: My favourite example Glen gave was that the ML kept giving bluegrass songs insanely high `speechiness` ratings. Because there were no banjos in the training data, they were registered as human speech. (This is hilarious.) They had to go back and add more songs with banjos to the training data.
 
-"You could imagine writing a formula for energy that combines like loudness and tempo and degree of harmonic variation or something. So it was [machine learning], but that one's more like a human helping a machine figure out a formula. Whereas valence is teaching the machine to try to reproduce a purely human thing. Same with danceability. I mean, danceability is whether a human can dance to it. So like, the machine's not gonna dance, so the machine can't have any opinion on that. The computer could have an opinion on energy. And the computer can definitely have an opinion on loudness. So there's a spectrum from, you know, loudness as purely analytical, and then energy is a little like loudness, with a little more subjectivity. And then danceability and valence are purely subjective."
+"You could imagine writing a formula for energy that combines like loudness and tempo and degree of harmonic variation or something. So it was \[machine learning\], but that one's more like a human helping a machine figure out a formula. Whereas valence is teaching the machine to try to reproduce a purely human thing. Same with danceability. I mean, danceability is whether a human can dance to it. So like, the machine's not gonna dance, so the machine can't have any opinion on that. The computer could have an opinion on energy. And the computer can definitely have an opinion on loudness. So there's a spectrum from, you know, loudness as purely analytical, and then energy is a little like loudness, with a little more subjectivity. And then danceability and valence are purely subjective."
 
 This put the big range of valence scores for Flight of The Bumblebee into perspective -- what that value is capturing is abstracted away from the actual notes of the song. The valence feature propagates a vibe, so of course this uncertainty makes room for noise and variation.
 
@@ -536,14 +517,147 @@ df |>
 
 @tbl-mostdanceable shows us the 20 songs in Jack Antonoff's discography with the highest danceability scores. Bleachers takes up 35% of this list, and Taylor Swift takes up 40% of this list. St Vincent, The Chicks, Lorde, and Florence and the Machine also haves songs up there.
 
-
 # Random Forest
 
+Random forests (RF) build an ensemble of decision trees during the training phase, and then use majority voting for classification tasks. Each tree in the ensembled is trained on a random sample of data taken with replacement, and only a random subset of features are considered when splitting at each node. This method ensures that each tree in the ensemble is unique, avoiding overfitting and capturing non-linear relationships and more complex patterns in the data. The formula behind the RF is:
+
+## Data Preparation
+
+The categorical feature 'producer', which contains the names of the producer for each track, was one-hot encoded to create binary columns for each producer ('is_antonoff', 'is_elworth', etc.). The producer feature was then converted into a factor variable, and the dataset was split into training and tests sets.
+
+## Model Training
+
+The RF was trainied using the @ranger package. The 'importance' parameter was set to 'impurity', which sets the model to interpret variable importance using Gini impurity.
+
+Gini impurity is a measure of misclassification. At every split in a decision tree, the algorithm tests how well each feature splits the data. The features that split the data the most accurately, and then with the least impurity, would have the lowest impurity score. In Random Forests, a variable's importance can be calculated by looking at how much the tree nodes that use that variable reduce impurity on average.
+
+Gini impurity was chose on the grounds that this study is interested in not only classifying producers, but, more importantly, in understanding how the underlying data informs these decisions. By calculating the Gini impurity not only for the entire model, but specifically for each producer, we can better understand how the variables in our dataset describe the differences between producers. Without song structure, instruments, sound, or other more ephemeral components of style, these differences can be taken as a proxy for style.
+
+## Results
+
+### Model Performance
+
+### Stylistic Difference
+
+Correlation heatmaps can help us better understand the differences between each producer's "style". The variables with the most variance were danceability, loudness, and energy.
+
+```{r}
+#| echo: false
+#| warning: false
+## Range of correlation scores
+
+library(dplyr)
+
+range_data <- table_data %>%
+  gather(variable, value, -producer, -term) %>%
+  group_by(variable) %>%
+  summarize(
+    min_value = min(value, na.rm = TRUE),
+    max_value = max(value, na.rm = TRUE),
+    range = max_value - min_value
+  ) %>%
+  arrange(-range)
+
+
+##Variables with greatest variance##
+top_vars <- range_data %>% 
+  top_n(3, range) %>%
+  pull(variable)
+
+print(top_vars)
 
 
 
+selected_data <- table_data %>%
+  select(producer, term, all_of(top_vars)) %>%
+  arrange(producer, term)
+
+print(selected_data)
+
+library(ggplot2)
+```
+
+Similar to the logistic regression, danceability was also, across all producers, the most important predictor in the classification process.
+
+```{r}
+#| echo: false
+#| warning: false
+list_importance <- list()
+unique_producers <- unique(data_reduced$producer)
+
+for (producer in unique_producers) {
+  data_temp <- data_reduced
+  data_temp$producer_binary <- as.factor(ifelse(data_temp$producer == producer, 1, 0))
+  
+  rf_temp <- randomForest(producer_binary ~ . - producer, data = data_temp, ntree = 100)
+  
+  importance_temp <- rf_temp$importance
+  print(colnames(importance_temp))  # To see available columns
+  
+  list_importance[[producer]] <- importance_temp[,'MeanDecreaseGini']
+}
+
+df_importance <- bind_rows(list_importance, .id = "producer")
+
+head(df_importance)
+
+df_importance_long <- df_importance %>%
+  gather(variable, importance, -producer)
+
+ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance)) +
+  geom_bar(stat = "identity") +
+  facet_wrap(~producer, scales = "fixed") + 
+  coord_flip() +
+  labs(title = "Variable Importance by Producer", 
+       x = "Variable", 
+       y = "Mean Decrease Gini") +
+  theme_minimal()
+
+
+```
+
+In the visualization of danceability correlations across producers, Antonoff's danceability has the least positive correlation with valence (SCORE), the most negative correlation with acousticness (SCORE), and significant positive correlations with speechiness (SCORE), loudness (SCORE), and energy (SCORE).
+
+```{r}
+#| echo: false
+#| warning: false
+# Danceability Plot
+ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
+  geom_bar(stat="identity", position="dodge") +
+  labs(title="Danceability across Producers", y="Danceability Score") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 # Discussion
+
+Antonoff's danceability score being, compared to other producers, significantly positively correlated with speechiness, loudness and energy, negatively correlated with acousticness, and less than average with valence tracks with how critics tend to describe his music.
+
+His tracks have been described as anthemic (cite), with a distinct vocal treatment that makes it sound, as Gamman put it, "the way it would sound to the person who's singing them".
+
+> In the treble mix of the song, like in the very upper end, sort of above where the vocals are -- he often really crushes that down. It's lower in volume than anything else, which is sort of a weird effect. When you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing , them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing her likes to do.
+
+Clearing noise and isolating the middle range of the vocals may make for a stronger "speechiness" feature.
+
+Valence, like danceability, was also a subjective variable built using labeling. Returning to the music itself, Antonoff-produced songs with the highest danceability scores aren't exactly dance hits.
+
+-   I Think He Knows by Taylor Swift:
+
+-   Vigilante Shit by Taylor Swift:
+
+    -   Not danceable.
+
+-   Heaven is Here by Florence and the Machine
+
+    -   Not danceable, but it does seem like it's trying to get your body to do something.
+
+-   I Wanna Get Better by Bleachers
+
+    -   More anthemic than danceable. It also seems like it's trying to coercing your attention, if not your body, and the speechiness, loudness, and energy are all apparent. The valence is apparent in the lyrics, but it doesn't have the kind of rhythm for dancing.
+
+-   Cornelia Street by Taylor Swift
+
+    -   
 
 ## Danceability Predicts Jack-iness {#sec-first-point}
 
@@ -551,15 +665,11 @@ Using the Spotify Audio Features, you can't really gauge what Jack Antonoff's mu
 
 > I think it's mostly in the vocal treatment, that's the thing that is the most off-putting to me. But just every decision feels a little bit wrong to me. If I wanted to be cringe I could point out the Juno 6 Bass, the perfectly stacked vocals, the Juno 6 pad, the wide and tight plate reverb, the Juno 6 sword, the goo goo gaga, the man hates treble unless it's just random crap swishing around, everything gets low passed with thin 707 drum samples, thin 808 drum samples, then 909 drum samples, thin Lin drum samples, thin thin drum samples, all the resonances, the harmonics get removed, everything is sort of squished down to the fundamental reduction in timbre, everything exists in a small frequency range, everything becomes a tone, it's an extremely consonant sound with no interplay between the different elements. Now that is a skill to do, and it produces a cleaner sound, and the only problem is I viscerally hate that sound.
 
-The Spotify Features also wouldn't help you understand in the same way you end up understanding it if you sat on my friend Matthew Jordan's couch and watched him beat box a few different Jack Antonoff and Pharrell impressions in order to show the contrast.
-
 According to this model, though, danceability is the most important feature in predicting whether a song was produced by Jack Antonoff. And the accuracy metrics aren't awful -- the accuracy score is 0.743, and the roc_auc (receiver operating characteristic area under the curve) (more fun to say out loud as an abbreviation. Rock Auck), which is a metric better suited for imbalanced datasets, such as our own, is 0.810. This means that although danceability can't show us the inside of a song, something about this score is telling us something about Jack's music.
 
-This was a feature that was invented in a lab \~15 years ago. This number refers to the time a bunch of undergraduates were paid (hopefully?) to listen to a bunch of songs and tag whether they were danceable or not. It is pretty much based on intuition. It captures this je-ne-sais-quoi essence of music that connects with listeners on a visceral level. Even if it doesn't make YOUR body want to move, you could imagine it making SOMEBODY'S body want to move.
+### In which I do a close listen of our model's top 5 most danceable songs[^3]:
 
-### In which I do a close listen of our model's top 5 most danceable songs[^5]:
-
-[^5]: I encourage you to follow along and drop me an email with your own assessment at michaela.drouillard\@mail.utoronto.ca.
+[^3]: I encourage you to follow along and drop me an email with your own assessment at michaela.drouillard\@mail.utoronto.ca.
 
 -   I Think He Knows by Taylor Swift:
 
@@ -573,8 +683,6 @@ This was a feature that was invented in a lab \~15 years ago. This number refers
 
     -   DEFINITELY not danceable. But it is trying to get your body to do something. Kind of sounds like it's suggesting that you join a Macedonian phalanx or something. But no. Not danceable.
 
-    ![](images/Macefonian_phalanx.png)
-
 -   I Wanna Get Better by Bleachers
 
     -   I don't know if "danceability" is the word, but I'll give it "anthem"-y. Like, I can't picture a group of friends dancing to this in the kitchen, but I can picture someone driving, on their way to give a presentation or negotiate a promotion or something, and this song comes on the radio and they leave it on. They kind of lean into it.
@@ -583,24 +691,11 @@ This was a feature that was invented in a lab \~15 years ago. This number refers
 
     -   Yeah I'm dancing. Or at least bobbing my head. I only became aware of that fact when I made eye contact with the guy next to me at this cafe.
 
-## Draw on the random forest danceability correlations graph, tie it into the close listen
-
-
-
-## Danceability isn't even necessarily about Dancing! I propose: Visceral-ness
-
 I am thinking about what Gamman said in his video.
 
 > I did use the phrase "visceral hatred". But i did so only to describe my visceral hatred. I can't stand the sound of it. I hate it. And the way in which I hate it is viscerally. But I didn't go beyond that because it doesn't go beyond that. Nothing against the guy, I like Taylor swift's stuff. It's just subjective taste.
 
 It's just his subjective taste, but in one way Gamman was actually totally on the money about this. The danceability variable, which is the strongest predictor of Jack-ness, seems to actually be more about "visceral"-ness when you do a close-listen of the songs with the highest danceability scores. Not all of them are danceable, but the one's that aren't still feel like they're trying to manipulate the way your body is holding itself in some way. The reason Jack is getting under people's skin could just be because his music... gets underneath your skin. Right to the viscera.
-
-
-
-
-
-
-
 
 ## Weaknesses and next steps
 
