@@ -302,9 +302,7 @@ In @fig-instrumentalness, St. Vincent is the only plot with any significant tren
 
 Finally, in @fig-tempo, there aren't many significant trends in tempo, except for Antonoff's collaborations with Lana Del Rey and Taylor Swift.
 
-We've observed subtle distinctions in variables associated with songs produced by Jack Antonoff, as evidenced by our cumulative distribution functions, quadrant analyses, and minor trends in the evolution of artists' sound characteristics, particularly energy. Employing a logistic regression will then:
-a) determine the likelihood of a song being produced by Antonoff based on these identified variables, and
-b) discern which variables are most influential in shaping this classification.
+We've observed subtle distinctions in variables associated with songs produced by Jack Antonoff, as evidenced by our cumulative distribution functions, quadrant analyses, and minor trends in the evolution of artists' sound characteristics, particularly energy. Employing a logistic regression will then: a) determine the likelihood of a song being produced by Antonoff based on these identified variables, and b) discern which variables are most influential in shaping this classification.
 
 # Logistic Regression
 
@@ -421,7 +419,7 @@ clean_df |>
 
 # Random Forest
 
-Random forests (RF) build an ensemble of decision trees during the training phase, and then use majority voting for classification tasks. Each tree in the ensemble is trained on a random sample of data taken with replacement, and only a random subset of features are considered when splitting at each node. This method ensures that each tree in the ensemble is unique, avoiding overfitting and capturing non-linear relationships and more complex patterns in the data. The formula behind the RF is:
+Random forests (RF) build an ensemble of decision trees during the training phase, and then use majority voting for classification tasks. Each tree in the ensemble is trained on a random sample of data taken with replacement, and only a random subset of features are considered when splitting at each node. This method ensures that each tree in the ensemble is unique, avoiding overfitting and capturing non-linear relationships and more complex patterns in the data.
 
 ## Data Preparation
 
