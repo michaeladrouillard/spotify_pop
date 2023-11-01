@@ -3,7 +3,7 @@ title: "title"
 subtitle: "subtitle"
 author: 
   - Michaela Drouillard
-thanks: "Code and data are available at: https://github.com/michaeladrouillard/jack."
+thanks: "Code and data are available at: https://github.com/michaeladrouillard/spotify_pop."
 date: today
 abstract: "Using data from the Spotify API, I explored Jack Antonoff's production style and assessed whether Spotify's audio features can capture it. In an interview with Glen McDonald, an engineer at Spotify, I learned that the danceability and valence features were created by having interns tag songs as positive or gloomy, or danceable or un-danceable. Using a logistic regression model, I found that danceability was the most important feature in predicting Antonoff's involvement in a song. In the discussion section, I do a close-listen of Antonoff's most danceable songs, and argue that the danceability variable is actually capturing something more like a visceral quality to Antonoff's music."
 format: pdf
@@ -42,7 +42,7 @@ I built a second model, a Random Forest, to complement the insights drawn from t
 
 In the discussion section, I listen to the songs with the highest danceability scores, and make an argument that this `danceability` feature, which has so much uncertainty cooked into it, is really capturing something like visceral-ness. Against the odds, we can capture something about Antonoff's music with these variables, and it might just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe.
 
-# Lit Review 
+# Lit Review
 
 # Data {#sec-data}
 
@@ -359,7 +359,7 @@ Now that we understand that there do seem to be some subtle differences in how v
 
 ## Data Preparation
 
-I made a binary response variable, called `jack`, that has a value of 1 if the song was written by Jack, and a 0 otherwise. There are 10 predictor variables, all of which are continuous: **`danceability`**, **`energy`**, **`loudness`**, **`mode`**, **`speechiness`**, **`acousticness`**, **`instrumentalness`**, **`liveness`**, **`valence`**, and **`tempo`**.
+The binary response variable, called `is_antonoff`, has a value of 1 if the song was produced by Antonoff, and a 0 otherwise. There are 10 predictor variables, all of which are continuous: **`danceability`**, **`energy`**, **`loudness`**, **`mode`**, **`speechiness`**, **`acousticness`**, **`instrumentalness`**, **`liveness`**, **`valence`**, and **`tempo`**.
 
 The formula for this logistic regression can be written as:
 
@@ -367,9 +367,9 @@ $$
 \mbox{Pr}(y_i=1) = \mbox{logit}^{-1}\left(\beta_0+\beta_1 x_i\right)
 $$
 
-where $\text{Pr}(y_i=1)$ is the probability of a song being written by Jack, $\beta_0$ is the intercept, and $\beta_1, \ldots, \beta_{10}$ are the coefficients corresponding to the predictor variables.
+where $\text{Pr}(y_i=1)$ is the probability of a song being produced by Antonoff, $\beta_0$ is the intercept, and $\beta_1, \ldots, \beta_{10}$ are the coefficients corresponding to the predictor variables.
 
-@fig-means gives us an idea of the mean value of each of these features for Jack and non-Jack song. A logistic regression will give us a better idea of how to weigh each of these features in order to predict the outcome, which gives us information about the "research" "question": are these characteristics related to Jack's music? (And then: Which ones? And then, the most elusive question: How?)
+@fig-means gives us an idea of the mean value of each of these features for Antonofff and non-Antonoff-produced tracks.
 
 ```{r}
 #| label: fig-means
@@ -377,19 +377,17 @@ where $\text{Pr}(y_i=1)$ is the probability of a song being written by Jack, $\b
 #| echo: false
 #| warning: false
 
-data_reduced <- read_csv(here::here("inputs/data/data_reduced.csv"))
+lr_data <- read_csv(here::here("inputs/data/lr_data.csv"))
 
-data_reduced |>
-  group_by(jack) |>
+lr_data |>
+  group_by(is_antonoff) |>
   summarise(across(-c(tempo, loudness), mean)) |>
-  pivot_longer(cols = -jack) |>
-  ggplot(aes(value, name, fill = factor(jack))) +
+  pivot_longer(cols = -is_antonoff) |>
+  ggplot(aes(value, name, fill = factor(is_antonoff))) +
   geom_col(alpha = 0.8, position = "dodge") +
   theme_minimal() +
   labs(fill = "Jack", x = "Mean Value", y = "Feature")
 ```
-
-This model assumes that the relationship between the independent variables and the dependent variable is linear. There could be non-linear relationships between the variables that this model isn't capturing. Second, it assumes that the relationship between the independent variables and the dependent variable is the same for all observations, which might not be true in practice -- there could be interactions between the variables, or in certain subgroups of data where the relationship is different. Albums where Jack may have had more of a back seat producing role are one example. (The fact that a song's development, from inception to recording, is a whole creative process, each having its own origin story with varying degrees of Jack-ness, is another.)
 
 One issue is that in our dataset, there are a lot more songs that aren't produced by Jack than songs that are. The classes have to be balanced.
 
@@ -408,16 +406,20 @@ I used the `tidymodels` to fit the model [@citetidymodels]. To deal with the imb
 
 The `workflow_set()` function lets us hold different sets of feature engineering together and use tuning to evaluate them all at once. I need to evaluate two elements: a basic model, and a model that was downsampled using the `themis` package.
 
-I used **`rank_results()`** from the **`yardstick`** package to rank the models based on accuracy, log loss, sensitivity, and specificity, and went with the downsampled model.
+I used **`rank_results()`** from the **`yardstick`** package to rank the models based on accuracy, log loss, sensitivity, and specificity. After testing both basic and downsampled versions of the model, the basic version yielded much higher accuracy score (0.918 basic versus 0.743 downsampled), although a lower roc auc score (0.746 basic versus 0.821 downsampled).
+
+The version with the original data remains consistently high in accuracy, even with increased regularization. It starts low with in mean log loss and sensitivity, but increases with increased regularization. Compared to the downsampled data, which starts high but drops significantly in accuracy and sensitivity, we chose to use the original data.
+
+![Comparing the Performance for Downsampled and Original Data](images/downsamplevsorig)
 
 ## Results
 
-The model's accuracy score is 0.743, and the ROC AUC score is 0.841. The accuracy score could be misleading, since the model had imbalanced classes, and downsampling may have affected the model's ability to correctly identify the minority class. The ROC AUC score is more reliable, since it's less sensitive to class imbalance.
+The model's accuracy score is 0.918, and the ROC AUC score is 0.746.
 
 |                        | Actually Positive (1) | Actually Negative (0) |
 |------------------------|-----------------------|-----------------------|
-| Predicted Positive (1) | 581                   | 25                    |
-| Predicted Negative (0) | 194                   | 51                    |
+| Predicted Positive (1) | 848                   | 76                    |
+| Predicted Negative (0) | 1                     | 0                     |
 
 : Confusion Matrix for Logistic Regression Results
 
@@ -425,13 +427,13 @@ The model's accuracy score is 0.743, and the ROC AUC score is 0.841. The accurac
 
 ```{r}
 #| label: tbl-importance
-#| tbl-cap: Importance Scores of Each Variable in Determining Jack-ness
+#| tbl-cap: Importance Scores of Each Variable in Determining Antonoff's Tracks
 #| echo: false
 #| warning: false
 
-jack_vip <- read_csv(here::here("inputs/data/jack_vip.csv"))
+antonoff_vip <- read_csv(here::here("inputs/data/antonoff_vip.csv"))
 
-jack_vip |>
+antonoff_vip |>
   knitr::kable(col.names = c("Variable",
                              "Importance",
                              "Sign"))
@@ -439,11 +441,11 @@ jack_vip |>
 
 ```{r}
 #| label: fig-importance
-#| fig-cap: Importance Scores of Each Variable in Determining Jack-ness
+#| fig-cap: Importance Scores of Each Variable in Determining Antonoff's tracks
 #| echo: false
 #| warning: false
 
-jack_vip |>
+antonoff_vip |>
   group_by(Sign) |>
   slice_max(Importance, n = 15) |>
   ungroup() |>
@@ -454,7 +456,7 @@ jack_vip |>
   theme(legend.position = "none")
 ```
 
-Danceability, with a positive importance score of 4.32, had the highest level of importance in determining whether a song was produced or co-produced by Jack Antonoff. Instrumentalness comes in second at 2.59, with a negative score (meaning that negative instrumentalness is correlated), and valence comes in third with a negative score at 2.02.
+Danceability, with a positive importance score of 4.142, had the highest level of importance in determining whether a song was produced or co-produced by Jack Antonoff. Valence comes in second at 2.559, with negative score. The third, instrumentalness correlates negatively with Antonoff tracks with a a negative score of 2.309.
 
 ```{r}
 #| label: tbl-mostdanceable
@@ -462,8 +464,10 @@ Danceability, with a positive importance score of 4.32, had the highest level of
 #| echo: false
 #| warning: false
 
-df |>
-  filter(jack == 1) |>
+clean_df <- read_csv(here::here("inputs/data/clean_df.csv"))
+
+clean_df |>
+  filter(producer == "antonoff") |>
   arrange(desc(danceability)) |>
   distinct(track_name, .keep_all = TRUE) |>
   select(artist_name, danceability, track_name) |>
@@ -481,15 +485,15 @@ Random forests (RF) build an ensemble of decision trees during the training phas
 
 ## Data Preparation
 
-The categorical feature 'producer', which contains the names of the producer for each track, was one-hot encoded to create binary columns for each producer ('is_antonoff', 'is_elworth', etc.). The producer feature was then converted into a factor variable, and the dataset was split into training and tests sets.
+The categorical feature `producer`, which contains the names of the producer for each track, was one-hot encoded to create binary columns for each producer (i.e. `is_antonoff`, `is_elworth`, etc.). The producer feature was then converted into a factor variable, and the dataset was split into training and tests sets.
 
 ## Model Training
 
-The RF was trainied using the @ranger package. The 'importance' parameter was set to 'impurity', which sets the model to interpret variable importance using Gini impurity.
+The RF was trained using the @ranger package. The 'importance' parameter was set to 'impurity', which sets the model to interpret variable importance using Gini impurity.
 
 Gini impurity is a measure of misclassification. At every split in a decision tree, the algorithm tests how well each feature splits the data. The features that split the data the most accurately, and then with the least impurity, would have the lowest impurity score. In Random Forests, a variable's importance can be calculated by looking at how much the tree nodes that use that variable reduce impurity on average.
 
-Gini impurity was chose on the grounds that this study is interested in not only classifying producers, but, more importantly, in understanding how the underlying data informs these decisions. By calculating the Gini impurity not only for the entire model, but specifically for each producer, we can better understand how the variables in our dataset describe the differences between producers. Without song structure, instruments, sound, or other more ephemeral components of style, these differences can be taken as a proxy for style.
+Gini impurity was chosen on the grounds that this study is interested in not only classifying producers, but, more importantly, in understanding how the underlying data informs these decisions. By calculating the Gini impurity not only for the entire model, but specifically for each producer, we can better understand how the variables in our dataset describe the differences between producers. Without song structure, instruments, sound, or other more ephemeral components of style, these differences can be taken as a proxy for style.
 
 ## Results
 
@@ -504,6 +508,10 @@ Gini impurity was chose on the grounds that this study is interested in not only
 | Kappa                   | 0.4223          |
 
 : Overall Performance Statistics
+
+The accuracy of the model (0.6111) being significantly higher than the No Information Rate (0.4274) means that it is doing more than just blind guessing based on class prevalence. With a p-value below 0.05, we can confirm the model's statistical significance over a naive approach.
+
+The model's accuracy and Kappa statistics suggest a moderate level of performance. However, there is enough demonstrated statistical significance to suggest that there are underlying patterns in the data that differentiate producers.
 
 ### Stylistic Difference
 

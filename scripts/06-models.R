@@ -13,6 +13,8 @@ library(tidymodels)
 library(randomForest)
 library(ranger)
 library(caret)
+library(themis)
+library(yardstick)
 
 data <- read_csv(here::here("inputs/data/clean_df.csv"))
 
@@ -29,24 +31,24 @@ write_csv(data_reduced,"inputs/data/data_reduced.csv")
 
 #### Predicting Antonoff ####
 ## glmnet requires all variables to be numeric, so i'm excluding the producer column
-
-# 1. Create a new binary column
-data_reduced$is_antonoff <- ifelse(data_reduced$producer == "antonoff", 1, 0)
 set.seed(853)
+# 1. Create a new binary column
+lr_data <- data_reduced
+lr_data$is_antonoff <- ifelse(lr_data$producer == "antonoff", 1, 0)
+lr_data$is_antonoff <- as.factor(lr_data$is_antonoff)
 
-data_reduced$is_antonoff <- as.factor(data_reduced$is_antonoff)
+
+write_csv(lr_data, "inputs/data/lr_data.csv")
 
 # 2. Update variable names and strata
 antonoff_split <- 
-  data_reduced |>
+  lr_data |>
   initial_split(strata = is_antonoff)
 
 antonoff_train <- training(antonoff_split)
 antonoff_test <- testing(antonoff_split)
-
-set.seed(853)
 antonoff_folds <- vfold_cv(antonoff_train, strata = is_antonoff)
-antonoff_folds
+
 
 # 3. Update the recipe
 is_antonoff <- 
@@ -57,12 +59,12 @@ is_antonoff <-
 # we can `prep()` just to check that it works:
 prep(is_antonoff)
 
+
+
+
 glmnet_spec <- 
   logistic_reg(penalty = tune(), mixture = 1) |>
   set_engine("glmnet")
-
-# install.packages("themis")
-library(themis)
 
 # Comparing the basic model and the downsampled one
 wf_set <-
@@ -79,15 +81,13 @@ narrower_penalty <- penalty(range = c(-3, 0))
 # install.packages("doParallel")
 doParallel::registerDoParallel()
 
-set.seed(853)
-
 tune_rs <- 
   workflow_map(
     wf_set,
     "tune_grid",
     resamples = antonoff_folds,
     grid = 15,
-    metrics = metric_set(accuracy, mn_log_loss, sensitivity, specificity),
+    metrics = metric_set(sens, spec, accuracy, mn_log_loss),
     param_info = parameters(narrower_penalty)
   )
 
@@ -95,10 +95,13 @@ tune_rs
 
 autoplot(tune_rs) + theme(legend.position = "none")
 
-rank_results(tune_rs, rank_metric = "sensitivity")
+rank_results(tune_rs, rank_metric = "sens")
 rank_results(tune_rs, rank_metric = "mn_log_loss")
 rank_results(tune_rs, rank_metric = "accuracy")
-rank_results(tune_rs, rank_metric = "specificity")
+rank_results(tune_rs, rank_metric = "spec")
+
+
+## Downsampling vs Basic
 
 downsample_rs <-
   tune_rs %>%
@@ -126,7 +129,7 @@ best_penalty
 # and evaluates one time on the testing data
 final_fit <-  
   wf_set %>% 
-  extract_workflow("downsampling_glmnet") %>%
+  extract_workflow("basic_glmnet") %>%
   finalize_workflow(best_penalty) %>%
   last_fit(antonoff_split)
 
@@ -148,7 +151,7 @@ antonoff_vip <-
   vi()
 
 antonoff_vip
-
+write_csv(antonoff_vip, "inputs/data/antonoff_vip.csv")
 
 ## Predictors ##
 
