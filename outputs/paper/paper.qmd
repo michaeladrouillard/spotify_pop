@@ -111,9 +111,6 @@ This is pretty vague. Especially valence -- is the positivity related to lyrics,
 
 I looked at the valence measures on Nikolai Rimsky-Korsakov's Flight of the Bumblebee, a song that's much faster and frantic than Mars and Jupiter. What I found complicated my understanding of valence -- different performances of the same song had different valence scores (@tbl-bees). Some were arias, played by different instruments. Arias tended to have higher valence scores. The lowest recorded valence across all performances is 0.2410, and the highest is .9230. What gives?
 
-```{}
-```
-
 ## Interview with Glen McDonald
 
 I interviewed Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. Macdonald told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^2]:
@@ -142,7 +139,6 @@ Macdonald suggests combining energy and valence to create quadrant, which usuall
 #   geom_hline(yintercept = mean(df$valence), color = "gray") +
 #   theme_minimal()
 ```
-
 
 In @fig-quadvalence, it looks like songs produced by Jack Antonoff are a little more clustered towards the lower end of valence, and across the spectrum of energy, although the variance is large.
 
@@ -389,7 +385,7 @@ I used **`rank_results()`** from the **`yardstick`** package to rank the models 
 
 The version with the original data remains consistently high in accuracy, even with increased regularization. It starts low with in mean log loss and sensitivity, but increases with increased regularization. Compared to the downsampled data, which starts high but drops significantly in accuracy and sensitivity, we chose to use the original data.
 
-![Comparing the Performance for Downsampled and Original Data](images/downsamplevsorig)
+![](images/lr_ds_orig.jpeg)
 
 ## Results
 
@@ -557,6 +553,7 @@ In the visualization of danceability correlations across producers, Antonoff's d
 #| warning: false
 # Danceability Plot
 
+selected_data <- read_csv(here::here("inputs/data/selected_data.csv"))
 
 ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
   geom_bar(stat="identity", position="dodge") +
@@ -577,23 +574,13 @@ Clearing noise and isolating the middle range of the vocals may make for a stron
 
 Valence, like danceability, was also a subjective variable built using labeling. Returning to the music itself, Antonoff-produced songs with the highest danceability scores aren't exactly dance hits.
 
--   I Think He Knows by Taylor Swift:
+I Think He Knows by Taylor Swift, plainly, seems danceable to me.
 
--   Vigilante Shit by Taylor Swift:
+However, personally, I don't hear Taylor Swift's Vigilante Shit or Florence and the Machine's Heaven is Here as danceable. They aren't understated, ambient tracks either -- there's something coercing your body to do something. Like Gamman's description of Antonoff's vocal design sounding how they sound to person who's singing them, the tracks seem like they're trying to get inside of your skin. But they don't have the rhythm of a dance track.
 
-    -   Not danceable.
+In a lot of ways, I Wanna Get Better by Bleachers is very similar to the typical Antonoff track that the outputs of our RF describe. This song is more anthemic, closer to the driving-over-the-Brooklyn-bridge, sort of post-Springsteen emotions that Antonoff is often characterized (or admitting) to striving for, than danceable. It also seems like it's trying to coercing your attention, if not your body, and the speechiness, loudness, and energy which are so correlated with danceability in Antonoff's RF results are all apparent. The redemption, broken-but-getting-better-quasi-valence can also be heard in the lyrics, but it still doesn't have the kind of rhythm for dancing.
 
--   Heaven is Here by Florence and the Machine
-
-    -   Not danceable, but it does seem like it's trying to get your body to do something.
-
--   I Wanna Get Better by Bleachers
-
-    -   More anthemic than danceable. It also seems like it's trying to coercing your attention, if not your body, and the speechiness, loudness, and energy are all apparent. The valence is apparent in the lyrics, but it doesn't have the kind of rhythm for dancing.
-
--   Cornelia Street by Taylor Swift
-
-    -   
+Cornelia Street by Taylor Swift is another sort of almost-danceable track -- while the melody is catchy, the lyrics themselves are wistful. The vocal treatment, again, is there --
 
 ## Danceability Predicts Jack-iness {#sec-first-point}
 
@@ -636,40 +623,6 @@ It's just his subjective taste, but in one way Gamman was actually totally on th
 ## Weaknesses and next steps
 
 One fundamental weakness is cooked into the dataset. Since we're not in the studio, we can't know the degree of Jack-iness in each individual song. Especially when he takes on the role of a more backseat co-producer. We can't actually know what his involvement in each song was. There's also the issue that a study like this implies that Jack Antonoff is the reason for the way these artists' sounds develop, which takes that agency away from the artists. This is a critique you see on the internet, and also a critique that some people on Twitter leveraged against Gamman after his Midnights video went viral. I mentioned it to a friend when she asked me how my final paper was going, and she said something like: "Yeah but like, it's *Taylor Swift*. As if anyone actually thinks that Jack Antonoff is the reason for her success." I agree.
-
-#### Could our model just be predicting Jack via Taylor Swift?
-
-So another issue is that there is a lot of Taylor Swift in our training data. As mentioned earlier, her songs take up 40% of @tbl-mostdanceable, which is 5% more than Antonoff's own band, Bleachers. Taylor Swift has the second highest average danceability score across all songs, and the most danceable songs are hers. She also happens to have a lot of collaborations with Antonoff under her belt -- more than any other artist. I suspect that perhaps our model was predicting Jack via Taylor, which could be a beautiful story about collaboration and aesthetic affinity. Or it could suggest that this model has a stink to it. An avenue for future study.
-
-```{r}
-#| echo: false
-#| warning: false
-
-df |>
-  filter(jack == 1) |>
-  ggplot(aes(x = artist_name, y = danceability)) +
-  geom_boxplot() +
-  ggtitle("Boxplot of Danceability by Artist") +
-  coord_flip() +
-  theme_minimal()
-```
-
-```{r}
-#| echo: false
-#| warning: false
-
-df |>
-  filter(jack == 1) |>
-  count(artist_name) |>
-  arrange(desc(n)) |>
-  head(10) |>
-  ggplot(aes(x = reorder(artist_name, n), y = n)) +
-  geom_bar(stat = "identity", fill = "steelblue") +
-  coord_flip() +
-  labs(title = "Artists with Most Jack = 1 Values", x = "Artist", y = "Count") +
-  theme_minimal()
-
-```
 
 #### Next Steps
 

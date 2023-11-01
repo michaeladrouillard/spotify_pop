@@ -375,7 +375,6 @@ ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
   geom_bar(stat="identity", position="dodge") +
   labs(title="Danceability across Producers", y="Danceability Score") +
   theme_minimal() +
-  facet_wrap(nrow = term)
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
 # Energy Plot
