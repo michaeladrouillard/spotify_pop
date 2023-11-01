@@ -223,6 +223,9 @@ head(df_importance)
 df_importance_long <- df_importance %>%
   gather(variable, importance, -producer)
 
+write.csv(df_importance, file = "inputs/data/df_importance.csv", row.names = FALSE)
+
+
 ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance)) +
   geom_bar(stat = "identity") +
   facet_wrap(~producer, scales = "fixed") + 
@@ -305,6 +308,7 @@ table_data <- melted_corr_all %>%
   select(-term) %>%
   spread(key = variable, value = value)
 
+write_csv(table_data, "inputs/data/table_data.csv")
 
 producer_specific_table <- function(producer_name) {
   table_data %>% filter(producer == producer_name)
@@ -359,6 +363,8 @@ print(top_vars)
 selected_data <- table_data %>%
   select(producer, term, all_of(top_vars)) %>%
   arrange(producer, term)
+
+write_csv(selected_data, "inputs/data/selected_data.csv")
 
 print(selected_data)
 
