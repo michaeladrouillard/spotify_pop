@@ -29,7 +29,7 @@ data_reduced <-
 write_csv(data_reduced,"inputs/data/data_reduced.csv")
 
 
-#### Predicting Antonoff ####
+#### Predicting Antonoff: non-bayesian  ####
 ## glmnet requires all variables to be numeric, so i'm excluding the producer column
 set.seed(853)
 # 1. Create a new binary column
@@ -167,9 +167,118 @@ antonoff_vip %>%
   theme(legend.position = "none")
 
 
+### SECOND MODEL: Bayesian logistic regression ###
+
+library(ROSE)
+library(rstanarm)
+
+lr_data <- data_reduced
+lr_data$is_antonoff <- ifelse(lr_data$producer == "antonoff", 1, 0)
+lr_data$is_antonoff <- as.factor(lr_data$is_antonoff)
 
 
-### SECOND MODEL: Random Forest ###
+antonoff_split <- 
+  lr_data |>
+  initial_split(strata = is_antonoff)
+
+antonoff_train <- training(antonoff_split)
+antonoff_test <- testing(antonoff_split)
+
+naive_prior <- normal(0, 10) #wide normal distribution approximation to flat prior
+antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff, levels = c("0", "1"))
+
+
+library(caret)
+library(rstanarm)
+
+antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff)
+
+ds_data<- downSample(x = antonoff_train[, !(names(antonoff_train) %in% "is_antonoff")],
+                                y = antonoff_train$is_antonoff)
+
+
+
+if("producer" %in% names(ds_data)) {
+  ds_data <- ds_data[, !(names(ds_data) %in% "producer")]
+}
+
+
+bayesian_model <- stan_glm(
+  Class ~ .,
+  data = ds_data,
+  family = binomial(link = "logit"),
+  prior = naive_prior,  
+  prior_intercept = normal(0, 5),  
+  iter = 2000,  
+  seed = 853  
+)
+
+
+summary(bayesian_model)
+
+
+
+
+
+posterior_predictive <- posterior_predict(bayesian_model, newdata = antonoff_test)
+
+predicted_probabilities <- apply(posterior_predictive, 2, mean)
+
+predicted_classes <- ifelse(predicted_probabilities > 0.5, "1", "0")
+
+predicted_classes <- factor(predicted_classes, levels = levels(antonoff_test$is_antonoff))
+
+confusionMatrix(predicted_classes, antonoff_test$is_antonoff)
+
+
+
+
+## UpSample 
+
+library(caret)
+library(rstanarm)
+library(rsample)
+
+
+antonoff_split <- initial_split(lr_data, strata = is_antonoff)
+antonoff_train <- training(antonoff_split)
+antonoff_test <- testing(antonoff_split)
+
+
+naive_prior <- normal(0, 10) 
+
+antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff, levels = c("0", "1"))
+
+
+up_data <- upSample(x = antonoff_train[, !(names(antonoff_train) %in% c("is_antonoff", "producer"))],
+                    y = antonoff_train$is_antonoff)
+
+
+
+bayesian_model2 <- stan_glm(
+  Class ~ .,
+  data = up_data,
+  family = binomial(link = "logit"),
+  prior = naive_prior,  
+  prior_intercept = normal(0, 5),  
+  iter = 2000,  
+  seed = 853  
+)
+
+summary(bayesian_model2)
+posterior_predictive2 <- posterior_predict(bayesian_model2, newdata = antonoff_test)
+predicted_probabilities2 <- apply(posterior_predictive2, 2, mean)
+predicted_classes2 <- ifelse(predicted_probabilities2 > 0.5, "1", "0")
+predicted_classes2 <- factor(predicted_classes2, levels = levels(antonoff_test$is_antonoff))
+confusionMatrix(predicted_classes2, antonoff_test$is_antonoff)
+
+
+
+
+
+
+
+### THIRD MODEL: Random Forest ###
 # one hot encoding for each producer (is_antonoff 1,0, is_elwroth 1,0, etc)
 # multi class classification
 install.packages("ranger")
