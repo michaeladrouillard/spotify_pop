@@ -16,6 +16,14 @@ bibliography: references.bib
 
 library(tidyverse)
 library(lubridate)
+library(tidyr)
+library(dplyr)
+library(tidymodels)
+library(randomForest)
+library(ranger)
+library(caret)
+library(themis)
+library(yardstick)
 
 ```
 
@@ -29,7 +37,7 @@ We are interested in whether Spotify audio features can be used to train a model
 
 We built two models to explore the data. The first model, a logistic regression, draws on the dataset of artists who've collaborated with Antonoff, with a binary variable to tag whether or not the song was an Antonoff production. With this model, we explore which variables are stronger predictors of Antonoff's style, developping a better understanding of whether the Spotify data can trace Antonoff's influence on an artist's sound over time. We built a second model, a Random Forest (RF), to complement the insights drawn from the logistic regression. The RF trains on the full data set, including other major pop producers.
 
-We find that danceability is the strongest predictor of whether or not a song has been produced by Antonoff. Furthermore, when the variance is considered along with other features of the dataset, the variance tends to be strongest classifier of whether a song was produced by Antonoff. Daanceability in concert with other features in the dataset provides the best predictions.
+We find that danceability is the strongest predictor of whether or not a song has been produced by Antonoff. Furthermore, when the variance is considered along with other features of the dataset, the variance tends to be strongest classifier of whether a song was produced by Antonoff. Danceability in concert with other features in the dataset provides the best predictions.
 
 Against the odds, we can capture something about Antonoff's music with these variables, and it might, in the end, just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe in using different methods and tools. The remainder of this paper is structured as follows: @ref-background...
 
@@ -89,9 +97,7 @@ From the `get_artist_audio_features` documentation (@citeSpotifyDocumentation):
 
 It's hard to gauge exactly what the variables `danceability` or `valence` mean, even using the documentation. For instance, `valence` is described as "A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)". `Danceability` is described as "how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0.0 is least danceable and 1.0 is most danceable". Neither of these definitions fully cover what metrics and thresholds go into something like `danceability`.
 
-In total 3738 tracks from X different artists. (Producers, etc)
-
-
+In total 3738 tracks from 828 different artists. We focus on identifying the styles of 7 producers: Jack Antonoff, Max Martin, Joel Little, Ariel Rechtshaid, Greg Kurstin, Paul Epworth and Rick Nowels. If tracks were produced by producers other than the main producers included in our study, they were marked as "other". We removed tracks from live performances, karaoke editions, international versions or remix albums. Where a deluxe album was available, we removed tracks belonging to the origin to avoid repetition.
 
 ```{r}
 #| label: fig-means
@@ -111,22 +117,21 @@ lr_data |>
   labs(fill = "Jack", x = "Mean Value", y = "Feature")
 ```
 
-
-
-
 ```{r}
 #| label: fig-quadvalence
 #| fig-cap: Valence and Energy Quadrant
 #| echo: false
 #| warning: false
+av<- read_csv(here::here("inputs/data/antonoff_viz.csv"))
 
-# df <- read_csv(here::here("inputs/data/clean_df.csv"))
-# 
-# ggplot(df, aes(x = energy, y = valence)) +
-#   geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
-#   geom_vline(xintercept = mean(df$energy), color = "gray") +
-#   geom_hline(yintercept = mean(df$valence), color = "gray") +
-#   theme_minimal()
+av$is_antonoff <- ifelse(av$producer == "antonoff", 1, 0)
+av$is_antonoff <- as.factor(av$is_antonoff)
+
+ggplot(av, aes(x = energy, y = valence)) +
+  geom_point(aes(color = as.factor(is_antonoff)), alpha = 0.3) +
+  geom_vline(xintercept = mean(df$energy), color = "gray") +
+  geom_hline(yintercept = mean(df$valence), color = "gray") +
+  theme_minimal()
 ```
 
 In @fig-quadvalence, it looks like songs produced by Antonoff are a little more clustered towards the lower end of valence, and across the spectrum of energy, although the variance is large.
@@ -136,13 +141,13 @@ In @fig-quadvalence, it looks like songs produced by Antonoff are a little more 
 #| fig-cap: Danceability and Energy Quadrant
 #| echo: false
 #| warning: false
-# 
-# ggplot(df, aes(x = energy, y = danceability)) +
-#   geom_point(aes(color = as.factor(jack)), alpha = 0.3) +
-#   geom_vline(xintercept = mean(df$energy), color = "gray") +
-#   geom_hline(yintercept = mean(df$danceability),
-#              color = "gray") +
-#   theme_minimal()
+
+ggplot(av, aes(x = energy, y = danceability)) +
+   geom_point(aes(color = as.factor(is_antonoff)), alpha = 0.3) +
+  geom_vline(xintercept = mean(df$energy), color = "gray") +
+  geom_hline(yintercept = mean(df$danceability),
+              color = "gray") +
+  theme_minimal()
 ```
 
 In @fig-quaddanceability2, it looks like Antonoff-produced songs err towards higher danceability, across the spectrum of energy.
@@ -157,36 +162,34 @@ By comparing cumulative distribution functions of each variable based on whether
 #| echo: false
 #| warning: false
 
-# data_reduced <- read_csv(here::here("inputs/data/data_reduced.csv"))
-# 
-# data_reduced |>
-#   pivot_longer(
-#     cols = c(
-#       danceability,
-#       energy,
-#       loudness,
-#       mode,
-#       speechiness,
-#       acousticness,
-#       instrumentalness,
-#       liveness,
-#       valence,
-#       tempo
-#     ),
-#     names_to = "name",
-#     values_to = "value"
-#   ) |>
-#   ggplot(aes(x = value, color = jack)) +
-#   stat_ecdf() +
-#   facet_wrap(vars(name),
-#              nrow = 3,
-#              ncol = 4,
-#              scales = "free") +
-#   theme_minimal() +
-#   labs(x = "Value",
-#        y = "Proportion")
+ av |>
+   pivot_longer(
+     cols = c(
+       danceability,
+       energy,
+       loudness,
+       mode,
+       speechiness,
+       acousticness,
+       instrumentalness,
+       liveness,
+       valence,
+       tempo
+     ),
+     names_to = "name",
+     values_to = "value"
+   ) |>
+   ggplot(aes(x = value, color = is_antonoff)) +
+   stat_ecdf() +
+   facet_wrap(vars(name),
+              nrow = 3,
+              ncol = 4,
+              scales = "free") +
+   theme_minimal() +
+   labs(x = "Value",
+        y = "Proportion")
 
-#even tho there's similrities, there's differences
+
 ```
 
 Another way to gauge the Antonoff-ification of pop music could be to look at how artists' sounds have changed over time, and whether there is any correlation with Antonoff. These plots are here to get a glimpse at pop's evolution over time, and where Antonoff fits in that picture. Each point represents a song.
@@ -197,21 +200,19 @@ Another way to gauge the Antonoff-ification of pop music could be to look at how
 #| echo: false
 #| warning: false
 
-# df <- read_csv(here::here("inputs/data/df.csv"))
-# 
-# df <- df |> 
-#   mutate(jack = factor(jack))
-# 
-# df |>
-#   filter(album_release_date_precision == "day") |>
-#   mutate(album_release_date = ymd(album_release_date)) |>
-#   ggplot(aes(y = energy, x = album_release_date, color = jack)) +
-#   geom_point(alpha = 0.3) +
-#   geom_smooth(method = lm, se = FALSE) +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-#   labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Energy") +
-#   facet_wrap(~ artist_name, ncol = 3)
+av <- av |>
+  mutate(is_antonoff= factor(is_antonoff))
+
+av |>
+  filter(album_release_date_precision == "day") |>
+  mutate(album_release_date = ymd(album_release_date)) |>
+  ggplot(aes(y = energy, x = album_release_date, color = is_antonoff)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
+  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Energy") +
+  facet_wrap(~ artist_name, ncol = 3)
 ```
 
 In @fig-energy, it looks like there's a downward trend in energy scores in artists who work with Antonoff, but that these downward trends are also somewhat in line with the artists' energy trajectories anyway, which could be indicative of broader trends in pop. Specifically, Lana Del Rey and Taylor Swift. They have enough albums recorded prior to collaborations with Antonoff to be able to observe this. Sharon Von Etten, Maggie Rogers, and Mitski, who have never worked with Antonoff, all have upward trends.
@@ -222,16 +223,16 @@ In @fig-energy, it looks like there's a downward trend in energy scores in artis
 #| echo: false
 #| warning: false
 
-# df |>
-#   filter(album_release_date_precision == "day") |>
-#   mutate(album_release_date = ymd(album_release_date)) |>
-#   ggplot(aes(y = danceability, x = album_release_date, color = jack)) +
-#   geom_point(alpha = 0.3) +
-#   geom_smooth(method = lm, se = FALSE) +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-#   labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Danceability") +
-#   facet_wrap( ~ artist_name, ncol = 3)
+av |>
+  filter(album_release_date_precision == "day") |>
+  mutate(album_release_date = ymd(album_release_date)) |>
+  ggplot(aes(y = danceability, x = album_release_date, color = is_antonoff)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
+  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Danceability") +
+  facet_wrap( ~ artist_name, ncol = 3)
 ```
 
 There aren't any significant correlations in danceability (@fig-danceability) .
@@ -242,16 +243,16 @@ There aren't any significant correlations in danceability (@fig-danceability) .
 #| echo: false
 #| warning: false
 
-# df |>
-#   filter(album_release_date_precision == "day") |>
-#   mutate(album_release_date = ymd(album_release_date)) |>
-#   ggplot(aes(y = valence, x = album_release_date, color = jack)) +
-#   geom_point(alpha = 0.3) +
-#   geom_smooth(method = lm, se = FALSE) +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-#   labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Valence") +
-#   facet_wrap( ~ artist_name, ncol = 3)
+av |>
+  filter(album_release_date_precision == "day") |>
+  mutate(album_release_date = ymd(album_release_date)) |>
+  ggplot(aes(y = valence, x = album_release_date, color = is_antonoff)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
+  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Valence") +
+  facet_wrap( ~ artist_name, ncol = 3)
 ```
 
 In @fig-valence, it looks like Lorde has the only significant change in valence scores, which tracks with my understanding her albums. *Melodrama* had piano and break ups, and *Solar Power* had a music video of Lorde prancing on the beach in a yellow bikini with Phoebe Bridgers and Clairo.
@@ -262,16 +263,16 @@ In @fig-valence, it looks like Lorde has the only significant change in valence 
 #| echo: false
 #| warning: false
 
-# df |>
-#   filter(album_release_date_precision == "day") |>
-#   mutate(album_release_date = ymd(album_release_date)) |>
-#   ggplot(aes(y = acousticness, x = album_release_date, color = jack)) +
-#   geom_point(alpha = 0.3) +
-#   geom_smooth(method = lm, se = FALSE) +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-#   labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Acousticness") +
-#   facet_wrap( ~ artist_name, ncol = 3)
+av |>
+  filter(album_release_date_precision == "day") |>
+  mutate(album_release_date = ymd(album_release_date)) |>
+  ggplot(aes(y = acousticness, x = album_release_date, color = is_antonoff)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
+  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Acousticness") +
+  facet_wrap( ~ artist_name, ncol = 3)
 ```
 
 Again in @fig-acousticness, Lorde's acoustic Solar Power album jumps out. Taylor Swift, Lorde and HAIM also have significant-seeming upward trends in `acousticness`, while Mitski, Sharon Von Etten and Maggie Rogers see decreasing `acousticness`.
@@ -282,16 +283,16 @@ Again in @fig-acousticness, Lorde's acoustic Solar Power album jumps out. Taylor
 #| echo: false
 #| warning: false
 
-# df |>
-#   filter(album_release_date_precision == "day") |>
-#   mutate(album_release_date = ymd(album_release_date)) |>
-#   ggplot(aes(y = instrumentalness, x = album_release_date, color = jack)) +
-#   geom_point(alpha = 0.3) +
-#   geom_smooth(method = lm, se = FALSE) +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-#   labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Instrumentalness") +
-#   facet_wrap( ~ artist_name, ncol = 3)
+av |>
+  filter(album_release_date_precision == "day") |>
+  mutate(album_release_date = ymd(album_release_date)) |>
+  ggplot(aes(y = instrumentalness, x = album_release_date, color = is_antonoff)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
+  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Instrumentalness") +
+  facet_wrap( ~ artist_name, ncol = 3)
 ```
 
 In @fig-instrumentalness, St. Vincent is the only plot with any significant trend in `instrumentalness`.
@@ -302,16 +303,16 @@ In @fig-instrumentalness, St. Vincent is the only plot with any significant tren
 #| echo: false
 #| warning: false
 
-# df |>
-#   filter(album_release_date_precision == "day") |>
-#   mutate(album_release_date = ymd(album_release_date)) |>
-#   ggplot(aes(y = tempo, x = album_release_date, color = jack)) +
-#   geom_point(alpha = 0.3) +
-#   geom_smooth(method = lm, se = FALSE) +
-#   theme_minimal() +
-#   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-#   labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Tempo") +
-#   facet_wrap( ~ artist_name, ncol = 3)
+av |>
+  filter(album_release_date_precision == "day") |>
+  mutate(album_release_date = ymd(album_release_date)) |>
+  ggplot(aes(y = tempo, x = album_release_date, color = is_antonoff)) +
+  geom_point(alpha = 0.3) +
+  geom_smooth(method = lm, se = FALSE) +
+  theme_minimal() +
+  scale_color_manual(values = c("#808080", "#FFB6C1")) +
+  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Tempo") +
+  facet_wrap( ~ artist_name, ncol = 3)
 ```
 
 Finally, in @fig-tempo, there aren't many significant trends in tempo, except for Antonoff's collaborations with Lana Del Rey and Taylor Swift.
@@ -326,12 +327,12 @@ The binary response variable, called `is_antonoff`, has a value of 1 if the song
 
 The formula for this logistic regression can be written as:
 
+
 $$
-\mbox{Pr}(y_i=1) = \mbox{logit}^{-1}\left(\beta_0+\beta_1 x_i\right)
+Pr(yi​=1)=logit−1(β0​+β1​×danceability+β2​×energy+...+β10​×tempo)
 $$
 
-where $\text{Pr}(y_i=1)$ is the probability of a song being produced by Antonoff, $\beta_0$ is the intercept, and $\beta_1, \ldots, \beta_{10}$ are the coefficients corresponding to the predictor variables.
-
+where $\text{Pr}(y_i=1)$ is the probability of a song being produced by Antonoff, $\beta_0$ is the intercept, and $\beta_1, \ldots, \beta_{10}$ are the coefficients corresponding to the 10 predictor variables.
 
 After some minor pre-processing using the `tidyverse` R package [@citetidyverse]. I followed @citeSilge to build a model that deals with the imbalanced classes.
 
@@ -428,9 +429,7 @@ clean_df |>
 
 @tbl-mostdanceable shows us the 20 songs in Jack Antonoff's discography with the highest `danceability` scores. Bleachers takes up 35% of this list, and Taylor Swift takes up 40% of this list. St Vincent, The Chicks, Lorde, and Florence and the Machine also haves songs up there.
 
-
 ## Random Forest
-
 
 | Metric                  | Value           |
 |-------------------------|-----------------|
@@ -544,7 +543,6 @@ I am thinking about what Gamman said in his video.
 
 It's just his subjective taste, but Gamman is right. The `danceability` variable, which is the strongest predictor of Jack-ness, seems to actually be more about some sort of "visceral"-ness when you do a close-listen of the songs with the highest danceability scores. Not all of them are danceable, but the one's that aren't still feel like they're trying to manipulate the way your body is holding itself in some way. The reason that Antonoff's sound dominating chart-topping pop production gets under people's skin could just be because his music gets underneath your skin.
 
-
 I interviewed Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. Macdonald told me that `valence` and `danceability` were created by giving thousands of examples to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like energy or instrumentalness, on the other hand, were determined primarily through machine listening techniques. The human subjectivity part only came in when it came to tweaking the training data[^1]:
 
 [^1]: My favourite example Glen gave was that the ML kept giving bluegrass songs insanely high `speechiness` ratings. Because there were no banjos in the training data, they were registered as human speech. (This is hilarious.) They had to go back and add more songs with banjos to the training data.
@@ -556,7 +554,6 @@ Glen confirmed that this process didn't know anything about lyrics, which makes 
 "Plus, we have the confounding factor of like, a song that seems happy today could be sad tomorrow because the singer was killed in a plane crash. The song didn't change, but our world changed and our reactions changed."
 
 Macdonald suggests combining energy and valence to create quadrant, which usually works "fairly well". High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming.
-
 
 \newpage
 
