@@ -327,7 +327,6 @@ The binary response variable, called `is_antonoff`, has a value of 1 if the song
 
 The formula for this logistic regression can be written as:
 
-
 $$
 Pr(yi​=1)=logit−1(β0​+β1​×danceability+β2​×energy+...+β10​×tempo)
 $$
@@ -350,7 +349,21 @@ The version with the original data remains consistently high in accuracy, even w
 
 Random forests (RF) build an ensemble of decision trees during the training phase, and then use majority voting for classification tasks. Each tree in the ensemble is trained on a random sample of data taken with replacement, and only a random subset of features are considered when splitting at each node. This method ensures that each tree in the ensemble is unique, avoiding overfitting and capturing non-linear relationships and more complex patterns in the data.
 
-add model here
+The training process for the RF model can be summarized as follows:
+
+1.  For each iteration ( b = 1 ) to ( B ):
+    a.  Draw a bootstrap sample ( Z\^\* ) of size ( N ) from the training data.
+    b.  Grow a random-forest tree ( T_b ) to the bootstrapped data by recursively performing the following steps for each terminal node of the tree until the minimum node size ( n\_{\text{min}} ) is reached:
+        i.  Select ( m ) predictors at random from the ( p ) predictors.
+        ii. Determine the best predictor and split-point among the ( m ).
+        iii. Split the node into two daughter nodes.
+2.  The ensemble of trees ( { T_b }\^B\_{b=1} ) constitutes the random forest model.
+
+For a new instance ( x ), the RF model prediction ( \hat{C}\^{\text{RF}}(x) ) is determined by the majority vote from the ensemble of trees:
+
+\[ \hat{C}\^{\text{RF}}(x) = \text{majority vote} \left{ \hat{C}*b(x)* \right}\^B{b=1} \]
+
+Where ( \hat{C}\_b(x) ) is the class prediction of the ( b )-th tree.
 
 The categorical feature `producer`, which contains the names of the producer for each track, was one-hot encoded to create binary columns for each producer (i.e. `is_antonoff`, `is_elworth`, etc.). The producer feature was then converted into a factor variable, and the dataset was split into training and tests sets.
 
