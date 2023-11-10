@@ -337,19 +337,21 @@ Random forests (RF) build an ensemble of decision trees during the training phas
 
 The training process for the RF model can be summarized as follows:
 
-1.  For each iteration ( b = 1 ) to ( B ):
-    a.  Draw a bootstrap sample ( Z\^\* ) of size ( N ) from the training data.
-    b.  Grow a random-forest tree ( T_b ) to the bootstrapped data by recursively performing the following steps for each terminal node of the tree until the minimum node size ( n\_{\text{min}} ) is reached:
-        i.  Select ( m ) predictors at random from the ( p ) predictors.
-        ii. Determine the best predictor and split-point among the ( m ).
+1.  For each iteration $(b = 1)$ to $( B )$:
+    a.  Draw a bootstrap sample $( Z^* )$ of size $( N )$ from the training data.
+    b.  Grow a random-forest tree $( T_b )$ to the bootstrapped data by recursively performing the following steps for each terminal node of the tree until the minimum node size $( n_{{min}} )$ is reached:
+        i.  Select $( m )$ predictors at random from the $( p )$ predictors.
+        ii. Determine the best predictor and split-point among the $( m )$.
         iii. Split the node into two daughter nodes.
-2.  The ensemble of trees ( { T_b }\^B\_{b=1} ) constitutes the random forest model.
+2.  The ensemble of trees $( \{ T_b \}_{b=1}^B )$ constitutes the random forest model.
 
-For a new instance ( x ), the RF model prediction ( \hat{C}\^{\text{RF}}(x) ) is determined by the majority vote from the ensemble of trees:
+For a new instance $( x )$, the RF model prediction $( \hat{C}^{RF}(x) )$ is determined by the majority vote from the ensemble of trees:
 
-\[ \hat{C}\^{\text{RF}}(x) = \text{majority vote} \left{ \hat{C}*b(x)* \right}\^B{b=1} \]
+$$
+\hat{C}^{\text{RF}}(x) = \text{majority vote} \left\{ \hat{C}_b(x) \right\}_{b=1}^B 
+$$
 
-Where ( \hat{C}\_b(x) ) is the class prediction of the ( b )-th tree.
+Where $( \hat{C}_b(x) )$ is the class prediction of the $(b)$-th tree.
 
 The categorical feature `producer`, which contains the names of the producer for each track, was one-hot encoded to create binary columns for each producer (i.e. `is_antonoff`, `is_elworth`, etc.). The producer feature was then converted into a factor variable, and the dataset was split into training and tests sets.
 
