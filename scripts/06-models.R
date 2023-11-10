@@ -142,7 +142,30 @@ antonoffmatrix <- collect_predictions(final_fit) %>%
 
 antonoffmatrix
 
+
+
 antonoffmatrix_df <- as.data.frame(antonoffmatrix$table)
+
+
+
+antonoff_predictions <- collect_predictions(final_fit)
+
+antonoff_predictions$is_antonoff <- factor(antonoff_predictions$is_antonoff, levels = c("1", "0"))
+antonoff_predictions$pred_class <- factor(antonoff_predictions$.pred_class, levels = c("1", "0"))
+
+str(antonoff_predictions$is_antonoff)
+str(antonoff_predictions$pred_class)
+
+conf_matrix <- confusionMatrix(antonoff_predictions$is_antonoff, antonoff_predictions$.pred_class)
+
+precision_value <- conf_matrix$byClass['Pos Pred Value']
+recall_value <- conf_matrix$byClass['Sensitivity']
+
+# Print Precision and Recall
+print(precision_value)
+print(recall_value)
+
+
 
 # install.packages("vip")
 library(vip)
