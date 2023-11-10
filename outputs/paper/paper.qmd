@@ -500,7 +500,7 @@ ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance
 
 ```
 
-In the visualization of danceability correlations across producers, Antonoff's danceability has the least positive correlation with valence (SCORE), the most negative correlation with acousticness (SCORE), and significant positive correlations with speechiness (SCORE), loudness (SCORE), and energy (SCORE).
+Relative to other producers, Antonoff's danceability has the least positive correlation with valence (0.311), the most negative correlation with acousticness (-0.0733), and significant positive correlations with speechiness (0.336), loudness (0.366), and energy (0.274).
 
 ```{r}
 #| label: fig-dancevariance

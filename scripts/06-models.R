@@ -129,7 +129,7 @@ best_penalty
 # and evaluates one time on the testing data
 final_fit <-  
   wf_set %>% 
-  extract_workflow("basic_glmnet") %>%
+  extract_workflow("downsampling_glmnet") %>%
   finalize_workflow(best_penalty) %>%
   last_fit(antonoff_split)
 
