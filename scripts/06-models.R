@@ -33,16 +33,24 @@ write_csv(data_reduced,"inputs/data/data_reduced.csv")
 ## glmnet requires all variables to be numeric, so i'm excluding the producer column
 set.seed(853)
 # 1. Create a new binary column
-lr_data <- data_reduced
-lr_data$is_antonoff <- ifelse(lr_data$producer == "antonoff", 1, 0)
-lr_data$is_antonoff <- as.factor(lr_data$is_antonoff)
+antdata <- read_csv(here::here("inputs/data/antonoff_viz.csv"))
+adf <- antdata |> 
+  select(producer,danceability, energy, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence,
+         tempo
+  ) 
+adf$is_antonoff <- ifelse(adf$producer == "antonoff", 1, 0)
+adf$is_antonoff <- as.factor(adf$is_antonoff)
+adf <- adf |>
+  select(is_antonoff, danceability, energy, loudness, mode, speechiness, acousticness, instrumentalness, liveness, valence,
+              tempo
+) 
 
 
-write_csv(lr_data, "inputs/data/lr_data.csv")
-
+#write_csv(lr_data, "inputs/data/lr_data.csv")
+adf$is_antonoff <- factor(adf$is_antonoff, levels = c("1", "0"))
 # 2. Update variable names and strata
 antonoff_split <- 
-  lr_data |>
+  adf |>
   initial_split(strata = is_antonoff)
 
 antonoff_train <- training(antonoff_split)
@@ -52,8 +60,7 @@ antonoff_folds <- vfold_cv(antonoff_train, strata = is_antonoff)
 
 # 3. Update the recipe
 is_antonoff <- 
-  recipe(is_antonoff ~ ., data = antonoff_train) %>%
-  step_rm(producer)
+  recipe(is_antonoff ~ ., data = antonoff_train) 
 
 
 # we can `prep()` just to check that it works:
@@ -207,28 +214,29 @@ antonoff_split <-
 antonoff_train <- training(antonoff_split)
 antonoff_test <- testing(antonoff_split)
 
-naive_prior <- normal(0, 10) #wide normal distribution approximation to flat prior
-antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff, levels = c("0", "1"))
+naive_prior <- normal(0, 5) #wide normal distribution approximation to flat prior
+
 
 
 library(caret)
 library(rstanarm)
 
-antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff)
+antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff, levels = c("0", "1"))
 
 ds_data<- downSample(x = antonoff_train[, !(names(antonoff_train) %in% "is_antonoff")],
                                 y = antonoff_train$is_antonoff)
 
 
 
-if("producer" %in% names(ds_data)) {
-  ds_data <- ds_data[, !(names(ds_data) %in% "producer")]
-}
+if("producer" %in% names(ds_data)) {ds_data <- ds_data[, !(names(ds_data) %in% "producer")]}
 
+antonoff_train$is_antonoff <- factor(antonoff_train$is_antonoff)
+
+antonoff_train <- antonoff_train[, !(names(antonoff_train) %in% "producer")]
 
 bayesian_model <- stan_glm(
-  Class ~ .,
-  data = ds_data,
+  is_antonoff ~ .,
+  data = antonoff_train,
   family = binomial(link = "logit"),
   prior = naive_prior,  
   prior_intercept = normal(0, 5),  
@@ -253,7 +261,7 @@ predicted_classes <- factor(predicted_classes, levels = levels(antonoff_test$is_
 
 confusionMatrix(predicted_classes, antonoff_test$is_antonoff)
 
-
+lr_data 
 
 
 ## UpSample 
