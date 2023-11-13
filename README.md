@@ -4,6 +4,8 @@ This paper uses audio features data from the Spotify API to analyze patterns in 
 
 The data were manually validated, and the finalized data sets are included in 'inputs/data'.
 
+A PDF of the paper is available at: https://github.com/michaeladrouillard/spotify_pop/blob/main/outputs/paper/paper.pdf.
+
 ## File Structure
 
 The repo is structured as the following:
