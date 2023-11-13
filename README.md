@@ -2,6 +2,8 @@
 
 This paper uses audio features data from the Spotify API to analyze patterns in contemporary pop prudction. Specifically, we build a logistic regression and a random forest to detect stylistic variation among artists and pop producers, with a focus on Jack Antonoff.
 
+The data were manually validated, and the finalized data sets are included in 'inputs/data'.
+
 ## File Structure
 
 The repo is structured as the following:
