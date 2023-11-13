@@ -4,7 +4,7 @@ author:
   - Michaela Drouillard
 thanks: "Code and data are available at: https://github.com/michaeladrouillard/spotify_pop."
 date: today
-abstract: "This paper explores whether or not we can predict whether a song was produced by Jack Antonoff using the audio features provided by Spotify's API. We find that in general our model has an accuracy score of 90%. (Precision and recall) We interestingly found that danceability, a metric trained on human-tagged data, was a key predictor. Our results have implications for the understanding of culture, how the combination human subjectivity and machine listening can come to create an approximate for style."
+abstract: "This paper explores whether or not we can predict whether a song was produced by Jack Antonoff using the audio features provided by Spotify's API. We find that in general our logistic regression model has an accuracy score of 76%, a precision score of 39%, and a recall of 75.61%. Our random forest has an accuracy of 61%, and a No Information Rate of 43%. We interestingly found that danceability, a metric trained on human-tagged data, was a key predictor. Our results have implications for computational explorations of culture, how the combination human subjectivity and machine listening can come to create an approximate for style."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -68,6 +68,7 @@ In total, we collected 3738 tracks from 828 different artists. If tracks were pr
 #| tbl-cap: Counts of Tracks Per Producer in Original Dataset
 #| echo: false
 #| warning: false
+lr_data<- read_csv(here::here("inputs/data/lr_data.csv"))
 
 library(kableExtra)
 
@@ -534,22 +535,22 @@ We spoke with Glen McDonald, a Principal Engineer at Spotify who worked at The E
 
 Glen confirmed that this process didn't account for lyrics, which made valence a particularly difficult variable to build. It could, in theory, pick up on aspects of vocal performance, but it didn't process anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Furthermore, two humans might even disagree on the song's valence: "Plus, we have the confounding factor of like, a song that seems happy today could be sad tomorrow because the singer was killed in a plane crash. The song didn't change, but our world changed and our reactions changed."
 
-Macdonald suggests combining energy and valence to create quadrant, which usually works "fairly well" to describe music. High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming.
+Macdonald suggests combining energy and valence to create quadrant, which usually works "fairly well" to describe music (see @fig-quadvalence). High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming.
 
 ```{r}
 #| label: fig-quadvalence
 #| fig-cap: Valence and Energy Quadrant
 #| echo: false
 #| warning: false
-av<- read_csv(here::here("inputs/data/antonoff_viz.csv"))
+av <- read.csv(here::here("inputs/data/antonoff_viz.csv"))
 
 av$is_antonoff <- ifelse(av$producer == "antonoff", 1, 0)
 av$is_antonoff <- as.factor(av$is_antonoff)
 
 ggplot(av, aes(x = energy, y = valence)) +
   geom_point(aes(color = as.factor(is_antonoff)), alpha = 0.3) +
-  geom_vline(xintercept = mean(df$energy), color = "gray") +
-  geom_hline(yintercept = mean(df$valence), color = "gray") +
+  geom_vline(xintercept = mean(av$energy), color = "gray") +
+  geom_hline(yintercept = mean(av$valence), color = "gray") +
   theme_minimal()
 ```
 
