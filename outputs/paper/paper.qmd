@@ -4,7 +4,7 @@ author:
   - Michaela Drouillard
 thanks: "Code and data are available at: https://github.com/michaeladrouillard/spotify_pop."
 date: "November 10 2023"
-abstract: "We explore whether we can predict if a song was produced by Jack Antonoff using the audio features provided by Spotify's API. Our logistic regression model has an accuracy score of 76%, a precision score of 39%, and a recall of 76%. Our random forestmodel has an accuracy of 61%, and a No Information Rate of 43%. We especially found that danceability, a metric trained on human-tagged data, was a key predictor. Our results have implications for computational explorations of culture, how the combination of human subjectivity and machine listening can come to create an approximate for style."
+abstract: "We explore whether we can predict if a song was produced by Jack Antonoff using the audio features provided by Spotify's API. Our logistic regression model has an accuracy score of 76%, a precision score of 39%, and a recall of 76%. Our random forest model has an accuracy of 61%, and a No Information Rate of 43%. We especially found that danceability, a metric trained on human-tagged data, was a key predictor. Our results have implications for computational explorations of culture, how the combination of human subjectivity and machine listening can come to create an approximate for style."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -137,6 +137,7 @@ av<- read_csv(here::here("inputs/data/antonoff_viz.csv"))
 
 av$is_antonoff <- ifelse(av$producer == "antonoff", 1, 0)
 av$is_antonoff <- as.factor(av$is_antonoff)
+levels(av$is_antonoff) <- c("No", "Yes") 
  av |>
    pivot_longer(
      cols = c(
@@ -162,7 +163,8 @@ av$is_antonoff <- as.factor(av$is_antonoff)
               scales = "free") +
    theme_minimal() +
    labs(x = "Value",
-        y = "Proportion")
+        y = "Proportion",
+        color = "Antonoff") 
 
 
 ```
@@ -186,7 +188,7 @@ av |>
   geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Energy") +
+  labs(color = "Antonoff", x = "Album Release Date", y = "Energy") +
   facet_wrap(~ artist_name, ncol = 3)
 ```
 
@@ -206,7 +208,7 @@ av |>
   geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Danceability") +
+  labs(color = "Antonoff", x = "Album Release Date", y = "Danceability") +
   facet_wrap( ~ artist_name, ncol = 3)
 ```
 
@@ -226,7 +228,7 @@ av |>
   geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Valence") +
+  labs(color = "Antonoff", x = "Album Release Date", y = "Valence") +
   facet_wrap( ~ artist_name, ncol = 3)
 ```
 
@@ -246,7 +248,7 @@ av |>
   geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Acousticness") +
+  labs(color = "Antonoff", x = "Album Release Date", y = "Acousticness") +
   facet_wrap( ~ artist_name, ncol = 3)
 ```
 
@@ -266,7 +268,7 @@ av |>
   geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Instrumentalness") +
+  labs(color = "Antonoff", x = "Album Release Date", y = "Instrumentalness") +
   facet_wrap( ~ artist_name, ncol = 3)
 ```
 
@@ -286,7 +288,7 @@ av |>
   geom_smooth(method = lm, se = FALSE) +
   theme_minimal() +
   scale_color_manual(values = c("#808080", "#FFB6C1")) +
-  labs(color = "Has 'y' in jack?", x = "Album Release Date", y = "Tempo") +
+  labs(color = "Antonoff", x = "Album Release Date", y = "Tempo") +
   facet_wrap( ~ artist_name, ncol = 3)
 ```
 
@@ -305,7 +307,7 @@ The binary response variable, called `is_antonoff`, has a value of 1 if the song
 The formula for this logistic regression can be written as:
 
 $$
-Pr(y_i​=1)=logit−1(β_0​+β_1​×danceability+β_2​×energy+...+β_0​×tempo)
+Pr(y_i​=1)=logit−1(β_0​+β_1​×danceability+β_2​×energy+...+β_{10}​×tempo)
 $$
 
 where $\text{Pr}(y_i=1)$ is the probability of a song being produced by Antonoff, $\beta_0$ is the intercept, and $\beta_1, \ldots, \beta_{10}$ are the coefficients corresponding to the 10 predictor variables.
