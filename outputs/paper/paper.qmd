@@ -102,7 +102,7 @@ From the `get_artist_audio_features` documentation (@citeSpotifyDocumentation):
 >
 > -   **valence:** A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-means
 #| fig-cap: Comparing the Mean Values of Each Variable
 #| echo: false
@@ -112,13 +112,14 @@ lr_data <- read_csv(here::here("inputs/data/lr_data.csv"))
 
 
 lr_data %>%
-  select(-producer, -tempo, -loudness) %>%  
+  select(-producer, -tempo, -loudness, -mode) %>%
   pivot_longer(cols = -is_antonoff, names_to = "feature", values_to = "value") %>%
-  ggplot(aes(x = value, y = feature, color = factor(is_antonoff))) +
-  geom_point(alpha = 0.8, position = position_jitter(width = 0.2)) +
-  scale_color_manual(values = c("blue", "orange"), labels = c("No", "Yes")) +
+  ggplot(aes(x = feature, y = value, fill = factor(is_antonoff))) +
+  geom_boxplot(alpha = 0.6, position = position_dodge(width = 0.8)) +
+  scale_fill_manual(values = c("blue", "orange"), labels = c("No", "Yes")) +
   theme_minimal() +
-  labs(color = "Antonoff", x = "Value", y = "Feature")
+  labs(fill = "Antonoff", x = "Feature", y = "Value") + 
+  coord_flip()
 
 
   
@@ -370,7 +371,11 @@ antonoff_vip <- read_csv(here::here("inputs/data/antonoff_vip.csv"))
 antonoff_vip |>
   knitr::kable(col.names = c("Variable",
                              "Importance",
-                             "Sign"))
+                             "Sign"),
+               digits = 3,
+               booktabs = TRUE,
+               linesep = "")
+
 ```
 
 ```{r}
@@ -408,7 +413,12 @@ clean_df |>
   head(20) |>
   knitr::kable(col.names = c("Artist Name",
                              "Danceability",
-                             "Track"))
+                             "Track"),
+  digits = 3,
+  booktabs = TRUE,
+  linesep = "")
+
+
 ```
 
 In the 20 songs in Jack Antonoff's discography with the highest `danceability` scores, Bleachers tracks account for 35% of this list, and Taylor Swift tracks account 40% of this list (@tbl-mostdanceable). St Vincent, The Chicks, Lorde, and Florence and the Machine are also featured.
@@ -456,7 +466,14 @@ top_vars <- range_data %>%
   top_n(3, range) %>%
   pull(variable)
 
-print(range_data)
+
+
+range_data |>
+  kable(col.names = 
+          c("Variable", "Min Value", "Max Value", "Range"),
+        digits = 3,
+        booktabs = TRUE,
+        linesep = "")
 
 
 
@@ -497,7 +514,7 @@ selected_data <- read_csv(here::here("inputs/data/selected_data.csv"))
 
 ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
   geom_bar(stat="identity", position="dodge") +
-  labs(title="Danceability across Producers", y="Danceability Score") +
+  labs(title="Danceability across Producers", y="Danceability Score", x= "Feature") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
@@ -548,7 +565,10 @@ ggplot(av, aes(x = energy, y = valence)) +
   geom_point(aes(color = as.factor(is_antonoff)), alpha = 0.3) +
   geom_vline(xintercept = mean(av$energy), color = "gray") +
   geom_hline(yintercept = mean(av$valence), color = "gray") +
-  theme_minimal()
+  theme_minimal() +
+  scale_color_manual(values = c("lightblue", "orange"),
+                     labels = c("No", "Yes"),
+                     name = "Antonoff")
 ```
 
 Our analysis reveals that the amalgamation of crowdsourced metrics (danceability) and machine-listening variables offers a nuanced approximation of musical style. Interestingly, the subjective nature of crowdsourced metrics, which might appear rudimentary, plays a crucial role in shaping a more intuitive and embodied understanding of music. This synergy between human subjectivity and algorithmic precision not only mirrors the multifaceted nature of musical perception, but also enriches our model's capacity to capture the essence of an artist's style.
