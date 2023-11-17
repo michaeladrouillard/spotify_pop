@@ -8,6 +8,7 @@ abstract: "We explore whether we can predict if a song was produced by Jack Anto
 format: pdf
 number-sections: true
 bibliography: references.bib
+csl: modern-language-association.csl
 ---
 
 ```{r}
