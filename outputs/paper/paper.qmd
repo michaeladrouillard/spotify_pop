@@ -1,10 +1,10 @@
 ---
-title: "Detecting Stylistic Variation in Pop Production using the Spotify API"
+title: "Detecting Stylistic Variation in Pop Production"
 author: 
   - Michaela Drouillard
 thanks: "Code and data are available at: https://github.com/michaeladrouillard/spotify_pop."
 date: today
-abstract: "This paper explores whether or not we can predict whether a song was produced by Jack Antonoff using the audio features provided by Spotify's API. We find that in general our logistic regression model has an accuracy score of 76%, a precision score of 39%, and a recall of 75.61%. Our random forest has an accuracy of 61%, and a No Information Rate of 43%. We interestingly found that danceability, a metric trained on human-tagged data, was a key predictor. Our results have implications for computational explorations of culture, how the combination human subjectivity and machine listening can come to create an approximate for style."
+abstract: "We explore whether we can predict if a song was produced by Jack Antonoff using the audio features provided by Spotify's API. Our logistic regression model has an accuracy score of 76%, a precision score of 39%, and a recall of 76%. Our random forestmodel has an accuracy of 61%, and a No Information Rate of 43%. We especially found that danceability, a metric trained on human-tagged data, was a key predictor. Our results have implications for computational explorations of culture, how the combination of human subjectivity and machine listening can come to create an approximate for style."
 format: pdf
 number-sections: true
 bibliography: references.bib
@@ -29,31 +29,21 @@ library(yardstick)
 
 # Introduction
 
-We're interested in understanding how to create an approximate for production style. To do this we used Spotify API's audio features dataset to explore different audio feature metrics and identify which were the most import predictors in identifying pop producers' style. We chose Jack Antonoff as focus, as he is a prolific and widely used producer, who also has his own solo acts.
+We are interested in understanding how to create an approximate for production style. To do this we used Spotify API's audio features dataset to explore different audio feature metrics and identify which were the most import predictors in identifying pop producers' style. We focus on Jack Antonoff, as he is a prolific and widely used producer, who also has his own solo acts.
 
 By way of background, Antonoff began his career as a guitarist in fun., and is the frontman in Bleachers. He has produced and co-produced music for Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, the Minions: The Rise of Gru Soundtrack, and more. His style is considered identifiable. As Andrew Marantz writes in the *New Yorker*: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
 
-We are interested in whether Spotify audio features can be used to train a model that distinguishes whether a song was produced by Antonoff. We obtained tracks from six artists who've collaborated with Antonoff, both before their collaboration and during. We also obtained tracks from similarly prolific pop producers. The producers we compare Antonoff's production style with are Little, Rechstaid, Martin, Kurstin, Epworth and Nowels. Our data set contains 3738 tracks in total.
+We are interested in whether Spotify audio features can be used to train a model that distinguishes whether a song was produced by Antonoff. We obtained tracks from six artists who've collaborated with Antonoff, both before their collaboration and during. We also obtained tracks from similarly prolific pop producers: Joel Little, Ariel Rechstaid, Max Martin, Greg Kurstin, Paul Epworth and Rick Nowels. Our data set contains 3738 tracks in total.
 
-We built two models to explore the data. The first model, a logistic regression, draws on the dataset of artists who've collaborated with Antonoff, with a binary variable to tag whether or not the song was an Antonoff production. With this model, we explore which variables are stronger predictors of Antonoff's style, developping a better understanding of whether the Spotify data can trace Antonoff's influence on an artist's sound over time. We built a second model, a Random Forest (RF), to complement the insights drawn from the logistic regression. The RF trains on the full data set, including other major pop producers.
+We built two models to explore the data. The first model, a logistic regression, draws on the dataset of artists who have collaborated with Antonoff, with a binary variable to tag whether or not the song was an Antonoff production. With this model, we explore which variables are stronger predictors of Antonoff's style, developping a better understanding of whether the Spotify data can trace Antonoff's influence on an artist's sound over time. We built a second model, a Random Forest (RF), to complement the insights drawn from the logistic regression. The RF trains on the full data set, including other major pop producers.
 
 We find that `danceability` is the strongest predictor of whether or not a song has been produced by Antonoff. Furthermore, when `danceability`'s correlation scores with other features in the dataset are considered, the variance in correlation scores tends to be strongest classifier of whether a song was produced by Antonoff. Danceability in concert with other features in the dataset provides the best predictions.
 
-Against the odds, we can capture something about Antonoff's music with these variables, and it might, in the end, just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe in using different methods and tools. The remainder of this paper is structured as follows:
-
-@ref-data
-
-@ref-Model
-
-@ref-Results
-
-@ref-Discussion
-
-@ref-References
+Our results suggest that we can capture something about Antonoff's music with these variables, and it might, in the end, just be that subjective "ick" that some people feel, and others enjoy, and that we're all just trying to describe in using different methods and tools. The remainder of this paper is structured as follows:
 
 # Data {#sec-data}
 
-We collected data from the Spotify API, which we accessed using the `spotifyr` package in R [@citeSpotify]. We used the `get_artist_audio_features` function to acquire data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski were included to represent other contemporary pop artists with overlapping fan bases who have never collaborated with Antonoff. Of the artists who did collaborate with Antonoff, we chose artist who have produced multiple albums, and at least one album with Antonoff.
+We collected data from the Spotify API, which we accessed using the `spotifyr` package in R [@citeSpotify]. We acquired data on Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, and Bleachers discographies. HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, and Mitski were included to represent other contemporary pop artists with overlapping fan bases who have never collaborated with Antonoff. Of the artists who did collaborate with Antonoff, we chose artist who have produced multiple albums, and at least one album with Antonoff.
 
 We acquired the discographies of comparable contemporary pop producers' by scraping their respective discography Wikipedia pages. The producers include Epworth, Rechstaid, Max Martin, Nowels, Joel Little, and Greg Kustin. These producers were chosen based both on their popularity, and because some have collaborated with the same artists as Antonoff.
 
@@ -75,7 +65,10 @@ library(kableExtra)
 tbl <- table(lr_data$producer)
 
 tbl |>
-  kable(col.names = c("Producer", "Number of Tracks"))
+  kable(col.names = c("Producer", "Number of Tracks"),
+  digits = 1,
+  booktabs = TRUE,
+  linesep = "")
 
 
 
@@ -83,7 +76,7 @@ tbl |>
 
 ### Audio Features Dataset
 
-The `get_artist_audio_features` provides a profile of each song, according to variables developped by Spotify, which makes for simple comparisons across artists. The final audio features in this study data set contains the variables: `artist_name`, `track_name`, `energy`, `danceability`, `key`, `loudness`, `mode`, `speechiness`, `acousticness`, `instrumentalness`, `liveness`, `valence`, `tempo`, `jack`.
+Spotify provides variables for each song, according to variables developed by Spotify, which makes for simple comparisons across artists. The final audio features in our data set are: `artist_name`, `track_name`, `energy`, `danceability`, `key`, `loudness`, `mode`, `speechiness`, `acousticness`, `instrumentalness`, `liveness`, `valence`, `tempo`, `jack`.
 
 From the `get_artist_audio_features` documentation (@citeSpotifyDocumentation):
 
@@ -117,21 +110,25 @@ From the `get_artist_audio_features` documentation (@citeSpotifyDocumentation):
 
 lr_data <- read_csv(here::here("inputs/data/lr_data.csv"))
 
-lr_data |>
-  group_by(is_antonoff) |>
-  summarise(across(-c(tempo, loudness), mean)) |>
-  pivot_longer(cols = -is_antonoff) |>
-  ggplot(aes(value, name, fill = factor(is_antonoff))) +
-  geom_col(alpha = 0.8, position = "dodge") +
+
+lr_data %>%
+  select(-producer, -tempo, -loudness) %>%  
+  pivot_longer(cols = -is_antonoff, names_to = "feature", values_to = "value") %>%
+  ggplot(aes(x = value, y = feature, color = factor(is_antonoff))) +
+  geom_point(alpha = 0.8, position = position_jitter(width = 0.2)) +
+  scale_color_manual(values = c("blue", "orange"), labels = c("No", "Yes")) +
   theme_minimal() +
-  labs(fill = "Jack", x = "Mean Value", y = "Feature")
+  labs(color = "Antonoff", x = "Value", y = "Feature")
+
+
+  
 ```
 
 By analyzing the cumulative distribution functions of various audio features, particularly when categorizing songs based on whether they were produced by Jack Antonoff (@fig-cdf), distinct patterns emerge. Notably, while attributes such as liveness, instrumentalness, and speechiness exhibit relative homogeneity, there are slight disparities in features like danceability, energy, loudness, acousticness, and valence.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-cdf
-#| fig-cap: Cumulative Distribution Function of Each Variable, 
+#| fig-cap: Cumulative Distribution Function of Each Variable 
 #| echo: false
 #| warning: false
 av<- read_csv(here::here("inputs/data/antonoff_viz.csv"))
@@ -170,7 +167,7 @@ av$is_antonoff <- as.factor(av$is_antonoff)
 
 Examining the temporal evolution of artists' sounds, especially in correlation with their collaboration with Antonoff, provides insights into the broader trends in pop music. Each point in the following plots represent one track.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-energy
 #| fig-cap: Energy Variable
 #| echo: false
@@ -193,7 +190,7 @@ av |>
 
 In @fig-energy, a downward trend in the energy scores is observed among artists collaborating with Antonoff. However, this trend appears consistent with the overall trajectories of these artists' works, suggesting broader trends in the pop genre, as exemplified by Lana Del Rey and Taylor Swift. Sharon Von Etten, Maggie Rogers, and Mitski, display upward energy trajectories in their musical careers.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-danceability
 #| fig-cap: Danceability Variable
 #| echo: false
@@ -213,7 +210,7 @@ av |>
 
 No significant trends are evident in danceability across the artists' collaborations with Antonoff, as demonstrated in (@fig-danceability) .
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-valence
 #| fig-cap: Valence Variable
 #| echo: false
@@ -233,7 +230,7 @@ av |>
 
 @fig-valence reveals a notable shift in valence scores in Lorde's discography, where her tracks display a slight upward trend and a greater range in valence scores over time.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-acousticness
 #| fig-cap: Acousticness Variable
 #| echo: false
@@ -253,7 +250,7 @@ av |>
 
 @fig-acousticness underscores a trend toward increased acousticness in the works of Taylor Swift, Lorde, and HAIM, contrasted with declining trends in artists like Mitski, Sharon Von Etten, and Maggie Rogers.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-instrumentalness
 #| fig-cap: Instrumentalness Variable
 #| echo: false
@@ -273,7 +270,7 @@ av |>
 
 @fig-instrumentalness exhibits no significant correlations.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| label: fig-tempo
 #| fig-cap: Tempo Variable
 #| echo: false
@@ -299,7 +296,7 @@ We've observed subtle distinctions in variables associated with songs produced b
 
 ## Logistic Regression
 
-The aim of the logistic regression is to determine whether we can predict Antonoff's influence in artists' sound. We select a total of 1465 tracks from the dataset from 12 artists: Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, Mitski, and Bleachers (Antonoff's own band)..
+The aim of the logistic regression is to determine whether we can predict Antonoff's influence in artists' sound. We select a total of 1465 tracks from the dataset from 12 artists: Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Von Etten, Mitski, and Bleachers (Antonoff's own band).
 
 The binary response variable, called `is_antonoff`, has a value of 1 if the song was produced by Antonoff, and a 0 otherwise. There are 10 predictor variables, all of which are continuous: **`danceability`**, **`energy`**, **`loudness`**, **`mode`**, **`speechiness`**, **`acousticness`**, **`instrumentalness`**, **`liveness`**, **`valence`**, and **`tempo`**.
 
@@ -467,7 +464,7 @@ print(range_data)
 
 Similar to the logistic regression, danceability was also, across all producers, the most important predictor in the classification process.
 
-```{r}
+```{r, fig.width= 8, fig.height=6}
 #| echo: false
 #| warning: false
 
