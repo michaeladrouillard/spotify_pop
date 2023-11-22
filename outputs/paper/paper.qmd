@@ -513,6 +513,7 @@ Relative to other producers, Antonoff's danceability has the least positive corr
 
 ```{r}
 #| label: fig-dancevariance
+#| fig-cap: Danceability Scores Across Producers
 #| echo: false
 #| warning: false
 # Danceability Plot
@@ -521,7 +522,7 @@ selected_data <- read_csv(here::here("inputs/data/selected_data.csv"))
 
 ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
   geom_bar(stat="identity", position="dodge") +
-  labs(title="Danceability across Producers", y="Danceability Score", x= "Feature") +
+  labs(y="Danceability Score", x= "Feature") +
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
