@@ -43,7 +43,7 @@ We find that `danceability` is the strongest predictor of whether a song has bee
 
 Our results suggest that we can capture something about Antonoff's music with these variable. It might, in the end, just be that subjective response that some people feel, and others enjoy, and that we are all just trying to describe in using different methods and tools. With the understanding that what we understand as "data-driven" in recommendation systems is often intertwined with human subjectivity -- engineers' understandings of taste and taste-making shape the recommendation systems that they build (@citeSeaver) -- we contribute to a more informed understanding of how style and tastes can been algorithmically rendered using Spotify's audio features.
 
-The remainder of this paper is structured as:
+The remainder of this paper is structured as: @sec-data details the data curation and extraction processes, including documentation on features from Spotify's audio features data set. @sec-model specifies the models used and @sec-results details their performance and most important predictors. @sec-discussion situates the study in the broader context of computational stylistics and recommendation systems, detailing how we can conceptualize "style" given the results and limitations of our study. We provide background on the Spotify features' provenance based on an interview we conducted with Glen McDonald, a principal engineer at Spotify.
 
 # Data {#sec-data}
 
@@ -303,7 +303,7 @@ To be clear, we do not suggest that Antonoff's involvement is the cause for the 
 
 This exploratory data analysis sets the stage for a) employing logistic regression to quantify the likelihood of Antonoff's involvement in a song based on these audio features, b) classifying tracks produced by a wider range of producers using a Random Forest, c) identifying the most influential variables in this classification to better understand how style can be inferred from the provided data set features.
 
-# Model
+# Model {#sec-model}
 
 ## Logistic Regression
 
@@ -358,7 +358,7 @@ Gini impurity is a measure of misclassification. At every split in a decision tr
 
 Gini impurity was chosen on the grounds that we are interested in not only classifying producers, but, more importantly, in understanding how the underlying data informs these decisions. By calculating the Gini impurity not only for the entire model, but specifically for each producer, we can better understand how the variables in our dataset describe the differences between producers. Without song structure, instruments, sound, or other more ephemeral components of style, these differences can be taken as a proxy for style.
 
-# Results
+# Results {#sec-results}
 
 ## Logistic Regression
 
@@ -536,7 +536,7 @@ ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
-# Discussion
+# Discussion {#sec-discussion}
 
 ### Defining Style
 
