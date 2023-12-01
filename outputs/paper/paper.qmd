@@ -41,7 +41,7 @@ We built two models to explore the data. The first model, a logistic regression,
 
 The second model, a Random Forest (RF), trains on a data set that includes the discographies of other prominent pop producers to classify producers. This expands upon and complements the results of the logistic regression -- where a logistic regression predicting an Antonoff-produced track in an artist's discography might actually be picking up on an artist releasing pop music, training a Random Forest on a bigger dataset with more producers captures both non-linear relationships in the data and accounts for intra-genre differences. In obtaining the strongest predictor variables in the Random Forest, we can better understand how it distinguishes between different pop producers' styles.
 
-We find that, in both models, `danceability` is the strongest predictor of whether a song has been produced by Antonoff. Additionally, when we look at how danceability relates to other features in the dataset, we find that the differences in these relationships are informative: the degree to which danceability's relationships with other features vary helps us most accurately determine if Antonoff produced a song. In other words, using danceability along with its interactions with other dataset features gives us the most accurate predictions.
+We find that, in both models, `danceability` is the strongest predictor of whether a song has been produced by Antonoff, and the strongest predictor in differentiating between producers generally. Additionally, when we look at how danceability relates to other features in the dataset, we find that the differences in these relationships are informative: the degree to which danceability's relationships with other features vary helps us most accurately classify tracks. In other words, using danceability along with its interactions with other dataset features gives us the most accurate predictions.
 
 In an interview with Spotify principal engineer Glen McDonald, we learned that the danceability and valence features were built using crowdsourced methods. With the understanding that what we understand as "data-driven" in recommendation systems is often intertwined with human subjectivity -- engineers' understandings of taste and taste-making also shape the recommendation systems that they build (@citeSeaver) -- our results suggest that it's possible to create representations of style by combining features derived from both automated audio analysis and more crowdsourced, subjective contributions. This research adds to a more informed understanding of how style and tastes can been algorithmically rendered using Spotify's audio features.
 
@@ -122,7 +122,7 @@ lr_data %>%
   pivot_longer(cols = -is_antonoff, names_to = "feature", values_to = "value") %>%
   ggplot(aes(x = feature, y = value, fill = factor(is_antonoff))) +
   geom_boxplot(alpha = 0.6, position = position_dodge(width = 0.8)) +
-  scale_fill_manual(values = c("blue", "orange"), labels = c("No", "Yes")) +
+  scale_fill_manual(values = c("#B0C4DE", "#9ACD32"), labels = c("No", "Yes")) +
   theme_minimal() +
   labs(fill = "Antonoff", x = "Feature", y = "Value") + 
   coord_flip()
@@ -408,7 +408,11 @@ antonoff_vip |>
   facet_wrap(vars(Sign), scales = "free_y") +
   labs(y = NULL) +
   theme(legend.position = "none") +
-  theme_minimal()
+  theme_minimal() +
+  scale_fill_manual(values = c(
+    "#FAD4A6", 
+    "#A4D4AE"))
+  
 ```
 
 Variable importance, which refers to the impact of each predictor variable in explaining the variation in the response variable, can offer a data-driven picture of what might set a producer's sound apart.
@@ -509,18 +513,29 @@ Similar to the logistic regression, danceability was also, across all producers,
 
 df_importance<- read_csv(here::here("inputs/data/df_importance.csv"))
 
+vibrant_colors <- c(
+  "#FAD4A6", # Peach Puff: A light, peachy tone
+  "#D3AE8C", # Tan: A muted, earthy tan color
+  "#B0C4DE", # Light Steel Blue: A soft, pastel blue
+  "#F1BAC3", # Light Pink: A pale pink shade
+  "#D1E0E0", # Powder Blue: A light, airy grey-blue
+  "#E7BE88", # Burlywood: A warm, beige color
+  "#C8A680", # Pale Goldenrod: A deeper, more saturated tan
+  "#A4D4AE", # Pale Green: A light, refreshing green
+  "#E2B0B0", # Rosy Brown: A soft coral tone
+  "#9ACD32"  # Yellow Green: A bright, springy green
+)
+
 df_importance_long <- df_importance %>%
   gather(variable, importance, -producer)
 
-ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance)) +
-  geom_bar(stat = "identity", fill = "pink") +  
+ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance, fill = variable)) +
+  geom_bar(stat = "identity") +  
   facet_wrap(~producer, scales = "fixed") + 
   coord_flip() +
-  labs( 
-       x = "Variable", 
-       y = "Mean Decrease Gini") +
-  theme_minimal()
-
+  labs(x = "Variable", y = "Mean Decrease Gini") +
+  theme_minimal() +
+  scale_fill_manual(values = vibrant_colors)
 
 ```
 
@@ -539,7 +554,18 @@ ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
   geom_bar(stat="identity", position="dodge") +
   labs(y="Danceability Score", x= "Feature") +
   theme_minimal() +
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  theme(axis.text.x = element_text(angle = 45, hjust = 1)) +
+  scale_fill_manual(values = c(
+    "#9ACD32", #springy green
+    "#E7BE88", # Rich warm beige
+    "#A4D4AE", # Pale green
+    "#D3AE8C", # Vibrant taupe
+    "#B0C4DE", # Lively soft blue
+    "#F1BAC3", # Vivid blush pink
+    "#D1E0E0", # Bright light gray
+    "#B0C4DE", # Vivid sky blue
+    "#A4D4AE" # Pale green
+  ))
 ```
 
 # Discussion {#sec-discussion}
