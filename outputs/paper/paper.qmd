@@ -31,7 +31,7 @@ library(yardstick)
 
 # Introduction
 
-We are interested in understanding how to create an approximation for production style based on a data set built using the Spotify audio features API. To do this, we explore different audio feature metrics and identify which were the most import predictors in identifying pop producers' style. We focus on Jack Antonoff, as he is a prolific and widely used producer, who also has his own solo acts.
+It is widely acknowledged that style recognition in music is difficult. Style, which is hard enough to define without building computational representations of it, is often constructed using lower-level perceptual features such as a pitch and tempo. We are interested in understanding how to create an approximation for production style based on a data set built using the Spotify audio features API, which includes both crowdsourced features and features derived from machine listening techniques. To do this, we explore different audio feature metrics and identify which were the most import predictors in identifying pop producers' style. We focus on Jack Antonoff, as he is a prolific and widely used producer, who also has his own solo acts.
 
 By way of background, Antonoff began his career as a guitarist in fun., and is the frontman in Bleachers. He has produced and co-produced music for artists including Lorde, Taylor Swift, Florence and the Machine, The Chicks, Clairo, The 1975, Grimes, Zayn, Pink, Lana Del Rey, Olivia Rodrigo, and the Minions: The Rise of Gru soundtrack. His style is considered identifiable, and his collaborators are influential -- as Andrew Marantz writes in the *New Yorker*: "When his band releases an album, the world responds politely. When he produces one by Lorde or Lana Del Rey or Taylor Swift, the world wobbles on its axis" [@citeMarantz].
 
@@ -309,7 +309,7 @@ This exploratory data analysis sets the stage for a) employing logistic regressi
 
 ## Logistic Regression
 
-The aim of the logistic regression is to determine whether we can predict Antonoff's influence in artists' sound. We select a total of 1465 tracks from the dataset from 12 artists: Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Van Etten, Mitski, and Bleachers.
+The aim of the logistic regression is to determine whether we can predict Antonoff's influence on artists' sound. We select a total of 1465 tracks from the dataset from 12 artists: Lorde, Taylor Swift, St. Vincent, Lana Del Rey, The Chicks, Florence and the Machine, HAIM, Marina and the Diamonds, Maggie Rogers, Sharon Van Etten, Mitski, and Bleachers. Marina and the Diamonds, Maggie Rogers, Sharon Van Etten and Mitski have not collaborated with Antonoff, but their tracks were added to contribute more data from the same taste pool to provide more context for the model.
 
 The binary response variable, called `is_antonoff`, has a value of 1 if the song was produced by Antonoff, and a 0 otherwise. There are 10 predictor variables, all of which are continuous: **`danceability`**, **`energy`**, **`loudness`**, **`mode`**, **`speechiness`**, **`acousticness`**, **`instrumentalness`**, **`liveness`**, **`valence`**, and **`tempo`**.
 
@@ -326,9 +326,7 @@ $$
 
 where $\text{Pr}(y_i=1)$ is the probability of a song being produced by Antonoff, $\beta_0$ is the intercept, and $\beta_1, \beta_2, \beta_3, \beta_4, \beta_5, \beta_6, \beta_7, \beta_8, \beta_9, \beta_{10}$ are the coefficients corresponding to the 10 predictor variables.
 
-After some minor pre-processing using the `tidyverse` package [@citetidyverse] in R [@citeR], we followed Julia Silge's downsampling methodology to build a model that deals with the imbalanced classes (@citeSilge ).
-
-The model was fit using `tidymodels` [@citetidymodels]. To deal with the imbalanced classes, we downsampled the majority class using the **`step_downsample()`** function from the **`themis`** package. Then we used 5-fold cross-validation with stratification by the **`is_antonoff`** variable to estimate the performance of the model.
+After some minor pre-processing using the `tidyverse` package [@citetidyverse] in R [@citeR], we followed Julia Silge's downsampling methodology to build a model that accounts for imbalanced classes (@citeSilge). We downsampled the majority class using the **`step_downsample()`** function from the **`themis`** package. Then, we used 5-fold cross-validation with stratification by the **`is_antonoff`** variable to estimate the performance of the model. The model was fit using `tidymodels` [@citetidymodels].
 
 ## Random Forest
 
@@ -354,11 +352,9 @@ Where $( \hat{C}_b(x) )$ is the class prediction of the $(b)$-th tree.
 
 The categorical feature `producer`, which contains the names of the producer for each track, was one-hot encoded to create binary columns for each producer (i.e. `is_antonoff`, `is_elworth`, etc.). The producer feature was then converted into a factor variable, and the dataset was split into training and test sets.
 
-The RF was trained using the `ranger` package in R (@citeR, @citeRanger). The 'importance' parameter was set to 'impurity', which sets the model to interpret variable importance using Gini impurity.
+The RF was trained using the `ranger` package in R (@citeR, @citeRanger). We set the model to interpret variable importance using Gini impurity, which is a measure of misclassification. At every split in a decision tree, the algorithm tests how well each feature splits the data. The features that split the data the most accurately, and thus with the least impurity, would have the lowest impurity score. A variable's importance can be calculated by looking at how much the tree nodes that use that variable reduce impurity on average.
 
-Gini impurity is a measure of misclassification. At every split in a decision tree, the algorithm tests how well each feature splits the data. The features that split the data the most accurately, and thus with the least impurity, would have the lowest impurity score. In Random Forests, a variable's importance can be calculated by looking at how much the tree nodes that use that variable reduce impurity on average.
-
-Gini impurity was chosen on the grounds that we are interested in not only classifying producers, but, more importantly, in understanding how the underlying data informs these decisions. By calculating the Gini impurity not only for the entire model, but specifically for each producer, we can better understand how the variables in our dataset describe the differences between producers. Without song structure, instruments, sound, or other more ephemeral components of style, these differences can be taken as a proxy for style.
+Gini impurity was chosen on the grounds that we are interested in not only classifying producers, but, more importantly, in understanding how the underlying data informs these decisions. By calculating the Gini impurity not only for the entire model, but specifically for each producer, we can better understand how the variables in our dataset describe the differences between producers. Without song structure, instruments, sound itself, or other more ephemeral components of style, these differences can be taken as a proxy for style.
 
 # Results {#sec-results}
 
@@ -373,7 +369,7 @@ The model's accuracy is 0.757, and the ROC AUC score is 0.819. Based on the conf
 
 : Confusion Matrix for Logistic Regression Results
 
-@tbl-importance shows variables' respective importance in determining whether a track was produced by Antonoff.
+@tbl-importance and @fig-importance show variables' respective importance in determining whether a track was produced by Antonoff.
 
 ```{r}
 #| label: tbl-importance
@@ -417,7 +413,7 @@ antonoff_vip |>
 
 Variable importance, which refers to the impact of each predictor variable in explaining the variation in the response variable, can offer a data-driven picture of what might set a producer's sound apart.
 
-`Danceability`, with a positive importance score of 4.142, had the highest level of importance in determining whether a song was produced or co-produced by Jack Antonoff. `Valence` was the second most important, with a negative score of 2.559. The third, `instrumentalness` correlates negatively with Antonoff tracks with a negative score of 2.309.
+`Danceability`, with a negative importance score of 4.142, had the highest level of importance in determining whether a song was produced or co-produced by Jack Antonoff. `Valence` was the second most important, with a positive score of 2.559. The third, `instrumentalness` correlates postively with Antonoff tracks with a score of 2.309.
 
 ```{r}
 #| label: tbl-mostdanceable
@@ -461,7 +457,7 @@ As presented in Table 5, the accuracy of the model (0.6111) being significantly 
 
 The model's accuracy and Kappa statistics suggest a moderate level of performance. However, there is enough demonstrated statistical significance to suggest that there are underlying patterns in the data that differentiate producers.
 
-The variables with the most variance for each producer's tracks were danceability, loudness, and energy (@tbl-rangecorr).
+The variables with the most variance in importance between each each producer were danceability, loudness, and energy (@tbl-rangecorr).
 
 ```{r}
 #| echo: false
@@ -503,11 +499,11 @@ range_data |>
 
 ```
 
-Similar to the logistic regression, danceability was also, across all producers, the most important predictor in the classification process.
+The variance in variable importance scores are visualized in @fig-varimpbyprod. Similar to logistic regression, danceability stands out as a variable with a high degree of variance from producer to producer, meaning that it contributes to succesful classification.
 
 ```{r, fig.width= 8, fig.height=6}
 #| label: fig-varimpbyprod
-#| tbl-cap: Variable Importance by Producer
+#| fig-cap: Variable Importance by Producer
 #| echo: false
 #| warning: false
 
@@ -539,7 +535,7 @@ ggplot(df_importance_long, aes(x = reorder(variable, importance), y = importance
 
 ```
 
-Relative to other producers, Antonoff's danceability has the least positive correlation with valence (0.311), the most negative correlation with acousticness (-0.0733), and significant positive correlations with speechiness (0.336), loudness (0.366), and energy (0.274). In @fig-dancevariance, we can observe how the patterns of variables' correlations with danceability differ between producers.
+Relative to other producers, Antonoff's danceability has the least positive correlation with valence (0.311), the most negative correlation with acousticness (-0.073), and significant positive correlations with speechiness (0.336), loudness (0.366), and energy (0.274). In @fig-dancevariance, we can observe how the patterns of variables' correlations with danceability differ between producers.
 
 ```{r}
 #| label: fig-dancevariance
@@ -572,29 +568,31 @@ ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
 
 ### Defining Style
 
-Roger Dannenberg differentiates between texture and style to define style: ""Texture" usually refers to sound and the activity of making sound, while "style" is most often used to describe the general impression or intention provided by a texture." (@dannenberg). According to Dannenberg, texture is a composite of aspects of music like that we can hear on longer or shorter time scales, such as harmonic rhythms, or differences in pitches, or loudness, among many others. These aspects are more objectively measurable, while style is the "sound colour" embedded in the combination and patterns of these elements.
+Style is bizarre and complex. In order to define it, Roger Dannenberg differentiates between texture and style: ""Texture" usually refers to sound and the activity of making sound, while "style" is most often used to describe the general impression or intention provided by a texture." (@dannenberg). According to Dannenberg, texture is a composite of aspects of music like that we can hear on longer or shorter time scales, such as harmonic rhythms, or differences in pitches, or loudness, among many others. These aspects are more objectively measurable, while style is the "sound colour" embedded in the combination and patterns of these elements.
 
-David Cope's Experiments in Musical Intelligence measures composers' style by detecting recurring patterns (@cope). First, recurring patterns are detected within a piece, which indicate the significant stylistic elements specific to that piece. Then, many compositions are analyzed by the same producer in order to find patterns specific to that producer. When the patterns specific to individual pieces are ruled out, a more latent "composer pattern" emerges. This composer pattern is a very basic representation of a composer's style, and can be further developed.
+We can build on these lower level perceptual features to arrive at approximations of style. For instance, David Cope's Experiments in Musical Intelligence measures composers' style by detecting recurring patterns (@cope). First, recurring patterns are detected within a piece, which indicate the significant stylistic elements specific to that piece. Then, many compositions are analyzed by the same producer in order to find patterns specific to that producer. When the patterns specific to individual pieces are ruled out, a more latent "composer pattern" emerges. This composer pattern is a very basic representation of a composer's style, and can be further developed.
 
-A major limitation to our study is that it doesn't account for patterns or the architecture of songs. Our dataset provides metrics that stand in for an entire piece, making a major part of the song inaccessible. However, working with this limitation, danceability, loudness, and energy scores emerged as key predictors in successful instances of classification.
+Our study follows a similar line of inquiry -- the Spotify API mostly provides metrics related to lower level perceptual features (with danceability and valence being the obvious anomalies). However, a major limitation to our study is that it doesn't account for patterns within a track or the overall architecture of songs (or, for that matter, albums). Our dataset provides metrics that stand in for an entire piece, making a major part of the song inaccessible. On a similar note, we also attribute one producer to each track. In pop production, co-productions are frequent, and the general spirit of the genre is more collaborative, making the idea of detecting a latent "composer pattern" harder to differentiate from the collaborations they're embedded in.
+
+Working with these limitations, danceability, loudness, and energy scores still emerge as key predictors in successful instances of classification. Whether or not we can attribute these stylistic differences solely to the named producer, it is a classification nonetheless.
 
 Using Dannenberg's definitions of texture and style as a framework, we can understand each feature of the dataset as encoding different elements of texture. In applying statistical models to these features, the underlying patterns in the relationship between these textures can be taken as an approximation for style.
 
 ### Our Results
 
-For instance, our logistic regression model was not able to strongly predict whether or not a song was produced by Jack Antonoff using the Spotify API's audio features data. These data are limited, providing static metrics that stand in for entire tracks, which may not be detailed enough for intra-genre classification. However, when classifying the tracks, `danceability` was the strongest predictor.
+For instance, our logistic regression model was not able to strongly predict whether a song was produced by Jack Antonoff using the Spotify API's audio features data. However, when classifying the tracks, `danceability` was the strongest predictor.
 
-Our Random Forest results, which were moderately strong at classifying tracks, indicate that Antonoff's music, characterized by its `danceability` score, exhibits a significant positive correlation with factors such as `speechiness`, `loudness`, and `energy`, while showing a negative correlation with `acousticness`, and a less pronounced positive correlation with `valence`, compared to other music producers. This profile---marked by speechiness, loudness, energy, and a blend of positivity with a touch of nostalgia---aligns with both detailed auditory analysis and critical assessments of Antonoff's sound.
+Our Random Forest results, which were moderately strong at classifying tracks, indicate that Antonoff's music, characterized by its `danceability` score, exhibits a significant positive correlation with factors such as `speechiness`, `loudness`, and `energy`, while showing a negative correlation with `acousticness`, and a less pronounced positive correlation with `valence` compared to other music producers (@fig-dancevariance). This profile---marked by speechiness, loudness, energy, and a blend of positivity with a touch of nostalgia---aligns with both our interpretations and critical assessments of Antonoff's sound.
 
-Antonoff's tracks have been described as anthemic (@citeRosen), with a distinct vocal treatment that makes it sound, as Caleb Gamman, a Youtuber who went viral for his critique of Jack Antonoffs sound, observes, "the way it would sound to the person who's singing them" (@citegammanint).
+Antonoff's tracks have been described as anthemic (@citeRosen), with a distinct vocal treatment that makes it sound, as Caleb Gamman, a Youtuber who went viral for his critique of Jack Antonoffs sound, told us, "the way it would sound to the person who's singing them" (@citegammanint).
 
-> In the treble mix of the song, like in the very upper end, sort of above where the vocals are -- he often really crushes that down. It's lower in volume than anything else, which is sort of a weird effect. When you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing , them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing her likes to do.
+> In the treble mix of the song, like in the very upper end, sort of above where the vocals are -- he often really crushes that down. It's lower in volume than anything else, which is sort of a weird effect. When you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing , them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing he likes to do.
 
 Perhaps, without further documentation on the `speechiness` feature's construction, clearing the noise and isolating the middle range of the vocals may make for stronger overall `speechiness` score in Antonoff's tracks. Antonoff also tends to collaborate with singer-songwriter artists, whose music is more lyric-oriented than dance hit pop.
 
 On that note, even Antonoff-produced songs with the highest `danceability` scores aren't exactly dance hits, compared to production styles like that of Max Martin.
 
-For instance, the highest scoring song in danceability*, I Think He Knows* by Taylor Swift, can pass as danceable, yet the next highest-scoring songs -- Taylor Swift's *Vigilante Shit* or Florence and the Machine's *Heaven is Here* -- don't resonate as dance tracks. But they aren't understated, ambient tracks either -- they exhibit some sort of visceral quality, like they're coercing your body to do something. Like Gamman's description of Antonoff's vocal design sounding like how they would sound to the person who's singing them, these tracks seem like they're trying to get inside of your skin. But they don't have the rhythm of a dance track.
+For instance, the highest scoring song in danceability*, I Think He Knows* by Taylor Swift, can pass as danceable, yet the next highest-scoring songs -- Taylor Swift's *Vigilante Shit* or Florence and the Machine's *Heaven is Here* -- don't resonate as dance tracks. But they aren't understated, ambient tracks either -- they exhibit some sort of visceral quality. Like Gamman's description of Antonoff's vocal design sounding like how they would sound to the person who's singing them, these tracks seem like they're trying to get inside of your skin. But they don't have the rhythm of a dance track.
 
 *I* *Wanna Get Better* by Bleachers typifies the Antonoff style as identified by our model. This song is more anthemic, resonating with a sort of neo-Springsteen aesthetic that Antonoff is often characterized as (or admitting to) being influenced by, than danceable (@citePareles, @citeHorn) . It also does sound like it's trying to demand your attention, and the speechiness, loudness, and energy which are distinctly correlated with danceability in Antonoff's RF results, are all apparent. The redemptive, broken-but-getting-better tone can also be heard in the lyrics, but it still doesn't have the kind of rhythm for dancing -- which maps onto how Antonoff's "valence" score isn't as a high as other pop artists in @fig-dancevariance.
 
@@ -610,7 +608,7 @@ We spoke with Glen McDonald, a Principal Engineer at Spotify who worked at The E
 
 Glen confirmed that this process didn't account for lyrics, which made valence a particularly difficult variable to build. It could, in theory, pick up on aspects of vocal performance, but it didn't process anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Furthermore, two humans might even disagree on the song's valence: "Plus, we have the confounding factor of like, a song that seems happy today could be sad tomorrow because the singer was killed in a plane crash. The song didn't change, but our world changed and our reactions changed" (@citeglenint).
 
-Macdonald suggests combining energy and valence to create quadrant, which usually works "fairly well" to describe music (see @fig-quadvalence) (@citeglenint): "High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming."
+Mcdonald suggests combining energy and valence to create quadrant, which usually works "fairly well" to describe music (see @fig-quadvalence) (@citeglenint): "High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming."
 
 ```{r}
 #| label: fig-quadvalence
@@ -636,9 +634,9 @@ ggplot(av, aes(x = energy, y = valence)) +
 
 What does the danceability variable then signify in Antonoff's music? Our findings suggest that, similar to McDonald's quadrants, Antonoff's most "danceable" songs are better understood through the lens of correlated features, even though danceability emerges as the primary predictor. This crowd-sourced metric, in conjunction with machine-listening-derived features that capture songs' "textures", offers a unique insight into an artist's style, capturing an intuitive understanding of a song's tone and energy.
 
-This approach not only mirrors the multifaceted nature of auditory perception, but also enriches our model's capacity to capture the essence of an artist's style. While crowdsourced metrics might initially seem rudimentary, this subjective aspect can play a crucial role in this process. The work of Martikainen et al. illustrates this point effectively, combining open-source audio tools with qualitative, crowd-sourced listener data to understand audio-based stylistic variation in podcasts (@podstyle).
+This approach not only mirrors the multifaceted nature of auditory perception, but also somehow enriches our model's capacity to capture the essence of an artist's style, or at least distinguish between producers in a limited data set. While crowdsourced metrics might initially seem rudimentary, this subjective aspect can play a crucial role in this process. The work of Martikainen et al. illustrates this point effectively, combining open-source audio tools with qualitative, crowd-sourced listener data to understand audio-based stylistic variation in podcasts (@podstyle).
 
-The role of human subjectivity is pivotal in interpreting and experiencing music, and this aspect becomes even more significant when considering the broader scope of music recommendation systems. As Nick Seaver's anthropological study of music recommendation companies shows, engineers "develop ways of thinking about musical preference and software, attempting to reconcile them with each other" (@citeSeaver). Engineers' understandings of style and taste influence the designs of the music recommendation systems they build. Our study therefore contributes to a more nuanced understanding of recommendation systems as a whole, highlighting the intricate balance between computational measures and human interpretation in the evolving landscape of music analysis and appreciation.
+The role of human subjectivity in interpreting and experiencing music alongside computational representations of it becomes even more apparent when considering the broader scope of music recommendation systems. In Nick Seaver's anthropological study of music recommendation companies, Seaver writes that engineers "develop ways of thinking about musical preference and software, attempting to reconcile them with each other" (@citeSeaver), referring to the fact that engineers' understandings of style and taste influence the designs of the music recommendation systems they build. Our study therefore contributes to a more nuanced understanding of recommendation systems as a whole, highlighting the balance between computational measures and human interpretation in the evolving landscape of music analysis and appreciation.
 
 Future studies should reproduce crowdsourced danceability or valence variables to better understand the underlying user preferences that motivate these metrics. In doing so, we can build more robust ways to computationally model more ephemeral and subjective aspects of music such as style.
 
