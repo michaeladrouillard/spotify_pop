@@ -2,14 +2,15 @@
 title: "Detecting Stylistic Variation in Pop Production"
 author: 
   - name: Michaela Drouillard
-    email: "michaela.drouillard@mail.utoronto.ca"
-thanks: "Code and data are available at: https://github.com/michaeladrouillard/spotify_pop. We thank Rohan Alexander, Carl Wilson and Inessa De Angelis for valuable suggestions."
-date: "November 24 2023"
+thanks: "Code and data are available at: https://github.com/michaeladrouillard/spotify_pop. We thank Rohan Alexander, Carl Wilson and Inessa De Angelis for valuable suggestions. For any comments or suggestions, please contact michaela.drouillard@mail.utoronto.ca"
+date: "today"
+date-format: "long"
 abstract: "This study investigates the feasibility of predicting whether a song is produced by Jack Antonoff using Spotify's audio feature API. We developed two models: a logistic regression model and a random forest model. The logistic regression model, focusing on Antonoff's collaborators' discographies, demonstrates an accuracy of 76%, precision of 39%, and a recall of 76% when predicting whether a track has an Antonoff credit. The random forest model, which includes discographies of other notable pop producers, shows an accuracy of 61% when predicting tracks' producers, comparing favorably to a No Information Rate of 43%. A significant finding is that 'danceability', a metric developed from human-tagged data, emerges as a crucial predictor in both models. This research contributes to the broader understanding of computational analysis in cultural contexts, illustrating how a blend of human judgment and algorithmic processing can approximate musical styles"
 format: pdf
 number-sections: true
 bibliography: references.bib
 csl: modern-language-association.csl
+number-depth: 2
 ---
 
 ```{r}
@@ -174,7 +175,7 @@ levels(av$is_antonoff) <- c("No", "Yes")
 
 ```
 
-Examining the temporal evolution of artists' sounds, especially in correlation with their collaboration with Antonoff, provides insights into the broader trends in pop music. Each point in figures 3-8 represent one track.
+Examining the temporal evolution of artists' sounds, especially in correlation with their collaboration with Antonoff, provides insights into the broader trends in pop music. Each point in Figures 3-8 represent one track.
 
 ```{r, fig.width= 8, fig.height=6}
 #| label: fig-energy
@@ -360,14 +361,14 @@ Gini impurity was chosen on the grounds that we are interested in not only class
 
 ## Logistic Regression
 
-The model's accuracy is 0.757, and the ROC AUC score is 0.819. Based on the confusion matrix presented in Table 2, the precision score is 0.385, meaning that approximately 39% of songs predicted to be produced by Antonoff were actually produced by him. The recall of 0.756 indicates that about 76% of songs produced by Antonoff were actually correctly identified in the model.
+The model's accuracy is 0.757, and the ROC AUC score is 0.819. Based on the confusion matrix presented in @tbl-logres, the precision score is 0.385, meaning that approximately 39% of songs predicted to be produced by Antonoff were actually produced by him. The recall of 0.756 indicates that about 76% of songs produced by Antonoff were actually correctly identified in the model.
 
 |                        | Actually Positive (1) | Actually Negative (0) |
 |------------------------|-----------------------|-----------------------|
 | Predicted Positive (1) | 62                    | 99                    |
 | Predicted Negative (0) | 20                    | 308                   |
 
-: Confusion Matrix for Logistic Regression Results
+: Confusion Matrix for Logistic Regression Results {#tbl-logres}
 
 @tbl-importance and @fig-importance show variables' respective importance in determining whether a track was produced by Antonoff.
 
@@ -413,7 +414,7 @@ antonoff_vip |>
 
 Variable importance, which refers to the impact of each predictor variable in explaining the variation in the response variable, can offer a data-driven picture of what might set a producer's sound apart.
 
-`Danceability`, with a negative importance score of 4.142, had the highest level of importance in determining whether a song was produced or co-produced by Jack Antonoff. `Valence` was the second most important, with a positive score of 2.559. The third, `instrumentalness` correlates postively with Antonoff tracks with a score of 2.309.
+`Danceability`, with a negative importance score of 4.142, had the highest level of importance in determining whether a song was produced or co-produced by Jack Antonoff. `Valence` was the second most important, with a positive score of 2.559. The third, `instrumentalness` correlates positively with Antonoff tracks with a score of 2.309.
 
 ```{r}
 #| label: tbl-mostdanceable
@@ -451,13 +452,13 @@ In the 20 songs in Jack Antonoff's discography with the highest `danceability` s
 | P-Value (Acc \> NIR)    | \<2.2e-16       |
 | Kappa                   | 0.4223          |
 
-: Overall Performance Statistics
+: Overall Performance Statistics {#tbl-perfstatsRF}
 
-As presented in Table 5, the accuracy of the model (0.6111) being significantly higher than the No Information Rate (0.4274) means that it is doing more than just blind guessing based on class prevalence. A p-value below 0.05 suggests the model may be better than a naive approach.
+As presented in @tbl-perfstatsRF, the accuracy of the model (0.6111) being significantly higher than the No Information Rate (0.4274) means that it is doing more than just blind guessing based on class prevalence. A p-value below 0.05 suggests the model may be better than a naive approach.
 
 The model's accuracy and Kappa statistics suggest a moderate level of performance. However, there is enough demonstrated statistical significance to suggest that there are underlying patterns in the data that differentiate producers.
 
-The variables with the most variance in importance between each each producer were danceability, loudness, and energy (@tbl-rangecorr).
+The variables with the most variance in importance between each producer were danceability, loudness, and energy (@tbl-rangecorr).
 
 ```{r}
 #| echo: false
@@ -499,7 +500,7 @@ range_data |>
 
 ```
 
-The variance in variable importance scores are visualized in @fig-varimpbyprod. Similar to logistic regression, danceability stands out as a variable with a high degree of variance from producer to producer, meaning that it contributes to succesful classification.
+The variance in variable importance scores are visualized in @fig-varimpbyprod. Similar to logistic regression, danceability stands out as a variable with a high degree of variance from producer to producer, meaning that it contributes to successful classification.
 
 ```{r, fig.width= 8, fig.height=6}
 #| label: fig-varimpbyprod
@@ -566,7 +567,7 @@ ggplot(selected_data, aes(x=term, y=danceability, fill=producer)) +
 
 # Discussion {#sec-discussion}
 
-### Defining Style
+## Defining Style
 
 Style is bizarre and complex. In order to define it, Roger Dannenberg differentiates between texture and style: ""Texture" usually refers to sound and the activity of making sound, while "style" is most often used to describe the general impression or intention provided by a texture." (@dannenberg). According to Dannenberg, texture is a composite of aspects of music like that we can hear on longer or shorter time scales, such as harmonic rhythms, or differences in pitches, or loudness, among many others. These aspects are more objectively measurable, while style is the "sound colour" embedded in the combination and patterns of these elements.
 
@@ -578,15 +579,15 @@ Working with these limitations, danceability, loudness, and energy scores still 
 
 Using Dannenberg's definitions of texture and style as a framework, we can understand each feature of the dataset as encoding different elements of texture. In applying statistical models to these features, the underlying patterns in the relationship between these textures can be taken as an approximation for style.
 
-### Our Results
+## Our Results
 
 For instance, our logistic regression model was not able to strongly predict whether a song was produced by Jack Antonoff using the Spotify API's audio features data. However, when classifying the tracks, `danceability` was the strongest predictor.
 
 Our Random Forest results, which were moderately strong at classifying tracks, indicate that Antonoff's music, characterized by its `danceability` score, exhibits a significant positive correlation with factors such as `speechiness`, `loudness`, and `energy`, while showing a negative correlation with `acousticness`, and a less pronounced positive correlation with `valence` compared to other music producers (@fig-dancevariance). This profile---marked by speechiness, loudness, energy, and a blend of positivity with a touch of nostalgia---aligns with both our interpretations and critical assessments of Antonoff's sound.
 
-Antonoff's tracks have been described as anthemic (@citeRosen), with a distinct vocal treatment that makes it sound, as Caleb Gamman, a Youtuber who went viral for his critique of Jack Antonoffs sound, told us, "the way it would sound to the person who's singing them" (@citegammanint).
+Antonoff's tracks have been described as anthemic (@citeRosen), with a distinct vocal treatment that makes it sound, as Caleb Gamman, a Youtuber who went viral for his critique of Jack Antonoff's sound, told us, "the way it would sound to the person who's singing them" (@citegammanint).
 
-> In the treble mix of the song, like in the very upper end, sort of above where the vocals are -- he often really crushes that down. It's lower in volume than anything else, which is sort of a weird effect. When you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing , them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing he likes to do.
+> In the treble mix of the song, like in the very upper end, sort of above where the vocals are -- he often really crushes that down. It's lower in volume than anything else, which is sort of a weird effect. When you hear someone speaking, you hear a lot of that, like, noise in their voice. When you yourself are speaking, you hear less of it, right? You hear more of your own voice bouncing around in your head. And so it sort of creates this effect of -- **like he mixes his vocals the way it would sound to the person who's singing, them. Which is sort of strange.** He often has no vocals on that upper end, which is very unusual, and then often there are random little bits of noise happening up there which is the sort of thing he likes to do.
 
 Perhaps, without further documentation on the `speechiness` feature's construction, clearing the noise and isolating the middle range of the vocals may make for stronger overall `speechiness` score in Antonoff's tracks. Antonoff also tends to collaborate with singer-songwriter artists, whose music is more lyric-oriented than dance hit pop.
 
@@ -594,21 +595,21 @@ On that note, even Antonoff-produced songs with the highest `danceability` score
 
 For instance, the highest scoring song in danceability*, I Think He Knows* by Taylor Swift, can pass as danceable, yet the next highest-scoring songs -- Taylor Swift's *Vigilante Shit* or Florence and the Machine's *Heaven is Here* -- don't resonate as dance tracks. But they aren't understated, ambient tracks either -- they exhibit some sort of visceral quality. Like Gamman's description of Antonoff's vocal design sounding like how they would sound to the person who's singing them, these tracks seem like they're trying to get inside of your skin. But they don't have the rhythm of a dance track.
 
-*I* *Wanna Get Better* by Bleachers typifies the Antonoff style as identified by our model. This song is more anthemic, resonating with a sort of neo-Springsteen aesthetic that Antonoff is often characterized as (or admitting to) being influenced by, than danceable (@citePareles, @citeHorn) . It also does sound like it's trying to demand your attention, and the speechiness, loudness, and energy which are distinctly correlated with danceability in Antonoff's RF results, are all apparent. The redemptive, broken-but-getting-better tone can also be heard in the lyrics, but it still doesn't have the kind of rhythm for dancing -- which maps onto how Antonoff's "valence" score isn't as a high as other pop artists in @fig-dancevariance.
+*I* *Wanna Get Better* by Bleachers typifies the Antonoff style as identified by our model. This song is more anthemic, resonating with a sort of neo-Springsteen aesthetic that Antonoff is often characterized as (or admitting to) being influenced by, than danceable (@citePareles, @citeHorn). It also does sound like it's trying to demand your attention, and the speechiness, loudness, and energy which are distinctly correlated with danceability in Antonoff's RF results, are all apparent. The redemptive, broken-but-getting-better tone can also be heard in the lyrics, but it still doesn't have the kind of rhythm for dancing -- which maps onto how Antonoff's "valence" score isn't as a high as other pop artists in @fig-dancevariance.
 
 *Cornelia Street* by Taylor Swift further exemplifies this near-danceable category. While melodically catchy, the lyrics themselves are wistful and longing. The vocal treatment, as described by Gamman, is there -- Swift's vocals sound magnified, carrying the bridge of the song.
 
-### "Danceability" and "Valence" Features' Crowd-sourced Construction
+## "Danceability" and "Valence" Features' Crowd-sourced Construction
 
-We spoke with Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. While Macdonald did not build the features, he has worked with them, and provided information on their provenance. Macdonald revealed that `valence` and `danceability` were created by giving tracks to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like `energy` or `instrumentalness`, on the other hand, were determined primarily through machine listening techniques, with human subjectivity being applied to fine-tune the features[^2] (@citeglenint).:
+We spoke with Glen McDonald, a Principal Engineer at Spotify who worked at The Echo Nest, a music intelligence start-up that was acquired by Spotify in 2014. While McDonald did not build the features, he has worked with them, and provided information on their provenance. McDonald revealed that `valence` and `danceability` were created by giving tracks to college interns and asking them to tag whether a song was positive or gloomy, or danceable or un-danceable. Variables like `energy` or `instrumentalness`, on the other hand, were determined primarily through machine listening techniques, with human subjectivity being applied to fine-tune the features[^2] (@citeglenint).:
 
 [^2]: A notable example of this being that bluegrass songs were given very high `speechiness` ratings. Because there were no banjos in the training data, the instruments were registered as human speech. The engineers had to go back and add more songs with banjos to the training data.
 
 > "You could imagine writing a formula for energy that combines loudness and tempo and degree of harmonic variation or something. So that feature was \[machine learning\], but that one's more like a human helping a machine figure out a formula. Whereas valence is teaching the machine to try to reproduce a purely human thing. The same with danceability. I mean, danceability is whether a human can dance to it. The machine's not gonna dance, so the machine can't have any opinion on that. The computer could have an opinion on energy. And the computer can definitely have an opinion on loudness. So there's a spectrum from, loudness as purely analytical, and then energy is a little like loudness, with a little more subjectivity. And then danceability and valence are purely subjective."
 
-Glen confirmed that this process didn't account for lyrics, which made valence a particularly difficult variable to build. It could, in theory, pick up on aspects of vocal performance, but it didn't process anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Furthermore, two humans might even disagree on the song's valence: "Plus, we have the confounding factor of like, a song that seems happy today could be sad tomorrow because the singer was killed in a plane crash. The song didn't change, but our world changed and our reactions changed" (@citeglenint).
+McDonald confirmed that this process didn't account for lyrics, which made valence a particularly difficult variable to build. It could, in theory, pick up on aspects of vocal performance, but it didn't process anything about languages or words or the meanings of songs. Take an upbeat, happy-sounding Elliot Smith song with devastating lyrics: the machine might register it as happy, where human listeners understand that it's sad. Furthermore, two humans might even disagree on the song's valence: "Plus, we have the confounding factor of like, a song that seems happy today could be sad tomorrow because the singer was killed in a plane crash. The song didn't change, but our world changed and our reactions changed" (@citeglenint).
 
-Mcdonald suggests combining energy and valence to create quadrant, which usually works "fairly well" to describe music (see @fig-quadvalence) (@citeglenint): "High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming."
+McDonald suggests combining energy and valence to create quadrant, which usually works "fairly well" to describe music (see @fig-quadvalence) (@citeglenint): "High energy and high valence could be generally happy, cheerful, upbeat. Low energy, low valence could be sad or downbeat. High energy, low valence is sort of angry. Low energy, high valence is serene or calming."
 
 ```{r}
 #| label: fig-quadvalence
@@ -630,7 +631,7 @@ ggplot(av, aes(x = energy, y = valence)) +
                      name = "Antonoff")
 ```
 
-### Conclusion
+## Conclusion
 
 What does the danceability variable then signify in Antonoff's music? Our findings suggest that, similar to McDonald's quadrants, Antonoff's most "danceable" songs are better understood through the lens of correlated features, even though danceability emerges as the primary predictor. This crowd-sourced metric, in conjunction with machine-listening-derived features that capture songs' "textures", offers a unique insight into an artist's style, capturing an intuitive understanding of a song's tone and energy.
 
