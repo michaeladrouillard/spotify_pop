@@ -106,10 +106,7 @@ Spotify provides variables for each song, some of which they developed, which en
 >
 > **valence:** A measure from 0.0 to 1.0 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry).
 
-
-
 By analyzing the cumulative distribution functions of various audio features, particularly when categorizing songs based on whether they were produced by Antonoff (@fig-cdf), distinct patterns emerge. Notably, while attributes such as liveness, instrumentalness, and speechiness exhibit relative homogeneity, there are slight disparities in features like danceability, energy, loudness, acousticness, and valence. (@fig-means in @sec-datarange depicts the range of scores for the tracks across all variables except for tempo, mode, and loudness, which are measured using different metrics.)
-
 
 ```{r, fig.width= 8, fig.height=6}
 #| label: fig-cdf
@@ -281,11 +278,11 @@ We have observed subtle trends in variables associated with songs produced by Ja
 
 To be clear, we do not suggest that Antonoff's involvement is the cause for the change in artist's sound. Arguments of "Antonoffication" risk removing agency and artistic credit from (female) artists, and attributing both their critical success and failures to Antonoff (@citeWilson). In an industry primarily led by male producers, and using features so limited in their ability to describe anything about the process of creation, it would not be appropriate to use these trends to suggest that Antonoff's involvement is the cause behind changes in sound. The purpose of these visualizations is to observe the distribution of variables across artists, over time, with a focus on Antonoff.
 
-This exploratory data analysis sets the stage for: 
+This exploratory data analysis sets the stage for:
 
-a) employing logistic regression to quantify the likelihood of Antonoff's involvement in a song based on these audio features, 
-b) classifying tracks produced by a wider range of producers using a random forest, 
-c) identifying the most influential variables in this classification to better understand how style can be inferred from the provided dataset features.
+a)  employing logistic regression to quantify the likelihood of Antonoff's involvement in a song based on these audio features,
+b)  classifying tracks produced by a wider range of producers using a random forest,
+c)  identifying the most influential variables in this classification to better understand how style can be inferred from the provided dataset features.
 
 # Model {#sec-model}
 
@@ -648,33 +645,24 @@ Future studies should reproduce crowdsourced danceability or valence variables t
 ## Data range and mean {#sec-datarange}
 
 ```{r, fig.width= 8, fig.height=6}
-#| label: fig-means
-#| fig-cap: Comparing the range and mean of each variable from the Spotify Audio Features API for our full dataset
-#| echo: false
+#| label: fig-means 
+#| fig-cap: Comparing the range and mean of each variable from the Spotify Audio Features API for our full dataset 
+#| echo: false 
 #| warning: false
 
 lr_data <- read_csv(here::here("inputs/data/lr_data.csv"))
 
-
-lr_data %>%
-  select(-producer,-tempo,-loudness,-mode) %>%
-  pivot_longer(cols = -is_antonoff,
-               names_to = "feature",
-               values_to = "value") %>%
-  ggplot(aes(
-    x = feature,
-    y = value,
-    fill = factor(is_antonoff)
-  )) +
+lr_data %>% 
+  select(-producer,-tempo,-loudness,-mode) %>% 
+  pivot_longer(cols = -is_antonoff, names_to = "feature", values_to = "value") %>% 
+  ggplot(aes( x = feature, y = value, fill = factor(is_antonoff) )) +
   geom_boxplot(alpha = 0.6, position = position_dodge(width = 0.8)) +
-  scale_fill_manual(values = c("#B0C4DE", "#9ACD32"),
-                    labels = c("No", "Yes")) +
-  theme_minimal() +
-  labs(fill = "Antonoff", x = "Feature", y = "Value") +
-  coord_flip()  
-```)
+  scale_fill_manual(values = c("#B0C4DE", "#9ACD32"), labels = c("No", "Yes")) + 
+  theme_minimal() + 
+  labs(fill = "Antonoff", x = "Feature", y = "Value") + 
+  coord_flip()
+```
 
 \newpage
-
 
 # References
